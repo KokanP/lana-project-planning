@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lana Project - Cost Calculator (Debug v2)</title>
+    <style>
+        /* --- General Styles --- */
+        :root {
+            --input-width: 90px;
+            --border-color: #d1d5db; /* gray-300 */
+            --table-header-bg: #f3f4f6; /* gray-100 */
+            --row-even-bg: #f9fafb; /* gray-50 */
+            --category-header-bg: #e5e7eb; /* gray-200 */
+            --totals-row-bg: #f3f4f6; /* gray-100 */
+            --grand-total-bg: #d1d5db; /* gray-300 */
+            --info-box-bg: #fefce8; /* yellow-50 */
+            --info-box-border: #facc15; /* yellow-400 */
+            --global-inputs-bg: #eff6ff; /* blue-50 */
+            --global-inputs-border: #93c5fd; /* blue-300 */
+            --code-bg: #e5e7eb; /* gray-200 */
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            padding: 1rem;
+            background-color: #f8fafc; /* gray-50 */
+            line-height: 1.5;
+            color: #1f2937; /* gray-800 */
+        }
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1, h2 {
+            font-weight: 600;
+            margin-bottom: 0.75em;
+            margin-top: 1.5em;
+        }
+        h1 { font-size: 1.75rem; }
+        h2 { font-size: 1.25rem; }
+
+        /* --- Info/Assumption Box --- */
+        .assumptions {
+            background-color: var(--info-box-bg);
+            border: 1px solid var(--info-box-border);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+        }
+        .assumptions h2 {
+             margin-top: 0;
+             margin-bottom: 0.75rem;
+             font-size: 1.1rem;
+             font-weight: 600;
+        }
+        .assumptions ul {
+            list-style: disc;
+            margin: 0 0 0 20px; /* Left margin for indentation */
+            padding: 0;
+        }
+        .assumptions ul li {
+            margin-bottom: 0.6em;
+        }
+        .assumptions ul ul { /* Nested list */
+             list-style: circle;
+             margin-left: 25px;
+             margin-top: 0.5em;
+        }
+        .assumptions code {
+            font-family: monospace;
+            background-color: var(--code-bg);
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        /* --- Global Inputs Box --- */
+        .global-inputs {
+             background-color: var(--global-inputs-bg);
+             border: 1px solid var(--global-inputs-border);
+             padding: 1rem;
+             margin-bottom: 1.5rem;
+             border-radius: 8px;
+             display: flex;
+             flex-direction: column;
+             gap: 0.75rem; /* Space between input rows */
+        }
+        .global-inputs div {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem; /* Space between label and input */
+            flex-wrap: wrap;
+        }
+        .global-inputs label {
+            font-weight: 600;
+            min-width: 180px; /* Align labels nicely */
+            text-align: right;
+        }
+        .global-inputs input[type="number"] {
+             padding: 5px 8px;
+             border: 1px solid var(--border-color);
+             border-radius: 4px;
+             width: var(--input-width);
+             text-align: right;
+        }
+        .global-inputs span small { /* Smaller text for description */
+             color: #4b5563; /* gray-600 */
+             font-size: 0.85em;
+        }
+
+        /* --- Table Styles --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            border-radius: 8px;
+            overflow: hidden; /* Ensures border-radius clips content */
+        }
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 0.75rem; /* Increased padding */
+            text-align: left;
+            vertical-align: top; /* Align content top for consistency */
+        }
+        thead th {
+            background-color: var(--table-header-bg);
+            font-weight: 600;
+            color: #374151; /* gray-700 */
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+        tbody tr:nth-child(even) {
+            background-color: var(--row-even-bg);
+        }
+        tbody tr:hover { /* Subtle hover effect */
+             background-color: #e5e7eb; /* gray-200 */
+        }
+        .category-header {
+            background-color: var(--category-header-bg);
+            font-weight: 600;
+            color: #1f2937; /* gray-800 */
+        }
+        .category-header:hover { /* Remove hover for category headers */
+             background-color: var(--category-header-bg);
+        }
+        td.input-col input[type="number"] {
+            width: var(--input-width);
+            padding: 5px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            text-align: right;
+        }
+         td.output-col {
+            font-weight: 600;
+            text-align: right;
+            white-space: nowrap; /* Prevent wrapping */
+         }
+        .totals-row td {
+            font-weight: 600;
+            background-color: var(--totals-row-bg);
+        }
+        .grand-totals-row td {
+             font-weight: 700; /* Bolder for grand total */
+             background-color: var(--grand-total-bg);
+        }
+        td:last-child { /* Comments column */
+            font-size: 0.85em;
+            color: #4b5563; /* gray-600 */
+        }
+    </style>
+</head>
+<body>
+
+<main>
+    <h1>Lana Project - Live Estimated Task Costs</h1>
+
+    <section class="assumptions">
+        <h2>Important Assumptions & Disclaimers</h2>
+        <ul>
+            <li><strong>Live Data:</strong> Changing input values (rates, hours, adjustment, multiplier) will update calculations.</li>
+            <li><strong>Time Estimates:</strong> 'Rough Est. Hours' are speculative initial guesses.</li>
+            <li><strong>EUR Rate Adjustment (%):</strong> Percentage of the base EUR rate to use for cost calculation (e.g., 10% means the effective rate is 0.1x the base rate). Models scenarios where contributors accept a lower effective EUR rate for higher potential LANA compensation.</li>
+            <li><strong>Cost Calculation (€):</strong> 'Calculated Task Cost (€)' = <code>(Base Est. Hourly Rate (€) * (EUR Rate Adjustment % / 100)) * Rough Est. Hours</code>.</li>
+            <li><strong>Currency:</strong> All monetary values are in Euros (€).</li>
+            <li><strong>LANA Payment Option & Risk/Reward:</strong> An alternative payment method uses LANA tokens. The "LANA Payment Multiplier" input adjusts the number of tokens paid relative to the calculated EUR cost.
+                <ul>
+                    <li><em>Formula:</em> <code>Est. Task Cost (LANA) = (Calculated EUR Cost * Multiplier) / LanaRate</code></li>
+                    <li><em>Mechanism:</em> The multiplier (default 10x) increases the amount of LANA paid compared to a direct conversion. This compensates contributors for the risk of LANA's value decreasing, while offering a higher potential reward if LANA's value increases significantly.</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <section class="global-inputs">
+        <div>
+            <label for="lanaRate">Current LANA/EUR Rate:</label>
+            <input type="number" id="lanaRate" value="0.0011" step="0.0001" class="global-input">
+            <span><small>(1 LANA = €<span id="rateDisplay">0.0011</span>)</small></span>
+        </div>
+        <div>
+            <label for="eurRateAdjustment">EUR Rate Adjustment (%):</label>
+            <input type="number" id="eurRateAdjustment" value="10" step="1" class="global-input">
+            <span><small>% (Portion of base EUR rate, e.g., 10% = 0.1x)</small></span>
+        </div>
+        <div>
+            <label for="lanaMultiplier">LANA Payment Multiplier:</label>
+            <input type="number" id="lanaMultiplier" value="10" step="1" class="global-input">
+            <span><small>x (Risk/Reward factor for LANA amount, default 10x)</small></span>
+        </div>
+    </section>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Task</th>
+                <th>Assigned Role (Primary)</th>
+                <th>Base Est. Hourly Rate (€)</th>
+                <th>Rough Est. Hours</th>
+                <th>Calculated Task Cost (€)</th>
+                <th>Est. Task Cost (LANA)</th>
+                <th>Comments</th>
+            </tr>
+        </thead>
+        <tbody id="costTableBody">
+            <tr class="category-header"><td colspan="8">Phase 1: Pre-Launch</td></tr>
+            <tr data-phase="1"><td>Pre-Launch</td><td>Team Formation</td><td>Project Manager</td><td class="input-col"><input type="number" value="16.1" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="40" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+            <tr data-phase="1"><td>Pre-Launch</td><td>Whitepaper Development</td><td>Project Manager / Mixed</td><td class="input-col"><input type="number" value="16.1" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="120" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+            <tr data-phase="1"><td>Pre-Launch</td><td>Website Creation / Update</td><td>Web Dev / Designer</td><td class="input-col"><input type="number" value="13.7" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="100" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+            <tr data-phase="1"><td>Pre-Launch</td><td>Legal Compliance Review</td><td>Legal Advisor</td><td class="input-col"><input type="number" value="11.7" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="60" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+            <tr data-phase="1"><td>Pre-Launch</td><td>Evaluation of work in fiscal value</td><td>Project Manager / Fin.</td><td class="input-col"><input type="number" value="16.1" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="20" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td>internal & external rates</td></tr>
+            <tr data-phase="1"><td>Pre-Launch</td><td>Move Comms (Telegram to Discord/Slack setup)</td><td>Community Mgr / PM</td><td class="input-col"><input type="number" value="11.9" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="30" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+            <tr class="totals-row"><td colspan="4" style="text-align: right;"><strong>Phase 1 Subtotal</strong></td><td class="output-col"><strong id="phase-1-hours">0</strong></td><td class="output-col"><strong id="phase-1-eur">€0.00</strong></td><td class="output-col"><strong id="phase-1-lana">0 LANA</strong></td><td></td></tr>
+
+            <tr class="category-header"><td colspan="8">Phase 2: ICO Equivalent</td></tr>
+            <tr data-phase="2"><td>ICO Equivalent</td><td>Devise Alternative "Sale" Strategy</td><td>Project Manager / Legal</td><td class="input-col"><input type="number" value="16.1" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="50" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+            <tr data-phase="2"><td>ICO Equivalent</td><td>Plan Coin Distribution (Team, Inv. etc.)</td><td>Project Manager / Fin.</td><td class="input-col"><input type="number" value="16.1" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="40" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+            <tr data-phase="2"><td>ICO Equivalent</td><td>Execute "Sale"/Promotion Event</td><td>Marketing / PM</td><td class="input-col"><input type="number" value="11.6" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="80" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+            <tr data-phase="2"><td>ICO Equivalent</td><td>Execute Coin Distribution</td><td>Blockchain Dev / Fin.</td><td class="input-col"><input type="number" value="21.5" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="50" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+            <tr class="totals-row"><td colspan="4" style="text-align: right;"><strong>Phase 2 Subtotal</strong></td><td class="output-col"><strong id="phase-2-hours">0</strong></td><td class="output-col"><strong id="phase-2-eur">€0.00</strong></td><td class="output-col"><strong id="phase-2-lana">0 LANA</strong></td><td></td></tr>
+
+            <tr class="category-header"><td colspan="8">Phase 3: Development</td></tr>
+            <tr data-phase="3"><td>Development</td><td>Blockchain (re)development (if needed)</td><td>Blockchain Dev</td><td class="input-col"><input type="number" value="21.5" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="200" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+            <tr data-phase="3"><td>Development</td><td>Wallet Integration / Update</td><td>Blockchain Dev</td><td class="input-col"><input type="number" value="21.5" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="150" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+            <tr data-phase="3"><td>Development</td><td>Establish Partnerships (Exchanges, Vendors etc.)</td><td>Project Manager / Mktg</td><td class="input-col"><input type="number" value="16.1" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="100" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+            <tr class="totals-row"><td colspan="4" style="text-align: right;"><strong>Phase 3 Subtotal</strong></td><td class="output-col"><strong id="phase-3-hours">0</strong></td><td class="output-col"><strong id="phase-3-eur">€0.00</strong></td><td class="output-col"><strong id="phase-3-lana">0 LANA</strong></td><td></td></tr>
+
+             <tr class="category-header"><td colspan="8">Phase 4: Marketing & Promotion</td></tr>
+             <tr data-phase="4"><td>Marketing & Promo</td><td>Social Media Strategy & Setup</td><td>Marketing Specialist</td><td class="input-col"><input type="number" value="11.6" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="40" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+             <tr data-phase="4"><td>Marketing & Promo</td><td>Ongoing Social Media Campaigns</td><td>Marketing Specialist</td><td class="input-col"><input type="number" value="11.6" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="160" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+             <tr data-phase="4"><td>Marketing & Promo</td><td>Content Strategy & Planning</td><td>Marketing Specialist</td><td class="input-col"><input type="number" value="11.6" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="30" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+             <tr data-phase="4"><td>Marketing & Promo</td><td>Content Creation (Blog Posts - initial batch)</td><td>Marketing Specialist</td><td class="input-col"><input type="number" value="11.6" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="80" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+             <tr data-phase="4"><td>Marketing & Promo</td><td>Content Creation (Videos - initial set)</td><td>Marketing / Designer</td><td class="input-col"><input type="number" value="11.6" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="120" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+             <tr data-phase="4"><td>Marketing & Promo</td><td>Content Creation (Infographics - initial set)</td><td>Graphic Designer</td><td class="input-col"><input type="number" value="13.7" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="60" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+             <tr data-phase="4"><td>Marketing & Promo</td><td>Press Release Strategy & Writing (per release)</td><td>Marketing Specialist</td><td class="input-col"><input type="number" value="11.6" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="20" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+             <tr data-phase="4"><td>Marketing & Promo</td><td>Event Planning (Webinar)</td><td>Marketing Specialist</td><td class="input-col"><input type="number" value="11.6" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="40" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+             <tr data-phase="4"><td>Marketing & Promo</td><td>Event Planning (Conference participation prep)</td><td>Marketing Specialist</td><td class="input-col"><input type="number" value="11.6" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="60" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+             <tr data-phase="4"><td>Marketing & Promo</td><td>Event Planning (Meetup - per event)</td><td>Marketing / Comm Mgr</td><td class="input-col"><input type="number" value="11.6" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="30" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+             <tr data-phase="4"><td>Marketing & Promo</td><td>Integrated Graphic Design (Logo, Handbook, Templates)</td><td>Graphic Designer</td><td class="input-col"><input type="number" value="13.7" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="100" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td>Logo, handbook, templates</td></tr>
+             <tr class="totals-row"><td colspan="4" style="text-align: right;"><strong>Phase 4 Subtotal</strong></td><td class="output-col"><strong id="phase-4-hours">0</strong></td><td class="output-col"><strong id="phase-4-eur">€0.00</strong></td><td class="output-col"><strong id="phase-4-lana">0 LANA</strong></td><td></td></tr>
+
+             <tr class="category-header"><td colspan="8">Phase 5: Community Building</td></tr>
+             <tr data-phase="5"><td>Community Building</td><td>Community Management Setup (Channels, Rules)</td><td>Community Manager</td><td class="input-col"><input type="number" value="11.9" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="40" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+             <tr data-phase="5"><td>Community Building</td><td>Ongoing Community Management (per month)</td><td>Community Manager</td><td class="input-col"><input type="number" value="11.9" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="100" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+             <tr data-phase="5"><td>Community Building</td><td>Influencer Identification & Outreach</td><td>Marketing Specialist</td><td class="input-col"><input type="number" value="11.6" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="50" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+             <tr data-phase="5"><td>Community Building</td><td>Airdrop Strategy & Planning</td><td>Marketing / Comm Mgr</td><td class="input-col"><input type="number" value="11.6" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="30" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+             <tr data-phase="5"><td>Community Building</td><td>Airdrop Execution & Support</td><td>Community Mgr / Dev</td><td class="input-col"><input type="number" value="11.9" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="40" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+             <tr data-phase="5"><td>Community Building</td><td>Ambassador Program Setup</td><td>Community Manager</td><td class="input-col"><input type="number" value="11.9" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="30" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+             <tr class="totals-row"><td colspan="4" style="text-align: right;"><strong>Phase 5 Subtotal</strong></td><td class="output-col"><strong id="phase-5-hours">0</strong></td><td class="output-col"><strong id="phase-5-eur">€0.00</strong></td><td class="output-col"><strong id="phase-5-lana">0 LANA</strong></td><td></td></tr>
+
+             <tr class="category-header"><td colspan="8">Phase 6: Launch Phase</td></tr>
+             <tr data-phase="6"><td>Launch Phase</td><td>Mainnet RE-Launch Prep & Execution</td><td>Blockchain Dev / PM</td><td class="input-col"><input type="number" value="21.5" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="100" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+             <tr data-phase="6"><td>Launch Phase</td><td>Exchange Listing Applications & Process (per exch.)</td><td>Project Manager / Legal</td><td class="input-col"><input type="number" value="16.1" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="80" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+             <tr data-phase="6"><td>Launch Phase</td><td>User Onboarding Materials Creation</td><td>Marketing / Comm Mgr</td><td class="input-col"><input type="number" value="11.6" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="50" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+             <tr class="totals-row"><td colspan="4" style="text-align: right;"><strong>Phase 6 Subtotal</strong></td><td class="output-col"><strong id="phase-6-hours">0</strong></td><td class="output-col"><strong id="phase-6-eur">€0.00</strong></td><td class="output-col"><strong id="phase-6-lana">0 LANA</strong></td><td></td></tr>
+
+             <tr class="category-header"><td colspan="8">Phase 7: Post-Launch Phase (Ongoing Costs per Iteration)</td></tr>
+             <tr data-phase="7"><td>Post-Launch Phase</td><td>Continuous Development (Ongoing - per month/sprint)</td><td>Blockchain Dev</td><td class="input-col"><input type="number" value="21.5" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="160" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+             <tr data-phase="7"><td>Post-Launch Phase</td><td>Continuous Marketing (Ongoing - per month)</td><td>Marketing Specialist</td><td class="input-col"><input type="number" value="11.6" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="80" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+             <tr data-phase="7"><td>Post-Launch Phase</td><td>Continuous Community Engagement (Ongoing - per month)</td><td>Community Manager</td><td class="input-col"><input type="number" value="11.9" step="0.1" class="rate-input"></td><td class="input-col"><input type="number" value="100" step="1" class="hours-input"></td><td class="output-col"><span class="eur-cost">0</span></td><td class="output-col"><span class="lana-cost">0</span></td><td></td></tr>
+             <tr class="totals-row"><td colspan="4" style="text-align: right;"><strong>Phase 7 Subtotal (per iteration)</strong></td><td class="output-col"><strong id="phase-7-hours">0</strong></td><td class="output-col"><strong id="phase-7-eur">€0.00</strong></td><td class="output-col"><strong id="phase-7-lana">0 LANA</strong></td><td></td></tr>
+
+             <tr class="grand-totals-row"><td colspan="4" style="text-align: right;"><strong>GRAND TOTAL (Initial: Phases 1-6)</strong></td><td class="output-col"><strong id="grand-total-hours">0</strong></td><td class="output-col"><strong id="grand-total-eur">€0.00</strong></td><td class="output-col"><strong id="grand-total-lana">0 LANA</strong></td><td></td></tr>
+        </tbody>
+    </table>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM Loaded. Initializing script (reintroducing toLocaleString)...");
+
+    // --- DOM Element References ---
+    const lanaRateInput = document.getElementById('lanaRate');
+    const rateDisplay = document.getElementById('rateDisplay');
+    const eurRateAdjustmentInput = document.getElementById('eurRateAdjustment');
+    const lanaMultiplierInput = document.getElementById('lanaMultiplier');
+    const tableBody = document.getElementById('costTableBody');
+    const allInputs = document.querySelectorAll('.rate-input, .hours-input, .global-input'); // Selector for all inputs that trigger updates
+
+    // Basic check for essential elements
+    if (!lanaRateInput || !rateDisplay || !eurRateAdjustmentInput || !lanaMultiplierInput || !tableBody || allInputs.length === 0) {
+        console.error("Initialization Error: Could not find one or more essential HTML elements. Check IDs and classes.");
+        return;
+    }
+    console.log(`Found ${allInputs.length} input elements to attach listeners to.`);
+
+    // --- Formatting Functions using toLocaleString() ---
+    // Use Intl.NumberFormat for robust locale-aware formatting
+    const currencyFormatter = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' });
+    const lanaFormatter = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
+
+    const formatCurrency = (value) => currencyFormatter.format(value);
+    const formatLana = (value) => {
+        const numberValue = Number(value);
+        // Check if the numberValue is actually a number before formatting
+        if (isNaN(numberValue)) {
+             return '0 LANA'; // Return default string if not a number
+        }
+        return lanaFormatter.format(numberValue) + ' LANA';
+    };
+
+
+    // --- Calculation Functions ---
+    // Calculates EUR cost based on an *already adjusted* rate and hours
+    function calculateEurCost(adjustedRate, hours) {
+        const numRate = parseFloat(adjustedRate) || 0;
+        const numHours = parseFloat(hours) || 0;
+        return numRate * numHours;
+    }
+
+    function calculateLanaCost(eurCost, lanaRate, multiplier) {
+        const numLanaRate = parseFloat(lanaRate) || 0.0011;
+        // Default multiplier corrected back to 10
+        const numMultiplier = parseFloat(multiplier) || 10;
+        if (numLanaRate <= 0) { // Check for non-positive rate
+            // console.warn("Warning: LANA/EUR rate is zero or negative, cannot calculate LANA cost."); // Less verbose
+            return 0;
+        }
+        // Formula: (eurCost * multiplier) / lanaRate
+        return (eurCost * numMultiplier) / numLanaRate;
+    }
+
+    // --- Main Update Function ---
+    function updateAllCalculations() {
+        // console.log("updateAllCalculations triggered..."); // Less verbose logging
+        const currentLanaRate = parseFloat(lanaRateInput.value) || 0.0011;
+        // Read EUR adjustment percentage, convert to factor (e.g., 10% -> 0.1)
+        const eurAdjustmentFactor = (parseFloat(eurRateAdjustmentInput.value) / 100.0) || 0.1; // Default to 0.1 (10%) if invalid
+        // Read LANA multiplier, default corrected to 10
+        const currentMultiplier = parseFloat(lanaMultiplierInput.value) || 10;
+        rateDisplay.textContent = currentLanaRate.toFixed(4);
+        // console.log(`Current LANA Rate: ${currentLanaRate}, EUR Adj Factor: ${eurAdjustmentFactor}, LANA Multiplier: ${currentMultiplier}`); // Less verbose
+
+        let phaseTotals = {};
+        let grandTotals = { hours: 0, eur: 0, lana: 0 };
+        let ongoingTotals = { hours: 0, eur: 0, lana: 0 }; // Phase 7
+
+        const rows = tableBody.querySelectorAll('tr[data-phase]');
+        // console.log(`Processing ${rows.length} task rows...`); // Less verbose
+
+        rows.forEach((row, index) => {
+            const phase = row.dataset.phase;
+            const rateInput = row.querySelector('.rate-input'); // This is the BASE rate
+            const hoursInput = row.querySelector('.hours-input');
+            const eurCostSpan = row.querySelector('.eur-cost');
+            const lanaCostSpan = row.querySelector('.lana-cost');
+
+            if (!rateInput || !hoursInput || !eurCostSpan || !lanaCostSpan || !phase) {
+                // console.warn(`Skipping row index ${index}: Missing elements or phase data.`); // Less verbose
+                return; // Skip malformed rows
+            }
+
+            const baseRate = parseFloat(rateInput.value) || 0;
+            const hours = parseFloat(hoursInput.value) || 0; // Use parseFloat here too
+
+            // Apply the EUR adjustment factor to the base rate for calculations
+            const adjustedEurRate = baseRate * eurAdjustmentFactor;
+
+            const eurCost = calculateEurCost(adjustedEurRate, hours); // Calculate EUR cost using adjusted rate
+            const lanaCost = calculateLanaCost(eurCost, currentLanaRate, currentMultiplier);
+
+            // console.log(`Updating display for row index ${index}: EUR=${eurCost}, LANA=${lanaCost}`); // Less verbose
+
+            // Update row display using toLocaleString formatting functions
+            eurCostSpan.textContent = formatCurrency(eurCost);
+            lanaCostSpan.textContent = formatLana(lanaCost);
+
+            // --- Accumulate Totals ---
+             if (!phaseTotals[phase]) {
+                 phaseTotals[phase] = { hours: 0, eur: 0, lana: 0 };
+             }
+             phaseTotals[phase].hours += hours; // Use parsed hours
+             phaseTotals[phase].eur += eurCost;
+             phaseTotals[phase].lana += lanaCost;
+
+            if (parseInt(phase) <= 6) {
+                grandTotals.hours += hours; // Use parsed hours
+                grandTotals.eur += eurCost;
+                grandTotals.lana += lanaCost;
+            }
+            // Phase 7 totals are handled in the phase loop below
+        });
+
+        // --- Update Phase Total Display ---
+         // console.log("Updating phase totals..."); // Less verbose
+         for (const phase in phaseTotals) {
+             const phaseHoursEl = document.getElementById(`phase-${phase}-hours`);
+             const phaseEurEl = document.getElementById(`phase-${phase}-eur`);
+             const phaseLanaEl = document.getElementById(`phase-${phase}-lana`);
+             if (phaseHoursEl && phaseEurEl && phaseLanaEl) {
+                phaseHoursEl.textContent = phaseTotals[phase].hours.toFixed(0);
+                 // Use toLocaleString formatting functions for totals
+                phaseEurEl.textContent = formatCurrency(phaseTotals[phase].eur);
+                phaseLanaEl.textContent = formatLana(phaseTotals[phase].lana);
+             } else {
+                console.warn(`Could not find total elements for Phase ${phase}`);
+             }
+         }
+
+        // --- Update Grand Total Display ---
+        // console.log("Updating grand totals..."); // Less verbose
+        const gtHoursEl = document.getElementById('grand-total-hours');
+        const gtEurEl = document.getElementById('grand-total-eur');
+        const gtLanaEl = document.getElementById('grand-total-lana');
+
+        if (gtHoursEl && gtEurEl && gtLanaEl) {
+            gtHoursEl.textContent = grandTotals.hours.toFixed(0);
+            // Use toLocaleString formatting functions for totals
+            gtEurEl.textContent = formatCurrency(grandTotals.eur);
+            gtLanaEl.textContent = formatLana(grandTotals.lana);
+        } else {
+            console.error("Error: Could not find Grand Total display elements!");
+        }
+         // console.log("Update complete."); // Log completion
+    }
+
+    // --- Attach Event Listeners ---
+    console.log("Attaching event listeners...");
+    allInputs.forEach(input => {
+        input.addEventListener('input', updateAllCalculations); // Use 'input' for immediate feedback
+    });
+
+    // --- Initial Calculation on Load ---
+    function initializeCalculator() {
+        // Keeping try...catch for safe initialization
+        try {
+            updateAllCalculations();
+            console.log("Calculator initialized successfully.");
+        } catch (error) {
+            console.error("Error during calculator initialization:", error);
+        }
+    }
+
+    initializeCalculator();
+
+});
+</script>
+
+</body>
+</html>

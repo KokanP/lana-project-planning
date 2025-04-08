@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lana Project - Sample Cost Estimation</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 1rem;
+            line-height: 1.6;
+            background-color: #f8fafc;
+        }
+        h1, h2, h3 {
+            margin-bottom: 0.5em;
+            margin-top: 1.2em;
+            font-weight: bold;
+        }
+        h1 { font-size: 1.8em; }
+        h2 { font-size: 1.4em; }
+        h3 { font-size: 1.2em; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9em;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #e2e8f0;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f1f5f9;
+        }
+        .disclaimer-box {
+            background-color: #fffbeb;
+            border: 1px solid #fcd34d;
+            padding: 1em;
+            margin: 1em 0;
+            border-radius: 8px;
+        }
+        .sample-notice {
+             background-color: #fee2e2;
+             border: 1px solid #fca5a5;
+             color: #991b1b;
+             padding: 1em;
+             margin: 1em 0;
+             border-radius: 8px;
+             text-align: center;
+             font-weight: bold;
+        }
+        ul {
+            list-style: disc;
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 0.5em;
+        }
+        strong { font-weight: bold; }
+        code {
+            font-family: monospace;
+            background-color: #e2e8f0;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+        }
+        .totals-row td {
+            font-weight: bold;
+            background-color: #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Lana Project - Project Documentation Draft</h1>
+    <p><strong>Date:</strong> April 8, 2025</p>
+    <p><strong>Version:</strong> 0.5 (Corrected Multiplier Defaults) - Static HTML Sample</p>
+
+    <div class="sample-notice">
+        <strong>SAMPLE DOCUMENT NOTICE:</strong><br>
+        The tasks, time estimates, hourly rates, and LANA rewards detailed in this document are placeholders for discussion and planning purposes only.<br>
+        Actual tasks, rates, and reward structures will be subject to agreement among project personnel.
+    </div>
+
+    <h2>1. Project Overview</h2>
+    <p>This document outlines the plan and estimated costs for the Lana Project, focusing on the re-launch and continued development of LANA Coin. The project involves several phases, from team formation and planning to development, marketing, community building, launch, and post-launch activities. The goal is to update the project's infrastructure, engage the community, and establish LANA Coin on relevant platforms.</p>
+    <p><strong>Disclaimer:</strong> This plan is a general outline and requires input from project owners. The cost estimations are based on specific assumptions detailed in the budget section. The timeline is currently To Be Determined (TBD).</p>
+
+    <h2>2. Project Scope & Objectives</h2>
+    <ul>
+        <li>Update and potentially redevelop the LANA Coin blockchain and associated wallets.</li>
+        <li>Develop and execute a revised "coin sale" or promotional equivalent strategy.</li>
+        <li>Plan and execute token distribution.</li>
+        <li>Build and engage a community through updated communication channels (e.g., Discord/Slack), social media, content creation, events, and potentially airdrops and an ambassador program.</li>
+        <li>Establish partnerships with exchanges, vendors, and potentially influencers.</li>
+        <li>Ensure legal compliance.</li>
+        <li>Successfully re-launch the mainnet.</li>
+        <li>Secure listings on major cryptocurrency exchanges.</li>
+        <li>Provide user onboarding support.</li>
+        <li>Engage in continuous development, marketing, and community engagement post-launch.</li>
+    </ul>
+
+    <h2>3. Team & Roles</h2>
+    <h3>Current Team Members (Partial List):</h3>
+    <ul>
+        <li>Gašper Zorman</li>
+        <li>Ignac Lesar</li>
+        <li><em>(Note: Full team list and specific responsibilities need further definition)</em></li>
+    </ul>
+    <h3>Suggested Roles Needed:</h3>
+    <ul>
+        <li>Project Manager(s)</li>
+        <li>Blockchain Developer(s)</li>
+        <li>Web Developer / Designer</li>
+        <li>Marketing Specialist(s) / Experts</li>
+        <li>Community Manager(s)</li>
+        <li>Legal Advisor(s)</li>
+        <li>Financial Analyst(s) / Finance Role</li>
+        <li>Graphic Designer</li>
+    </ul>
+    <h3>Onboarding:</h3>
+    <ul>
+        <li>Onboarding buddies may be assigned.</li>
+        <li>Specific onboarding materials need to be defined (Welcome packet, policies, guides).</li>
+    </ul>
+
+    <h2>4. Project Plan, Tasks & Estimated Costs</h2>
+    <p>This section combines the project phases with task-specific cost estimations, incorporating a risk/reward model for LANA token payments. Costs are shown in Euros (€) and optionally in LANA tokens based on the assumptions below.</p>
+
+    <div class="disclaimer-box">
+        <h3>Important Assumptions & Disclaimers (for values shown in tables):</h3>
+        <ul>
+            <li><strong>SAMPLE Values:</strong> Tasks, time estimates, rates, and reward parameters are illustrative placeholders.</li>
+            <li><strong>Static Data:</strong> Values in the cost tables are static examples calculated using the specific assumptions listed here.</li>
+            <li><strong>Time Estimates:</strong> 'Rough Est. Hours' are speculative guesses.</li>
+            <li><strong>EUR Rate Adjustment (%):</strong> Assumed to be <strong>10%</strong> for the calculations below. This means the effective hourly rate used for EUR cost calculation is <strong>0.1 times</strong> the 'Base Est. Hourly Rate (€)' listed. This models a scenario where contributors accept a lower effective EUR rate for higher potential LANA compensation.</li>
+            <li><strong>Cost Calculation (€):</strong> 'Calculated Task Cost (€)' = <code>(Base Est. Hourly Rate (€) * (EUR Rate Adjustment % / 100)) * Rough Est. Hours</code>. For the tables below: <code>(Base Rate * 0.1) * Hours</code>.</li>
+            <li><strong>Currency:</strong> All monetary values are in Euros (€).</li>
+            <li><strong>LANA Payment Option & Risk/Reward:</strong> An alternative payment method uses LANA tokens. The estimated LANA cost reflects payment adjusted by a multiplier relative to the specified market rate (assumed <strong>1 LANA = 0.0011 EUR</strong> below) to account for team risk/reward.</li>
+            <li><strong>LANA Payment Multiplier:</strong> Assumed to be <strong>10x</strong> for the calculations below. This multiplier increases the amount of LANA paid relative to the calculated EUR cost, compensating contributors for token volatility risk with higher potential upside.</li>
+            <li><strong>Cost Calculation (LANA):</strong> <code>Est. Task Cost (LANA) = (Calculated Task Cost (€) * Multiplier) / Current LANA/EUR Rate</code>. For the tables below: <code>(Calculated € Cost * 10) / 0.0011</code>.</li>
+        </ul>
+    </div>
+
+    <h3>Phase 1: Pre-Launch</h3>
+    <table>
+        <thead>
+            <tr><th>Task</th><th>Assigned Role (Primary)</th><th>Base Est. Hourly Rate (€)</th><th>Rough Est. Hours</th><th>Calculated Task Cost (€)</th><th>Est. Task Cost (LANA)</th><th>Comments</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Team Formation</td><td>Project Manager</td><td>16.1</td><td>40</td><td>64.40</td><td>585,455</td><td></td></tr>
+            <tr><td>Whitepaper Development</td><td>Project Manager / Mixed</td><td>16.1</td><td>120</td><td>193.20</td><td>1,756,364</td><td></td></tr>
+            <tr><td>Website Creation / Update</td><td>Web Dev / Designer</td><td>13.7</td><td>100</td><td>137.00</td><td>1,245,455</td><td></td></tr>
+            <tr><td>Legal Compliance Review</td><td>Legal Advisor</td><td>11.7</td><td>60</td><td>70.20</td><td>638,182</td><td></td></tr>
+            <tr><td>Evaluation of work in fiscal value</td><td>Project Manager / Fin.</td><td>16.1</td><td>20</td><td>32.20</td><td>292,727</td><td>internal & external rates</td></tr>
+            <tr><td>Move Comms (Telegram to Discord/Slack setup)</td><td>Community Mgr / PM</td><td>11.9</td><td>30</td><td>35.70</td><td>324,545</td><td></td></tr>
+            <tr class="totals-row"><td><strong>Phase 1 Subtotal</strong></td><td></td><td></td><td><strong>370</strong></td><td><strong>€532.70</strong></td><td><strong>4,842,727 LANA</strong></td><td></td></tr>
+        </tbody>
+    </table>
+
+    <h3>Phase 2: ICO Equivalent</h3>
+     <table>
+        <thead>
+            <tr><th>Task</th><th>Assigned Role (Primary)</th><th>Base Est. Hourly Rate (€)</th><th>Rough Est. Hours</th><th>Calculated Task Cost (€)</th><th>Est. Task Cost (LANA)</th><th>Comments</th></tr>
+        </thead>
+        <tbody>
+             <tr><td>Devise Alternative "Sale" Strategy</td><td>Project Manager / Legal</td><td>16.1</td><td>50</td><td>80.50</td><td>731,818</td><td></td></tr>
+             <tr><td>Plan Coin Distribution (Team, Inv. etc.)</td><td>Project Manager / Fin.</td><td>16.1</td><td>40</td><td>64.40</td><td>585,455</td><td></td></tr>
+             <tr><td>Execute "Sale"/Promotion Event</td><td>Marketing / PM</td><td>11.6</td><td>80</td><td>92.80</td><td>843,636</td><td></td></tr>
+             <tr><td>Execute Coin Distribution</td><td>Blockchain Dev / Fin.</td><td>21.5</td><td>50</td><td>107.50</td><td>977,273</td><td></td></tr>
+             <tr class="totals-row"><td><strong>Phase 2 Subtotal</strong></td><td></td><td></td><td><strong>220</strong></td><td><strong>€345.20</strong></td><td><strong>3,138,182 LANA</strong></td><td></td></tr>
+         </tbody>
+    </table>
+
+    <h3>Phase 3: Development</h3>
+     <table>
+        <thead>
+            <tr><th>Task</th><th>Assigned Role (Primary)</th><th>Base Est. Hourly Rate (€)</th><th>Rough Est. Hours</th><th>Calculated Task Cost (€)</th><th>Est. Task Cost (LANA)</th><th>Comments</th></tr>
+        </thead>
+        <tbody>
+             <tr><td>Blockchain (re)development (if needed)</td><td>Blockchain Dev</td><td>21.5</td><td>200</td><td>430.00</td><td>3,909,091</td><td></td></tr>
+             <tr><td>Wallet Integration / Update</td><td>Blockchain Dev</td><td>21.5</td><td>150</td><td>322.50</td><td>2,931,818</td><td></td></tr>
+             <tr><td>Establish Partnerships (Exchanges, Vendors etc.)</td><td>Project Manager / Mktg</td><td>16.1</td><td>100</td><td>161.00</td><td>1,463,636</td><td></td></tr>
+             <tr class="totals-row"><td><strong>Phase 3 Subtotal</strong></td><td></td><td></td><td><strong>450</strong></td><td><strong>€913.50</strong></td><td><strong>8,304,545 LANA</strong></td><td></td></tr>
+        </tbody>
+    </table>
+
+    <h3>Phase 4: Marketing & Promotion</h3>
+     <table>
+        <thead>
+            <tr><th>Task</th><th>Assigned Role (Primary)</th><th>Base Est. Hourly Rate (€)</th><th>Rough Est. Hours</th><th>Calculated Task Cost (€)</th><th>Est. Task Cost (LANA)</th><th>Comments</th></tr>
+        </thead>
+        <tbody>
+             <tr><td>Social Media Strategy & Setup</td><td>Marketing Specialist</td><td>11.6</td><td>40</td><td>46.40</td><td>421,818</td><td></td></tr>
+             <tr><td>Ongoing Social Media Campaigns</td><td>Marketing Specialist</td><td>11.6</td><td>160</td><td>185.60</td><td>1,687,273</td><td></td></tr>
+             <tr><td>Content Strategy & Planning</td><td>Marketing Specialist</td><td>11.6</td><td>30</td><td>34.80</td><td>316,364</td><td></td></tr>
+             <tr><td>Content Creation (Blog Posts - initial batch)</td><td>Marketing Specialist</td><td>11.6</td><td>80</td><td>92.80</td><td>843,636</td><td></td></tr>
+             <tr><td>Content Creation (Videos - initial set)</td><td>Marketing / Designer</td><td>11.6</td><td>120</td><td>139.20</td><td>1,265,455</td><td></td></tr>
+             <tr><td>Content Creation (Infographics - initial set)</td><td>Graphic Designer</td><td>13.7</td><td>60</td><td>82.20</td><td>747,273</td><td></td></tr>
+             <tr><td>Press Release Strategy & Writing (per release)</td><td>Marketing Specialist</td><td>11.6</td><td>20</td><td>23.20</td><td>210,909</td><td></td></tr>
+             <tr><td>Event Planning (Webinar)</td><td>Marketing Specialist</td><td>11.6</td><td>40</td><td>46.40</td><td>421,818</td><td></td></tr>
+             <tr><td>Event Planning (Conference participation prep)</td><td>Marketing Specialist</td><td>11.6</td><td>60</td><td>69.60</td><td>632,727</td><td></td></tr>
+             <tr><td>Event Planning (Meetup - per event)</td><td>Marketing / Comm Mgr</td><td>11.6</td><td>30</td><td>34.80</td><td>316,364</td><td></td></tr>
+             <tr><td>Integrated Graphic Design (Logo, Handbook, Templates)</td><td>Graphic Designer</td><td>13.7</td><td>100</td><td>137.00</td><td>1,245,455</td><td>Logo, handbook, templates</td></tr>
+             <tr class="totals-row"><td><strong>Phase 4 Subtotal</strong></td><td></td><td></td><td><strong>740</strong></td><td><strong>€892.00</strong></td><td><strong>8,109,091 LANA</strong></td><td></td></tr>
+        </tbody>
+    </table>
+
+    <h3>Phase 5: Community Building</h3>
+     <table>
+        <thead>
+            <tr><th>Task</th><th>Assigned Role (Primary)</th><th>Base Est. Hourly Rate (€)</th><th>Rough Est. Hours</th><th>Calculated Task Cost (€)</th><th>Est. Task Cost (LANA)</th><th>Comments</th></tr>
+        </thead>
+        <tbody>
+             <tr><td>Community Management Setup (Channels, Rules)</td><td>Community Manager</td><td>11.9</td><td>40</td><td>47.60</td><td>432,727</td><td></td></tr>
+             <tr><td>Ongoing Community Management (per month)</td><td>Community Manager</td><td>11.9</td><td>100</td><td>119.00</td><td>1,081,818</td><td></td></tr>
+             <tr><td>Influencer Identification & Outreach</td><td>Marketing Specialist</td><td>11.6</td><td>50</td><td>58.00</td><td>527,273</td><td></td></tr>
+             <tr><td>Airdrop Strategy & Planning</td><td>Marketing / Comm Mgr</td><td>11.6</td><td>30</td><td>34.80</td><td>316,364</td><td></td></tr>
+             <tr><td>Airdrop Execution & Support</td><td>Community Mgr / Dev</td><td>11.9</td><td>40</td><td>47.60</td><td>432,727</td><td></td></tr>
+             <tr><td>Ambassador Program Setup</td><td>Community Manager</td><td>11.9</td><td>30</td><td>35.70</td><td>324,545</td><td></td></tr>
+             <tr class="totals-row"><td><strong>Phase 5 Subtotal</strong></td><td></td><td></td><td><strong>290</strong></td><td><strong>€342.70</strong></td><td><strong>3,115,455 LANA</strong></td><td></td></tr>
+        </tbody>
+    </table>
+
+    <h3>Phase 6: Launch Phase</h3>
+     <table>
+        <thead>
+            <tr><th>Task</th><th>Assigned Role (Primary)</th><th>Base Est. Hourly Rate (€)</th><th>Rough Est. Hours</th><th>Calculated Task Cost (€)</th><th>Est. Task Cost (LANA)</th><th>Comments</th></tr>
+        </thead>
+        <tbody>
+             <tr><td>Mainnet RE-Launch Prep & Execution</td><td>Blockchain Dev / PM</td><td>21.5</td><td>100</td><td>215.00</td><td>1,954,545</td><td></td></tr>
+             <tr><td>Exchange Listing Applications & Process (per exch.)</td><td>Project Manager / Legal</td><td>16.1</td><td>80</td><td>128.80</td><td>1,170,909</td><td></td></tr>
+             <tr><td>User Onboarding Materials Creation</td><td>Marketing / Comm Mgr</td><td>11.6</td><td>50</td><td>58.00</td><td>527,273</td><td></td></tr>
+             <tr class="totals-row"><td><strong>Phase 6 Subtotal</strong></td><td></td><td></td><td><strong>230</strong></td><td><strong>€401.80</strong></td><td><strong>3,652,727 LANA</strong></td><td></td></tr>
+        </tbody>
+    </table>
+
+    <h3>Phase 7: Post-Launch Phase</h3>
+     <table>
+        <thead>
+            <tr><th>Task</th><th>Assigned Role (Primary)</th><th>Base Est. Hourly Rate (€)</th><th>Rough Est. Hours</th><th>Calculated Task Cost (€)</th><th>Est. Task Cost (LANA)</th><th>Comments</th></tr>
+        </thead>
+        <tbody>
+             <tr><td>Continuous Development (Ongoing - per month/sprint)</td><td>Blockchain Dev</td><td>21.5</td><td>160</td><td>344.00</td><td>3,127,273</td><td></td></tr>
+             <tr><td>Continuous Marketing (Ongoing - per month)</td><td>Marketing Specialist</td><td>11.6</td><td>80</td><td>92.80</td><td>843,636</td><td></td></tr>
+             <tr><td>Continuous Community Engagement (Ongoing - per month)</td><td>Community Manager</td><td>11.9</td><td>100</td><td>119.00</td><td>1,081,818</td><td></td></tr>
+             <tr class="totals-row"><td><strong>Phase 7 Subtotal (per month/iteration)</strong></td><td></td><td></td><td><strong>340</strong></td><td><strong>€555.80</strong></td><td><strong>5,052,727 LANA</strong></td><td></td></tr>
+        </tbody>
+    </table>
+
+    <hr>
+    <p><strong>Total Estimated Initial Cost (Phases 1-6): €3,427.90 / 31,163,127 LANA</strong><br>
+    <em>(Based on 10% EUR Rate Adjustment & 10x LANA Multiplier)</em></p>
+    <p><strong>Total Estimated Initial Hours (Phases 1-6): 2200 hours</strong><br>
+    <em>(Note: Post-Launch costs are ongoing)</em></p>
+    <hr>
+
+
+    <h2>5. Timeline</h2>
+    <p><strong>TBD</strong> - A detailed timeline with milestones needs to be established based on team availability and project priorities.</p>
+
+    <h2>6. Marketing, Promotion & Community Strategy Elements</h2>
+    <ul>
+        <li><strong>Website:</strong> Update existing site with sections for Homepage, About Us, Roadmap, Token Info, Community. Needs professional look and updated content.</li>
+        <li><strong>Content:</strong> Strategy and creation plan for blog posts, videos, infographics.</li>
+        <li><strong>Social Media:</strong> Strategy, setup, and ongoing campaigns.</li>
+        <li><strong>Events:</strong> Plan for webinars, conference participation, and meetups. Requires better coordination.</li>
+        <li><strong>PR:</strong> Strategy for press releases.</li>
+        <li><strong>Community Management:</strong> Setup and ongoing management of channels (e.g., Discord/Slack). Rules and support structure needed.</li>
+        <li><strong>Influencers/Ambassadors:</strong> Identify and outreach to influencers; potentially set up an ambassador program.</li>
+        <li><strong>Airdrops:</strong> Strategy, planning, execution, and support for airdrops. Move from ad-hoc to planned approach.</li>
+        <li><strong>Branding:</strong> Develop integrated graphic design including logo, handbook, templates. Potentially brochures/flyers.</li>
+    </ul>
+
+    <h2>7. Communication Channels</h2>
+    <ul>
+        <li>Plan to move from Telegram to managed alternatives like Discord or Slack.</li>
+        <li>Specific channel links need to be defined.</li>
+    </ul>
+
+    <h2>8. Legal & Compliance</h2>
+    <ul>
+        <li>Legal compliance review is required.</li>
+        <li>Need to ensure compliance with relevant regulations and obtain necessary licenses.</li>
+        <li>Address legal aspects of the "ICO equivalent" strategy and exchange listings.</li>
+    </ul>
+
+</body>
+</html>

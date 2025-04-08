@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lana Project - Presentation Demo</title>
+    <style>
+        /* --- General Styles --- */
+        :root {
+            --input-width: 90px;
+            --border-color: #d1d5db; /* gray-300 */
+            --table-header-bg: #f3f4f6; /* gray-100 */
+            --row-even-bg: #f9fafb; /* gray-50 */
+            --category-header-bg: #e5e7eb; /* gray-200 */
+            --totals-row-bg: #f3f4f6; /* gray-100 */
+            --grand-total-bg: #d1d5db; /* gray-300 */
+            --info-box-bg: #fefce8; /* yellow-50 */
+            --info-box-border: #facc15; /* yellow-400 */
+            --global-inputs-bg: #eff6ff; /* blue-50 */
+            --global-inputs-border: #93c5fd; /* blue-300 */
+            --code-bg: #e5e7eb; /* gray-200 */
+        }
+        html, body { /* Apply base settings for scroll snapping container */
+            height: 100%;
+            margin: 0;
+            overflow: hidden; /* Prevent body scroll, container handles it */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            color: #1f2937; /* gray-800 */
+        }
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Scroll Container */
+        #presentation-container {
+            height: 100vh; /* Full viewport height */
+            overflow-y: scroll; /* Enable vertical scrolling ON THE CONTAINER */
+            scroll-snap-type: y mandatory; /* Snap vertically, always snap */
+            background-color: #f8fafc; /* Default background */
+        }
+
+        /* Individual Sections (Slides) */
+        #presentation-container section {
+            height: 100vh; /* Each section is full viewport height */
+            width: 100%; /* Full width */
+            scroll-snap-align: start; /* Snap to the start (top) of the section */
+            /* Use clamp for responsive padding */
+            padding: clamp(1.5rem, 5vh, 3rem) clamp(2rem, 5vw, 6rem);
+            box-sizing: border-box; /* Include padding in height/width */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Center content vertically */
+            border-bottom: 1px solid #e5e7eb; /* Separator line */
+            position: relative; /* For scroll hint positioning */
+        }
+
+        /* Section-Specific Styles */
+        #intro { background-color: #eff6ff; /* blue-50 */ }
+        #plan-overview { background-color: #f0fdf4; /* green-50 */ }
+        #calculator-demo { background-color: #fefce8; /* yellow-50 */ }
+        #sample-costs { background-color: #fef2f2; /* red-50 */ }
+        #next-steps { background-color: #f1f5f9; /* slate-100 */ border-bottom: none; /* No line after last section */ }
+
+        /* --- Typography & Content Styling with clamp() --- */
+        h1, h2, h3 {
+            margin: 0 0 1rem 0;
+            font-weight: 600;
+            max-width: 800px; /* Keep headings from getting too wide */
+        }
+        h1 {
+            font-size: clamp(2rem, 5vw + 1rem, 3.5rem); /* Example: min 2rem, scales with 5vw, max 3.5rem */
+            text-align: center;
+        }
+        h2 {
+            font-size: clamp(1.5rem, 3vw + 1rem, 2.75rem); /* Example: min 1.5rem, scales with 3vw, max 2.75rem */
+            border-bottom: 2px solid rgba(0,0,0,0.1);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem; /* More space after H2 */
+        }
+        h3 {
+             font-size: clamp(1.1rem, 1.5vw + 0.5rem, 1.6rem); /* Example */
+             font-weight: 600;
+             margin-top: 1.5rem;
+             margin-bottom: 0.75rem;
+        }
+        p, ul {
+            font-size: clamp(1rem, 1.5vw + 0.5rem, 1.25rem); /* Example: min 1rem, scales with 1.5vw, max 1.25rem */
+            line-height: 1.7; /* Slightly increased line-height for readability */
+            max-width: 800px;
+        }
+        ul { list-style: disc; margin-left: 25px; padding: 0;}
+        li { font-size: inherit; margin-bottom: 0.6em;} /* Inherit from parent p/ul */
+
+        code {
+            font-family: monospace;
+            background-color: var(--code-bg);
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-size: 0.9em; /* Slightly smaller than surrounding text */
+        }
+        .totals-summary {
+            background-color: #fff;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            margin-top: 1rem;
+            display: inline-block; /* Fit content */
+            font-size: clamp(0.9rem, 1.2vw + 0.5rem, 1.1rem); /* Scale summary text too */
+        }
+        .totals-summary strong { display: block; margin-bottom: 0.5rem;}
+        .totals-summary span { font-weight: normal; } /* Ensure values aren't bold if parent is */
+        .totals-summary small { font-size: 0.85em; color: #4b5563; }
+
+        /* --- End Typography --- */
+
+        /* --- Info/Assumption Box --- */
+        .assumptions { /* Keep existing styles, ensure text inside scales */
+            background-color: var(--info-box-bg);
+            border: 1px solid var(--info-box-border);
+            padding: clamp(1rem, 3vw, 1.5rem); /* Responsive padding */
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+        }
+        .assumptions h2 { font-size: clamp(1.1rem, 2vw + 0.5rem, 1.5rem); } /* Scale assumptions title */
+        .assumptions ul ul { list-style: circle; margin-left: 25px; margin-top: 0.5em; }
+
+
+        /* --- Global Inputs Box --- */
+        .global-inputs {
+             background-color: var(--global-inputs-bg);
+             border: 1px solid var(--global-inputs-border);
+             padding: 1rem;
+             margin-bottom: 1.5rem;
+             border-radius: 8px;
+             display: flex;
+             flex-direction: column;
+             gap: 0.75rem;
+        }
+        .global-inputs div { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+        .global-inputs label { font-weight: 600; min-width: 180px; text-align: right; }
+        .global-inputs input[type="number"] { padding: 5px 8px; border: 1px solid var(--border-color); border-radius: 4px; width: var(--input-width); text-align: right; }
+        .global-inputs span small { color: #4b5563; font-size: 0.85em; }
+
+        /* --- Iframe Styling --- */
+        #calculator-iframe {
+            width: 100%;
+            height: 75vh; /* Adjust height as needed */
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background-color: #fff;
+            margin-top: 1rem; /* Space above iframe */
+        }
+
+        /* --- Scroll Hint --- */
+        .scroll-hint {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            color: #6b7280; /* gray-500 */
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); } 40% { transform: translateX(-50%) translateY(-10px); } 60% { transform: translateX(-50%) translateY(-5px); } }
+
+    </style>
+</head>
+<body>
+
+<main id="presentation-container">
+
+    <section id="intro">
+        <h1>Lana Project</h1>
+        <h2>Plan & Cost Estimation Review</h2>
+        <p>Reviewing the drafted plan, cost estimation model, and planning tools for the Lana Project re-launch and development.</p>
+        <div class="scroll-hint">Scroll Down ↓</div>
+    </section>
+
+    <section id="plan-overview">
+        <h2>Project Plan Outline (High-Level)</h2>
+        <p>The project involves several key phases:</p>
+        <ul>
+            <li><strong>Pre-Launch:</strong> Team formation, whitepaper, website setup, legal review, initial evaluations.</li>
+            <li><strong>ICO Equivalent:</strong> Devising alternative sale/promotion, planning & executing distribution.</li>
+            <li><strong>Development:</strong> Blockchain updates (if needed), wallet integration, partnerships.</li>
+            <li><strong>Marketing & Promotion:</strong> Strategy, social media, content creation, events, branding.</li>
+            <li><strong>Community Building:</strong> Management setup, influencer/ambassador programs, airdrops.</li>
+            <li><strong>Launch Phase:</strong> Mainnet re-launch, exchange listings, user onboarding.</li>
+            <li><strong>Post-Launch Phase:</strong> Continuous development, marketing, and community engagement.</li>
+        </ul>
+         <div class="scroll-hint">Scroll Down ↓</div>
+    </section>
+
+    <section id="calculator-demo">
+        <h2>Interactive Cost Calculator Demo</h2>
+        <p>This tool allows for flexible cost simulation based on adjustable parameters. Feel free to change values below (you may need to scroll within this embedded frame):</p>
+        <iframe id="calculator-iframe" src="./lana-cost-calculator.html" title="Lana Project Cost Calculator">
+            Your browser doesn't support iframes. Please access the calculator directly.
+        </iframe>
+         <div class="scroll-hint">Scroll Down ↓</div>
+    </section>
+
+    <section id="sample-costs">
+        <h2>Sample Cost Scenario & Assumptions</h2>
+        <p>The following totals represent a **sample calculation** based on current placeholder tasks/hours and the **default parameters** shown in the calculator:</p>
+        <ul>
+            <li>Default EUR Rate Adjustment: <strong>10%</strong> (Effective rate is 0.1x Base Rate)</li>
+            <li>Default LANA Payment Multiplier: <strong>10x</strong> (Risk/Reward Factor)</li>
+            <li>Default LANA/EUR Rate: <strong>0.0011</strong></li>
+        </ul>
+         <div class="totals-summary">
+            <strong>Total Estimated Initial Cost (Phases 1-6):</strong>
+            <span>€3,427.90 / 31,163,127 LANA</span> <br>
+            <small>(Based on 10% EUR Rate Adj. & 10x LANA Multiplier)</small><br><br>
+            <strong>Total Estimated Initial Hours:</strong>
+            <span>2200 hours</span>
+         </div>
+        <p><em>Note: These are illustrative figures. Actual costs depend on refined estimates and final parameter settings. See the static sample document for full task details based on these defaults.</em></p>
+         <div class="scroll-hint">Scroll Down ↓</div>
+    </section>
+
+    <section id="next-steps">
+        <h2>Discussion & Next Steps</h2>
+        <p>To refine this plan and move forward, we need input on:</p>
+        <ul>
+            <li>Feedback on the overall plan structure and phases.</li>
+            <li>Review and refinement of the placeholder task list and estimated hours.</li>
+            <li>Discussion and agreement on appropriate Base Hourly Rates (€) for different roles.</li>
+            <li>Agreement on the parameters for the Risk/Reward model (EUR Rate Adjustment %, LANA Payment Multiplier, reference LANA/EUR rate).</li>
+            <li>Definition of project milestones and a realistic timeline (Currently TBD).</li>
+            <li>Confirmation of team roles and responsibilities.</li>
+        </ul>
+        <p>Thank you!</p>
+        </section>
+
+</main>
+
+</body>
+</html>
