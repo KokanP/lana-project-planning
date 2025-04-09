@@ -4,19 +4,20 @@ This repository hosts files related to the planning and cost estimation for the 
 
 ## Hosted Version
 
-The interactive cost calculator and links to other documents are hosted via GitHub Pages at:
+The interactive cost calculator and links to other documents are hosted at:
 
-**[`https://lana.freq.band`](https://lana.freq.band/lana-project-planning/)**
+**[`https://lana.freq.band/`](https://lana.freq.band/)**
 
 ## Contents
 
-* **[`lana-cost-calculator.html`](https://lana.freq.band/lana-project-planning/lana-cost-calculator.html)**: The main **interactive** cost estimation tool built with HTML, CSS, and JavaScript. Allows for live calculation updates based on user inputs. *(Direct Link to Calculator)*
-* **[`lana_project_cost_sample.html`](https://lana.freq.band/lana-project-planning/lana_project_cost_sample.html)**: A **static HTML version** of the project documentation containing sample cost estimations based on default parameters (10% EUR Rate Adjustment, 10x LANA Multiplier). *(Direct Link to Static Sample Doc)*
-* **[`Building-Trust.html`](https://lana.freq.band/lana-project-planning/Building-Trust.html)**: Static HTML version of the 'Building Trust: Essential Website Elements for Level 1 Blockchain Cryptocurrencies' guidelines document. *(Direct Link to Trust Guidelines)*
-* **[`presentation.html`](https://lana.freq.band/lana-project-planning/presentation.html)**: A scrollable presentation demo covering the project plan, calculator, sample costs, and next steps. *(Direct Link to Presentation Demo)*
+* **[`lana-cost-calculator.html`](./lana-cost-calculator.html)**: The main **interactive** cost estimation tool built with HTML, CSS, and JavaScript. Allows for live calculation updates based on user inputs. *(Direct Link to Calculator)*
+* **[`lana_project_cost_sample.html`](./lana_project_cost_sample.html)**: A **static HTML version** of the project documentation containing sample cost estimations based on default parameters (10% EUR Rate Adjustment, 10x LANA Multiplier). *(Direct Link to Static Sample Doc)*
+* **[`Building-Trust.html`](./Building-Trust.html)**: Static HTML version of the 'Building Trust: Essential Website Elements for Level 1 Blockchain Cryptocurrencies' guidelines document. *(Direct Link to Trust Guidelines)*
+* **[`presentation.html`](./presentation.html)**: A scrollable presentation demo covering the project plan, calculator, sample costs, and next steps. *(Direct Link to Presentation Demo)*
+* **[`whales-analysis.html`](./whales-analysis.html)**: An analytical article examining the role and impact of cryptocurrency "whales" holding assets in low-volume market conditions. *(Direct Link to Whale Analysis)*
 * **`README.md`**: This file, explaining the repository contents.
 
-## Using the Interactive Calculator (`lana-costs-calculator.html`)
+## Using the Interactive Calculator (`lana-cost-calculator.html`)
 
 This HTML file provides a dynamic interface to explore estimated costs for the Lana Project, incorporating a risk/reward model for LANA token payments.
 
