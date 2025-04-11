@@ -12,6 +12,8 @@ from datetime import datetime
 API_BASE_URL_GENERAL = "https://chainz.cryptoid.info/lana/api.dws"
 # Delay between API calls in seconds (using 11s for safety)
 API_DELAY = 11
+# Output filename for the transaction data
+JSON_OUTPUT_FILENAME = "address_transactions.json"
 
 # --- Helper Function for API Calls ---
 # Note: This function now only needs one base URL
@@ -112,10 +114,10 @@ def run_analysis():
 
     # --- Fetch Recent Transactions for Top Addresses (Individually using q=multiaddr) ---
     print(f"\nFetching recent transactions for top addresses individually using q=multiaddr...")
-    address_tx_data = {} # Store tx data per address
+    address_tx_data = {} # Store raw tx data per address
     addresses_with_recent_rewards = [] # Store addresses identified with rewards
     processed_count = 0
-    max_addresses_to_check = 5 # Limit for initial proof-of-concept testing
+    max_addresses_to_check = 100 # <<< KEEPING TEST RUN AT 100
 
     # Store the first response snippet for debugging
     first_multiaddr_response_snippet = 'Not Available'
@@ -126,15 +128,13 @@ def run_analysis():
         print(f"Waiting {API_DELAY}s...")
         time.sleep(API_DELAY)
 
-        # --- MODIFIED API CALL ---
-        # Call q=multiaddr for *only* this single address
+        # --- API CALL using q=multiaddr for single address ---
         query_params = {'q': 'multiaddr', 'active': address_to_check}
-        # Optional: Get more/fewer transactions using 'n', e.g., query_params['n'] = 20
         tx_data = get_api_data(API_BASE_URL_GENERAL, query_params, api_key)
-        # --- END OF MODIFIED CALL ---
 
         if tx_data:
-            address_tx_data[address_to_check] = tx_data # Store the raw data
+            # Store the raw data returned by the API for this address
+            address_tx_data[address_to_check] = tx_data
 
             # DEBUG: Print structure for the FIRST address ONLY
             if processed_count == 0:
@@ -144,30 +144,31 @@ def run_analysis():
                 print(first_multiaddr_response_snippet[:1500] + ('...' if len(first_multiaddr_response_snippet) > 1500 else ''))
                 # --- !!! PARSING LOGIC FOR TRANSACTIONS NEEDED HERE !!! ---
                 print("\nParsing multiaddr transaction data (placeholder - needs update based on snippet above)...")
-                # TODO: Based on the snippet structure seen in logs, write code here to:
-                # 1. Access the actual list of transactions (likely under the 'txs' key).
-                # 2. Iterate through transactions.
-                # 3. Identify potential reward transactions (look for coinbase flags, specific input addresses like 'coinbase', consistent amounts, maybe output 'type'?).
-                # 4. If recent rewards found, add address_to_check to addresses_with_recent_rewards.
-                # Example *GUESS* assuming tx_data is dict with 'txs' list:
-                # if isinstance(tx_data, dict) and 'txs' in tx_data and isinstance(tx_data['txs'], list):
-                #    recent_rewards_found = False
-                #    for tx in tx_data['txs'][:20]: # Check recent N transactions
-                #        if isinstance(tx, dict):
-                #             # Check for signs of coinbase/reward
-                #             is_reward = tx.get('is_coinbase') or tx.get('input_addr') == 'coinbase' # Hypothetical keys
-                #             if is_reward:
-                #                 print(f"  Found potential reward transaction: {tx.get('hash')}")
-                #                 recent_rewards_found = True
-                #                 break # Found one, no need to check further for this address for now
-                #    if recent_rewards_found:
-                #        addresses_with_recent_rewards.append(address_to_check)
+                # TODO: Based on the snippet structure seen in logs, write code here
+
         else:
             print(f"Warning: Failed to fetch multiaddr data for address {address_to_check}", file=sys.stderr)
 
         processed_count += 1
 
     print(f"\nFinished fetching transaction data for {processed_count} addresses.")
+
+    # --- Save Collected Transaction Data ---
+    print(f"\nSaving transaction data for {len(address_tx_data)} addresses to {JSON_OUTPUT_FILENAME}...")
+    try:
+        with open(JSON_OUTPUT_FILENAME, 'w') as f:
+            json.dump(address_tx_data, f, indent=4)
+        print(f"Successfully saved data to {JSON_OUTPUT_FILENAME}")
+    except IOError as e:
+        print(f"Error: Failed to save data to {JSON_OUTPUT_FILENAME}: {e}", file=sys.stderr)
+    except TypeError as e:
+         print(f"Error: Failed to serialize data to JSON: {e}", file=sys.stderr)
+
+
+    # --- Identify Addresses with Recent Rewards ---
+    print("\nIdentifying addresses with recent rewards (placeholder)...")
+    # TODO: Implement logic here based on parsed transaction data from address_tx_data
+    # This parsing would now likely happen in a separate analysis step using the saved JSON file
 
     # --- Perform Original Concentration Calculations ---
     print("\nCalculating concentration (based on raw rich list)...")
@@ -188,13 +189,13 @@ def run_analysis():
 
     # --- Build Recent Rewards Output String (Placeholder) ---
     recent_rewards_output = f"### Addresses in Top {max_addresses_to_check} Checked with Recent Reward Activity\n\n"
-    # TODO: After parsing works, format the output:
     if addresses_with_recent_rewards:
        recent_rewards_output += f"Found {len(addresses_with_recent_rewards)} addresses with potential recent rewards:\n\n"
-       for addr in addresses_with_recent_rewards:
+       for addr in addresses_with_recent_rewards: # Maybe limit printed list
             recent_rewards_output += f"- {addr}\n"
     else:
-       recent_rewards_output += f"No addresses with obvious recent reward activity identified among the first {processed_count} checked (or parsing logic not implemented).\n"
+       # Updated message to reflect that analysis happens later
+       recent_rewards_output += f"Transaction data for {len(address_tx_data)} addresses saved to {JSON_OUTPUT_FILENAME}. Analysis for reward activity pending.\n"
 
 
     # --- Construct the Final Markdown Report ---

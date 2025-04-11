@@ -32,52 +32,59 @@ jobs:
 
       - name: Run Analysis Script
         # Runs the script and redirects standard output to analysis_output.md
+        # The script itself now saves address_transactions.json
         id: analysis
         env:
           # Pass the repository secret CRYPTOID_API_KEY as API_KEY env variable
           API_KEY: ${{ secrets.CRYPTOID_API_KEY }}
         run: |
-          # Execute python script, redirecting stdout to a file
+          # Execute python script, redirecting stdout (report) to a file
           python analysis.py > analysis_output.md
           # Check if output file was created and has content
           if [ ! -s analysis_output.md ]; then
-            echo "Analysis script produced no output or failed." >&2 # Print error to stderr
-            # Optionally fail the job if output is critical
-            # exit 1
+            echo "Analysis script report (stdout) is empty." >&2
           else
-            echo "Analysis script finished and produced output."
+            echo "Analysis script finished and produced report output."
+          fi
+          # Also check if the JSON file was created by the script
+          if [ ! -f address_transactions.json ]; then
+             echo "Warning: address_transactions.json file not found." >&2
+          else
+             echo "Found address_transactions.json file."
           fi
 
       - name: Commit results
-        # This step now runs again
+        # Commits both the report and the raw JSON data
         if: true # Ensure this step runs
         run: |
           # Configure git user for commit
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
-          # Define the file to be updated in the repository (e.g., RESULTS.md)
-          TARGET_FILE="RESULTS.md"
+          # Define the report file to be updated in the repository
+          TARGET_REPORT_FILE="RESULTS.md"
+          # Define the JSON data file created by the script
+          JSON_DATA_FILE="address_transactions.json"
 
-          echo "Copying analysis output to $TARGET_FILE"
-          # Copy the script's output file to the target file
-          # Use || true to prevent workflow failure if analysis_output.md somehow doesn't exist
-          cp analysis_output.md $TARGET_FILE || true
+          echo "Copying analysis report output to $TARGET_REPORT_FILE"
+          # Copy the script's stdout output to the target report file
+          cp analysis_output.md $TARGET_REPORT_FILE || echo "analysis_output.md not found, skipping copy."
 
-          # Add the target file to git staging
-          echo "Adding $TARGET_FILE to git"
-          git add $TARGET_FILE
+          # Add both the report file and the JSON data file to git staging
+          echo "Adding $TARGET_REPORT_FILE and $JSON_DATA_FILE to git"
+          git add $TARGET_REPORT_FILE $JSON_DATA_FILE
 
-          echo "Checking for changes in $TARGET_FILE..."
-          # Commit only if there are changes staged specifically to $TARGET_FILE
-          if git diff --staged --quiet $TARGET_FILE; then
-            echo "No changes detected in $TARGET_FILE."
+          echo "Checking for changes..."
+          # Commit only if there are changes staged in tracked files
+          # Use git status --porcelain to check for any changes
+          if output=$(git status --porcelain) && [ -z "$output" ]; then
+            echo "No changes detected to commit."
           else
-            echo "Changes detected in $TARGET_FILE, attempting commit..."
-            # Commit only the target file to avoid unrelated changes
-            git commit -m "Update LanaCoin analysis results" $TARGET_FILE
+            echo "Changes detected, attempting commit..."
+            # Commit all staged changes (-a might be too broad, rely on explicit add)
+            git commit -m "Update LanaCoin analysis results and data"
             echo "Pushing changes..."
-            # Push using default GITHUB_TOKEN (needs 'contents: write' permission)
+            # Push using default GITHUB_TOKEN
             git push
             echo "Changes pushed."
           fi
