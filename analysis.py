@@ -8,12 +8,13 @@ from datetime import datetime
 # print("--- Analysis.py script started execution! ---") # Debug
 
 # --- Constants ---
-# Note: Using different base URLs for different types of queries now
+# Use the main documented API endpoint
 API_BASE_URL_GENERAL = "https://chainz.cryptoid.info/lana/api.dws"
-API_BASE_URL_ADDR_TX = "https://chainz.cryptoid.info/lana/address.tx2.dws" # Undocumented endpoint for address TXs?
-API_DELAY = 11 # Delay between API calls in seconds (increased slightly for safety)
+# Delay between API calls in seconds (using 11s for safety)
+API_DELAY = 11
 
 # --- Helper Function for API Calls ---
+# Note: This function now only needs one base URL
 def get_api_data(base_url, query_params, api_key):
     """ Fetches data using API key from a specified base URL """
     if not api_key:
@@ -22,13 +23,13 @@ def get_api_data(base_url, query_params, api_key):
     params_with_key = query_params.copy()
     params_with_key['key'] = api_key
     try:
-        print(f"Requesting: {base_url} with params: {query_params}") # Debug
-        response = requests.get(base_url, params=params_with_key, timeout=30)
+        # Debug print showing the actual request details (q parameter visible)
+        print(f"Requesting: {base_url} with params: {params_with_key}")
+        response = requests.get(base_url, params=params_with_key, timeout=30) # Increased timeout
         response.raise_for_status()
         content_type = response.headers.get('Content-Type', '')
-        # Assume address TX endpoint returns JSON based on network log fmt=js
+        # multiaddr should return JSON
         if 'application/json' in content_type or 'javascript' in content_type:
-             # It might return JSONP (like fmt=js suggests), try to strip callback if needed
             text_response = response.text.strip()
             # Basic check for JSONP wrapper like "callback(...)"
             if text_response.endswith(')') and '(' in text_response:
@@ -37,10 +38,10 @@ def get_api_data(base_url, query_params, api_key):
                 if start < end:
                     text_response = text_response[start:end]
             try:
-                return json.loads(text_response) # Try parsing potentially cleaned text
+                return json.loads(text_response)
             except json.JSONDecodeError:
                  print(f"Error: Failed to decode JSON/JSONP response. Response text: {text_response[:200]}...", file=sys.stderr)
-                 return None # Failed parsing
+                 return None
         else:
              # Handle plain text for simpler endpoints like 'circulating'
              return response.text.strip()
@@ -50,9 +51,6 @@ def get_api_data(base_url, query_params, api_key):
         return None
     except requests.exceptions.HTTPError as http_err:
         print(f"Error: HTTP error occurred: {http_err} for params: {query_params}", file=sys.stderr)
-        # Special handling for 404 maybe?
-        if response.status_code == 404:
-            print("Note: Got a 404 Not Found error. Endpoint or parameters might be incorrect.")
         return None
     except requests.exceptions.RequestException as req_err:
         print(f"Error: An ambiguous request error occurred: {req_err} for params: {query_params}", file=sys.stderr)
@@ -112,12 +110,15 @@ def run_analysis():
         print("Could not fetch rich list data or data is not a dictionary.", file=sys.stderr)
         return None # Exit if rich list is essential
 
-    # --- Fetch Recent Transactions for Top Addresses (Individually) ---
-    print(f"\nFetching recent transactions for top addresses individually...")
+    # --- Fetch Recent Transactions for Top Addresses (Individually using q=multiaddr) ---
+    print(f"\nFetching recent transactions for top addresses individually using q=multiaddr...")
     address_tx_data = {} # Store tx data per address
     addresses_with_recent_rewards = [] # Store addresses identified with rewards
     processed_count = 0
-    max_addresses_to_check = 5 # Limit for initial testing
+    max_addresses_to_check = 5 # Limit for initial proof-of-concept testing
+
+    # Store the first response snippet for debugging
+    first_multiaddr_response_snippet = 'Not Available'
 
     for holder in parsed_holders[:max_addresses_to_check]:
         address_to_check = holder['address']
@@ -125,30 +126,33 @@ def run_analysis():
         print(f"Waiting {API_DELAY}s...")
         time.sleep(API_DELAY)
 
-        # Try fetching data using the discovered endpoint and hypothesized parameter 'a'
-        # Parameters might need adjustment (e.g., use 'id=', 'addr=', or the 'dud=' seen in logs)
-        tx_data = get_api_data(API_BASE_URL_ADDR_TX, {'a': address_to_check}, api_key)
+        # --- MODIFIED API CALL ---
+        # Call q=multiaddr for *only* this single address
+        query_params = {'q': 'multiaddr', 'active': address_to_check}
+        # Optional: Get more/fewer transactions using 'n', e.g., query_params['n'] = 20
+        tx_data = get_api_data(API_BASE_URL_GENERAL, query_params, api_key)
+        # --- END OF MODIFIED CALL ---
 
         if tx_data:
             address_tx_data[address_to_check] = tx_data # Store the raw data
 
             # DEBUG: Print structure for the FIRST address ONLY
             if processed_count == 0:
-                print(f"\nReceived transaction data for first address (type: {type(tx_data)}).")
-                print("Transaction data snippet (first address):")
-                tx_snippet_for_log = str(tx_data)
-                print(tx_snippet_for_log[:1500] + ('...' if len(tx_snippet_for_log) > 1500 else ''))
+                print(f"\nReceived multiaddr response for first address (type: {type(tx_data)}).")
+                print("Multiaddr response snippet (first address):")
+                first_multiaddr_response_snippet = str(tx_data) # Capture for report
+                print(first_multiaddr_response_snippet[:1500] + ('...' if len(first_multiaddr_response_snippet) > 1500 else ''))
                 # --- !!! PARSING LOGIC FOR TRANSACTIONS NEEDED HERE !!! ---
-                print("\nParsing transaction data (placeholder - needs update based on snippet above)...")
+                print("\nParsing multiaddr transaction data (placeholder - needs update based on snippet above)...")
                 # TODO: Based on the snippet structure seen in logs, write code here to:
-                # 1. Access the actual list of transactions.
+                # 1. Access the actual list of transactions (likely under the 'txs' key).
                 # 2. Iterate through transactions.
                 # 3. Identify potential reward transactions (look for coinbase flags, specific input addresses like 'coinbase', consistent amounts, maybe output 'type'?).
                 # 4. If recent rewards found, add address_to_check to addresses_with_recent_rewards.
-                # Example *GUESS* assuming tx_data is a list of tx dicts:
-                # if isinstance(tx_data, list):
+                # Example *GUESS* assuming tx_data is dict with 'txs' list:
+                # if isinstance(tx_data, dict) and 'txs' in tx_data and isinstance(tx_data['txs'], list):
                 #    recent_rewards_found = False
-                #    for tx in tx_data[:20]: # Check recent N transactions
+                #    for tx in tx_data['txs'][:20]: # Check recent N transactions
                 #        if isinstance(tx, dict):
                 #             # Check for signs of coinbase/reward
                 #             is_reward = tx.get('is_coinbase') or tx.get('input_addr') == 'coinbase' # Hypothetical keys
@@ -159,7 +163,7 @@ def run_analysis():
                 #    if recent_rewards_found:
                 #        addresses_with_recent_rewards.append(address_to_check)
         else:
-            print(f"Warning: Failed to fetch transaction data for address {address_to_check}", file=sys.stderr)
+            print(f"Warning: Failed to fetch multiaddr data for address {address_to_check}", file=sys.stderr)
 
         processed_count += 1
 
@@ -222,22 +226,13 @@ def run_analysis():
 {rich_list_snippet_for_log[:500]}...
 ```
 
-**Transaction Data Snippet (First Address Checked Only):**
+**MultiAddr Response Snippet (First Address Checked Only):**
 ```json
-{tx_snippet_for_log if 'tx_snippet_for_log' in locals() else 'Not Available'}...
+{first_multiaddr_response_snippet[:500]}...
 ```
 
 *End of Report*
 """
-    # Assign snippet for report - handle case where loop didn't run
-    if processed_count > 0 and address_to_check in address_tx_data:
-         tx_snippet_for_log = str(address_tx_data[address_to_check])[:500]
-    else:
-         tx_snippet_for_log = 'Not Available'
-    # Re-format the string with the potentially updated snippet
-    output_string = output_string.replace("{tx_snippet_for_log if 'tx_snippet_for_log' in locals() else 'Not Available'}...", tx_snippet_for_log)
-
-
     print("\n--- Analysis Output ---")
     print(output_string)
     print("--- End of Output ---")
