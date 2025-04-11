@@ -1,0 +1,84 @@
+name: Run LanaCoin Analysis
+
+on:
+  schedule:
+    # Example: Run daily at 8 AM UTC
+    - cron: '0 8 * * *'
+  workflow_dispatch: # Allows manual triggering from the Actions tab
+
+jobs:
+  build-and-analyze:
+    runs-on: ubuntu-latest
+    # Grant permissions for the GITHUB_TOKEN to push changes back to the repo
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4 # Use latest major version
+
+      - name: Set up Python
+        uses: actions/setup-python@v5 # Use latest major version
+        with:
+          python-version: '3.10' # Specify a concrete Python version (e.g., 3.10)
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # Only install requests if requirements.txt doesn't exist or is basic
+          # Alternatively, create requirements.txt with 'requests' in it
+          pip install requests
+          # if [ -f requirements.txt ]; then pip install -r requirements.txt; else pip install requests; fi
+
+      - name: Run Analysis Script
+        id: analysis # Give the step an id if you need to reference its output
+        env:
+          # Pass the repository secret CRYPTOID_API_KEY as API_KEY env variable
+          API_KEY: ${{ secrets.CRYPTOID_API_KEY }}
+        run: |
+          # Run the script and redirect its standard output to a file
+          # Make sure analysis.py is in the root, or adjust path e.g., python src/analysis.py
+          python analysis.py > analysis_output.md
+          # Check if output file was created and has content (optional robustness check)
+          if [ ! -s analysis_output.md ]; then
+            echo "Analysis script produced no output or failed."
+            # Decide if you want to fail the job or continue
+            # exit 1 # Example: fail the job if output is empty
+          fi
+          echo "Analysis script finished."
+
+
+      - name: Commit results
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+          # Define the file to be updated in the repository
+          # Option 1: Use a dedicated results file
+          TARGET_FILE="RESULTS.md"
+          # Option 2: Update the main README (be careful with this)
+          # TARGET_FILE="README.md"
+
+          echo "Copying analysis output to $TARGET_FILE"
+          # Copy the script's output to the target file
+          # Use || true to prevent failure if analysis_output.md doesn't exist (e.g., script failed)
+          cp analysis_output.md $TARGET_FILE || true
+
+          # Add the target file to git, even if it was just created
+          echo "Adding $TARGET_FILE to git"
+          git add $TARGET_FILE
+
+          echo "Checking for changes..."
+          # Commit only if there are changes staged to $TARGET_FILE
+          # Use git diff --staged --quiet $TARGET_FILE to check only the target file
+          if git diff --staged --quiet $TARGET_FILE; then
+            echo "No changes detected in $TARGET_FILE."
+          else
+            echo "Changes detected in $TARGET_FILE, attempting commit..."
+            # Commit only the target file explicitly to avoid unrelated changes
+            git commit -m "Update LanaCoin analysis results" $TARGET_FILE
+            echo "Pushing changes..."
+            # Use default GITHUB_TOKEN which has write permissions due to `permissions` block above
+            git push
+            echo "Changes pushed."
+          fi
