@@ -5,7 +5,7 @@ import os
 import time
 from datetime import datetime
 
-print("--- Analysis.py script started execution! ---")
+# print("--- Analysis.py script started execution! ---") # Debug
 
 # --- Constants ---
 # API base URL for LanaCoin on Chainz Cryptoid
@@ -26,35 +26,24 @@ def get_api_data(query_params, api_key):
     Returns:
         dict or list or str or None: Parsed JSON data, raw text if not JSON, or None if the request fails.
     """
-    # Check if API key is provided
     if not api_key:
         print("Error: API Key is required but not provided.", file=sys.stderr)
         return None
 
-    # Create a copy to avoid modifying the original dict
     params_with_key = query_params.copy()
-    # Add the API key - documentation confirmed 'key' parameter
     params_with_key['key'] = api_key
 
     try:
-        # Make request WITH the key included in parameters
-        # Debug print to show the request being made (excluding key value)
-        print(f"Requesting: {API_BASE_URL} with params: {query_params}")
-        # Perform the GET request with a timeout
+        # print(f"Requesting: {API_BASE_URL} with params: {query_params}") # Debug
         response = requests.get(API_BASE_URL, params=params_with_key, timeout=15)
-        # Raise an exception for bad status codes (4xx client error or 5xx server error)
         response.raise_for_status()
 
-        # Check content type - some simple APIs might return plain text
         content_type = response.headers.get('Content-Type', '')
-        # If JSON, parse and return
         if 'application/json' in content_type:
             return response.json()
-        # Otherwise, return raw text stripped of whitespace
         else:
             return response.text.strip()
 
-    # Handle specific exceptions
     except requests.exceptions.Timeout:
         print(f"Error: API request timed out for params: {query_params}", file=sys.stderr)
         return None
@@ -62,11 +51,9 @@ def get_api_data(query_params, api_key):
         print(f"Error: HTTP error occurred: {http_err} for params: {query_params}", file=sys.stderr)
         return None
     except requests.exceptions.RequestException as req_err:
-        # Catch any other request-related errors
         print(f"Error: An ambiguous request error occurred: {req_err} for params: {query_params}", file=sys.stderr)
         return None
     except json.JSONDecodeError:
-        # Handle cases where JSON decoding fails (e.g., invalid JSON format)
         print(f"Error: Failed to decode JSON response for params: {query_params}. Response text: {response.text[:200]}...", file=sys.stderr)
         return None
 
@@ -76,97 +63,109 @@ def run_analysis():
     """
     Runs the main analysis process: fetches data, analyzes, formats output.
     """
-    # Debug print indicating function start
-    print("--- run_analysis() function started ---")
+    # print("--- run_analysis() function started ---") # Debug
 
-    # Read API key from environment variable 'API_KEY'
     api_key = os.environ.get('API_KEY')
-    # Check if API key was successfully retrieved
     if not api_key:
         print("Error: Environment variable 'API_KEY' not set. Exiting.", file=sys.stderr)
-        return None # Stop execution if no key found
+        return None
 
-    # Print last few characters of API key for verification (masked)
-    print(f"Using API Key ending with: ...{api_key[-4:]}")
+    # print(f"Using API Key ending with: ...{api_key[-4:]}") # Debug
 
     # --- Make API calls ---
-    # Wait before the first call to respect rate limits
-    print(f"Waiting {API_DELAY}s before first API call...")
+    # print(f"Waiting {API_DELAY}s before first API call...") # Debug
     time.sleep(API_DELAY)
-    # Fetch circulating supply data
-    print("Fetching circulating supply...")
+    # print("Fetching circulating supply...") # Debug
     circulating_supply_data = get_api_data({'q': 'circulating'}, api_key)
-    circulating_supply = None # Initialize variable
-    # Process circulating supply data if fetched successfully
+    circulating_supply = None
     if circulating_supply_data is not None:
         try:
-            # Convert data to float (assuming plain text number)
             circulating_supply = float(circulating_supply_data)
-            print(f"Received circulating supply: {circulating_supply}")
+            # print(f"Received circulating supply: {circulating_supply}") # Debug
         except ValueError:
-            # Handle error if conversion fails
             print(f"Error: Could not convert circulating supply data '{circulating_supply_data}' to float.", file=sys.stderr)
-            return None # Exit if supply data is invalid
+            return None
     else:
-        # Handle failure to fetch supply data
         print("Failed to fetch circulating supply. Cannot continue analysis.", file=sys.stderr)
         return None
 
-    # Wait before the next call
-    print(f"Waiting {API_DELAY}s...")
+    # print(f"Waiting {API_DELAY}s...") # Debug
     time.sleep(API_DELAY)
-    # Fetch rich list data (top 1000 holders)
-    print("Fetching rich list (top 1000)...")
-    rich_list_data = get_api_data({'q': 'rich'}, api_key) # Use confirmed 'rich' query
+    # print("Fetching rich list (top 1000)...") # Debug
+    rich_list_data = get_api_data({'q': 'rich'}, api_key)
 
-    # Initialize placeholder variables for results
+    # Initialize variables
     parsed_holders = []
-    concentration_top_10 = "TBD" # To Be Determined
-    concentration_top_100 = "TBD"
-    rich_list_snippet_for_log = 'Not Available' # Default snippet value
+    concentration_top_10 = "Error" # Default to Error
+    concentration_top_100 = "Error"
+    rich_list_snippet_for_log = 'Not Available'
 
-    # Process rich list data if fetched successfully
-    if rich_list_data:
-        # Print data type for debugging
-        print(f"Received rich list data (type: {type(rich_list_data)}).")
-        # DEBUG: Print snippet for inspection in logs
-        print("Rich list snippet:")
-        rich_list_snippet_for_log = str(rich_list_data)
-        # Print first 1000 characters, add ellipsis if longer
-        print(rich_list_snippet_for_log[:1000] + ('...' if len(rich_list_snippet_for_log) > 1000 else ''))
+    if rich_list_data and isinstance(rich_list_data, dict):
+        # print(f"Received rich list data (type: {type(rich_list_data)}).") # Debug
+        rich_list_snippet_for_log = str(rich_list_data) # Store snippet before processing
 
-        # --- !!! PARSING LOGIC NEEDED HERE !!! ---
-        # Placeholder for parsing logic based on observed data structure
-        print("\nParsing rich list data (placeholder - needs update based on snippet above)...")
-        # TODO: Implement parsing based on actual data structure found in logs.
-        # Steps:
-        # 1. Access the actual list/dict containing holder info.
-        # 2. Iterate through holders.
-        # 3. Extract address and balance.
-        # 4. Convert balance to float.
-        # 5. Store in `parsed_holders`.
+        # --- PARSE RICH LIST DATA ---
+        print("\nParsing rich list data...")
+        # Access the list of holders safely using .get()
+        holders_list = rich_list_data.get('rich1000', [])
 
-        # --- Perform Calculations (Placeholder) ---
-        # Placeholder for concentration calculation logic
-        print("\nCalculating concentration (placeholder - needs parsed data and filtering)...")
-        # TODO: Implement calculations after parsing works.
-        # Steps:
-        # 1. Filter `parsed_holders` (e.g., remove exchanges).
-        # 2. Sum balances for top N filtered holders.
-        # 3. Calculate percentage of `circulating_supply`.
+        if isinstance(holders_list, list):
+            for holder_data in holders_list:
+                if isinstance(holder_data, dict):
+                    try:
+                        address = holder_data.get('addr')
+                        # Amount might be string or number, handle conversion
+                        balance_raw = holder_data.get('amount')
+                        if address is not None and balance_raw is not None:
+                            balance = float(balance_raw)
+                            parsed_holders.append({'address': address, 'balance': balance})
+                        else:
+                             print(f"Warning: Missing 'addr' or 'amount' in holder data: {holder_data}", file=sys.stderr)
+                    except (ValueError, TypeError) as e:
+                        print(f"Warning: Could not parse balance for holder data {holder_data}: {e}", file=sys.stderr)
+                else:
+                    print(f"Warning: Expected dict item in rich1000 list, got {type(holder_data)}", file=sys.stderr)
+            print(f"Successfully parsed {len(parsed_holders)} entries from rich list.")
+        else:
+            print(f"Error: Expected 'rich1000' key to contain a list, but got {type(holders_list)}.", file=sys.stderr)
+
+        # --- PERFORM CALCULATIONS ---
+        print("\nCalculating concentration...")
+        if parsed_holders and circulating_supply is not None and circulating_supply > 0:
+            # TODO: Implement filtering of exchange/contract addresses if needed
+            # For now, use the raw parsed list. API likely returns sorted.
+            # filtered_holders = [h for h in parsed_holders if h['address'] not in KNOWN_EXCHANGES]
+            filtered_holders = parsed_holders # Using raw list for now
+
+            if filtered_holders:
+                # Ensure sorted by balance descending (API probably does this, but safer to ensure)
+                filtered_holders.sort(key=lambda x: x['balance'], reverse=True)
+
+                # Calculate sums for top N
+                top_10_balance = sum(h['balance'] for h in filtered_holders[:10])
+                top_100_balance = sum(h['balance'] for h in filtered_holders[:100])
+
+                # Calculate percentages
+                concentration_top_10 = f"{(top_10_balance / circulating_supply) * 100:.2f}%"
+                concentration_top_100 = f"{(top_100_balance / circulating_supply) * 100:.2f}%"
+                print("Calculations complete.")
+            else:
+                print("No holders left after filtering (or filtering not implemented).")
+                concentration_top_10 = "N/A (No Holders)"
+                concentration_top_100 = "N/A (No Holders)"
+        else:
+            print("Cannot perform calculations: Missing parsed holders or valid circulating supply.")
+            concentration_top_10 = "Error (Missing Data)"
+            concentration_top_100 = "Error (Missing Data)"
 
     else:
-        # Handle failure to fetch rich list data
-        print("Could not fetch rich list data.", file=sys.stderr)
-        # Keep default placeholder values
+        print("Could not fetch rich list data or data is not a dictionary.", file=sys.stderr)
+        # Keep default 'Error'/'Not Available' values
 
     # --- Format Output ---
-    # Prepare the final report string
     print("\nFormatting results...")
-    # Get current UTC time for the report timestamp
     report_time_utc = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')
 
-    # Construct the Markdown report string
     output_string = f"""# LanaCoin Whale Analysis Report
 
 **Data Fetched:** {report_time_utc}
@@ -178,7 +177,7 @@ def run_analysis():
 * **Top 10 Holders (% of Circulating):** {concentration_top_10}
 * **Top 100 Holders (% of Circulating):** {concentration_top_100}
 
-*(Note: Calculations are placeholders until data parsing is implemented. Exchange/Contract addresses should ideally be excluded for accuracy)*
+*(Note: Based on raw API data. Known exchange/contract addresses are NOT filtered out in this version.)*
 
 ## Raw Rich List Data Snippet (for Debugging)
 
@@ -188,29 +187,20 @@ def run_analysis():
 
 *End of Report*
 """
-    # Print the final formatted output string to stdout
     print("\n--- Analysis Output ---")
     print(output_string)
     print("--- End of Output ---")
 
-    # Return the formatted string (useful if called as a module)
     return output_string
 
-# --- Script Execution Guard ---
-# Ensures the following code only runs when the script is executed directly
+# --- Script Execution ---
 if __name__ == "__main__":
-    # Debug print indicating entry into the main execution block
-    print("--- Script __main__ block started ---")
-    # Debug print before calling the main function
-    print("--- About to call run_analysis() ---")
-    # Call the main analysis function
+    # print("--- Script __main__ block started ---") # Debug
+    # print("--- About to call run_analysis() ---") # Debug
     analysis_result_string = run_analysis()
-    # Check if the function returned a result (indicating success)
-    if analysis_result_string:
-        print("--- run_analysis() completed successfully ---")
-    else:
-        # Indicate if the function returned None (likely due to an error)
-        print("--- run_analysis() did not complete successfully or returned None ---")
+    # if analysis_result_string: # Debug
+    #     print("--- run_analysis() completed successfully ---") # Debug
+    # else: # Debug
+    #     print("--- run_analysis() did not complete successfully or returned None ---") # Debug
 
-    # Debug print indicating the script is about to finish
-    print("--- Analysis.py script finished execution! ---")
+    # print("--- Analysis.py script finished execution! ---") # Debug

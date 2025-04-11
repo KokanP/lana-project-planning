@@ -30,45 +30,54 @@ jobs:
           # Optional: Use requirements.txt if you create one
           # if [ -f requirements.txt ]; then pip install -r requirements.txt; else pip install requests; fi
 
-      - name: Run Analysis Script (Debug Mode - Log All Output)
-        # This step now includes extra checks before running the script
+      - name: Run Analysis Script
+        # Runs the script and redirects standard output to analysis_output.md
         id: analysis
         env:
           # Pass the repository secret CRYPTOID_API_KEY as API_KEY env variable
           API_KEY: ${{ secrets.CRYPTOID_API_KEY }}
         run: |
-          echo "---------------------------------------------"
-          echo "DEBUGGING STEPS:"
-          echo "Current directory: $(pwd)"
-          echo "Listing files:"
-          ls -la
-          echo "Python version:"
-          python --version
-          echo "Checking analysis.py content:"
-          # Use cat || true to prevent workflow failure if file somehow doesn't exist
-          cat analysis.py || echo "analysis.py not found or cat failed"
-          echo "---------------------------------------------"
+          # Execute python script, redirecting stdout to a file
+          python analysis.py > analysis_output.md
+          # Check if output file was created and has content
+          if [ ! -s analysis_output.md ]; then
+            echo "Analysis script produced no output or failed." >&2 # Print error to stderr
+            # Optionally fail the job if output is critical
+            # exit 1
+          else
+            echo "Analysis script finished and produced output."
+          fi
 
-          echo "Attempting to run analysis.py..."
-          # Execute python script directly, printing all output to logs
-          # Make sure analysis.py is in the root, or adjust path e.g., python src/analysis.py
-          python analysis.py
-          echo "Finished attempting analysis.py."
-
-      - name: Commit results (DISABLED - Enable after debugging)
-        # This step is temporarily disabled until the script runs correctly
-        if: false
+      - name: Commit results
+        # This step now runs again
+        if: true # Ensure this step runs
         run: |
-          echo "Commit step skipped during debugging."
-          # Original commit logic would go here
-          # git config --local user.email "action@github.com"
-          # git config --local user.name "GitHub Action"
-          # TARGET_FILE="RESULTS.md"
-          # cp analysis_output.md $TARGET_FILE || true # analysis_output.md not created in debug mode
-          # git add $TARGET_FILE
-          # if git diff --staged --quiet $TARGET_FILE; then
-          #   echo "No changes detected in $TARGET_FILE."
-          # else
-          #   git commit -m "Update LanaCoin analysis results" $TARGET_FILE
-          #   git push
-          # fi
+          # Configure git user for commit
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+          # Define the file to be updated in the repository (e.g., RESULTS.md)
+          TARGET_FILE="RESULTS.md"
+
+          echo "Copying analysis output to $TARGET_FILE"
+          # Copy the script's output file to the target file
+          # Use || true to prevent workflow failure if analysis_output.md somehow doesn't exist
+          cp analysis_output.md $TARGET_FILE || true
+
+          # Add the target file to git staging
+          echo "Adding $TARGET_FILE to git"
+          git add $TARGET_FILE
+
+          echo "Checking for changes in $TARGET_FILE..."
+          # Commit only if there are changes staged specifically to $TARGET_FILE
+          if git diff --staged --quiet $TARGET_FILE; then
+            echo "No changes detected in $TARGET_FILE."
+          else
+            echo "Changes detected in $TARGET_FILE, attempting commit..."
+            # Commit only the target file to avoid unrelated changes
+            git commit -m "Update LanaCoin analysis results" $TARGET_FILE
+            echo "Pushing changes..."
+            # Push using default GITHUB_TOKEN (needs 'contents: write' permission)
+            git push
+            echo "Changes pushed."
+          fi
