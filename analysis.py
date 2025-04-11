@@ -5,6 +5,8 @@ import os
 import time # Import time module for delays
 from datetime import datetime # If needed for output string
 
+print("--- Analysis.py script started execution! ---")
+
 # --- Constants ---
 # API base URL for LanaCoin on Chainz Cryptoid
 API_BASE_URL = "https://chainz.cryptoid.info/lana/api.dws"
