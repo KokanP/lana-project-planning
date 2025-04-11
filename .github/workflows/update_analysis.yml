@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     # Grant permissions for the GITHUB_TOKEN to push changes back to the repo
     permissions:
-      contents: write
+      contents: write # Needed to commit changes back
 
     steps:
       - name: Checkout code
@@ -25,60 +25,40 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          # Only install requests if requirements.txt doesn't exist or is basic
-          # Alternatively, create requirements.txt with 'requests' in it
+          # Install requests, needed by analysis.py
           pip install requests
+          # Optional: Use requirements.txt if you create one
           # if [ -f requirements.txt ]; then pip install -r requirements.txt; else pip install requests; fi
 
-      - name: Run Analysis Script
-        id: analysis # Give the step an id if you need to reference its output
+      - name: Run Analysis Script (Debug Mode - Log All Output)
+        # This step now runs the script directly to show all stdout/stderr in logs
+        id: analysis
         env:
           # Pass the repository secret CRYPTOID_API_KEY as API_KEY env variable
           API_KEY: ${{ secrets.CRYPTOID_API_KEY }}
         run: |
-          # Run the script and redirect its standard output to a file
+          echo "Attempting to run analysis.py..."
+          # Execute python script directly, printing all output to logs
           # Make sure analysis.py is in the root, or adjust path e.g., python src/analysis.py
-          python analysis.py > analysis_output.md
-          # Check if output file was created and has content (optional robustness check)
-          if [ ! -s analysis_output.md ]; then
-            echo "Analysis script produced no output or failed."
-            # Decide if you want to fail the job or continue
-            # exit 1 # Example: fail the job if output is empty
-          fi
-          echo "Analysis script finished."
+          python analysis.py
+          echo "Finished attempting analysis.py."
 
-
-      - name: Commit results
+      - name: Commit results (DISABLED - Enable after debugging)
+        # This step is temporarily less useful until the script produces valid output
+        # We'll re-enable/modify it once analysis.py runs correctly
+        if: false # Temporarily disable this step
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-
-          # Define the file to be updated in the repository
-          # Option 1: Use a dedicated results file
-          TARGET_FILE="RESULTS.md"
-          # Option 2: Update the main README (be careful with this)
-          # TARGET_FILE="README.md"
-
-          echo "Copying analysis output to $TARGET_FILE"
-          # Copy the script's output to the target file
-          # Use || true to prevent failure if analysis_output.md doesn't exist (e.g., script failed)
-          cp analysis_output.md $TARGET_FILE || true
-
-          # Add the target file to git, even if it was just created
-          echo "Adding $TARGET_FILE to git"
-          git add $TARGET_FILE
-
-          echo "Checking for changes..."
-          # Commit only if there are changes staged to $TARGET_FILE
-          # Use git diff --staged --quiet $TARGET_FILE to check only the target file
-          if git diff --staged --quiet $TARGET_FILE; then
-            echo "No changes detected in $TARGET_FILE."
-          else
-            echo "Changes detected in $TARGET_FILE, attempting commit..."
-            # Commit only the target file explicitly to avoid unrelated changes
-            git commit -m "Update LanaCoin analysis results" $TARGET_FILE
-            echo "Pushing changes..."
-            # Use default GITHUB_TOKEN which has write permissions due to `permissions` block above
-            git push
-            echo "Changes pushed."
-          fi
+          echo "Commit step skipped during debugging."
+          # Original commit logic would go here, adjusted for debugging output if needed
+          # git config --local user.email "action@github.com"
+          # git config --local user.name "GitHub Action"
+          # TARGET_FILE="RESULTS.md"
+          # echo "Copying analysis output to $TARGET_FILE"
+          # cp analysis_output.md $TARGET_FILE || true # analysis_output.md not created in debug mode
+          # git add $TARGET_FILE
+          # if git diff --staged --quiet $TARGET_FILE; then
+          #   echo "No changes detected in $TARGET_FILE."
+          # else
+          #   git commit -m "Update LanaCoin analysis results" $TARGET_FILE
+          #   git push
+          # fi
