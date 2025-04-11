@@ -31,12 +31,24 @@ jobs:
           # if [ -f requirements.txt ]; then pip install -r requirements.txt; else pip install requests; fi
 
       - name: Run Analysis Script (Debug Mode - Log All Output)
-        # This step now runs the script directly to show all stdout/stderr in logs
+        # This step now includes extra checks before running the script
         id: analysis
         env:
           # Pass the repository secret CRYPTOID_API_KEY as API_KEY env variable
           API_KEY: ${{ secrets.CRYPTOID_API_KEY }}
         run: |
+          echo "---------------------------------------------"
+          echo "DEBUGGING STEPS:"
+          echo "Current directory: $(pwd)"
+          echo "Listing files:"
+          ls -la
+          echo "Python version:"
+          python --version
+          echo "Checking analysis.py content:"
+          # Use cat || true to prevent workflow failure if file somehow doesn't exist
+          cat analysis.py || echo "analysis.py not found or cat failed"
+          echo "---------------------------------------------"
+
           echo "Attempting to run analysis.py..."
           # Execute python script directly, printing all output to logs
           # Make sure analysis.py is in the root, or adjust path e.g., python src/analysis.py
@@ -44,16 +56,14 @@ jobs:
           echo "Finished attempting analysis.py."
 
       - name: Commit results (DISABLED - Enable after debugging)
-        # This step is temporarily less useful until the script produces valid output
-        # We'll re-enable/modify it once analysis.py runs correctly
-        if: false # Temporarily disable this step
+        # This step is temporarily disabled until the script runs correctly
+        if: false
         run: |
           echo "Commit step skipped during debugging."
-          # Original commit logic would go here, adjusted for debugging output if needed
+          # Original commit logic would go here
           # git config --local user.email "action@github.com"
           # git config --local user.name "GitHub Action"
           # TARGET_FILE="RESULTS.md"
-          # echo "Copying analysis output to $TARGET_FILE"
           # cp analysis_output.md $TARGET_FILE || true # analysis_output.md not created in debug mode
           # git add $TARGET_FILE
           # if git diff --staged --quiet $TARGET_FILE; then
