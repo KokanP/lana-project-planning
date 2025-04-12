@@ -24,11 +24,9 @@ PLOT_HIST_FILENAME = "balance_histogram.png"
 WHALES_ANALYSIS_URL = "whales-analysis.html" # Relative link
 CONTEXT_URL = "https://lana.freq.band/whales-analysis.html" # External context link
 
-
 # --- Helper Function for API Calls ---
 def get_api_data(base_url, query_params, api_key):
     """ Fetches data using API key from a specified base URL """
-    # (Same as previous version)
     if not api_key:
         print("Error: API Key is required but not provided.", file=sys.stderr)
         return None
@@ -52,8 +50,8 @@ def get_api_data(base_url, query_params, api_key):
                  print(f"Error: Failed to decode JSON/JSONP response. Response text: {text_response[:200]}...", file=sys.stderr)
                  return None
         else:
+             # Assume plain text number for circulating supply etc.
              return response.text.strip()
-    # ... (rest of error handling as before) ...
     except requests.exceptions.Timeout:
         print(f"Error: API request timed out for params: {query_params}", file=sys.stderr)
         return None
@@ -64,9 +62,7 @@ def get_api_data(base_url, query_params, api_key):
         print(f"Error: An ambiguous request error occurred: {req_err} for params: {query_params}", file=sys.stderr)
         return None
 
-
 # --- Plotting Functions (Save to file) ---
-# (Plotting functions remain the same - plot_top_n_chart, plot_lorenz_curve, plot_balance_histogram)
 def plot_top_n_chart(holders_data, num_holders_to_plot, filename):
     """Generates and saves a bar chart of top N holders."""
     print(f"\nGenerating Top {num_holders_to_plot} Holders Bar Chart...")
@@ -101,12 +97,14 @@ def plot_lorenz_curve(holders_data, filename):
         print("Error: No holder data available for Lorenz curve.")
         return False, None
     try:
+        # Use balances directly (already in whole coins as floats)
         balances_lorenz_coins = np.array([h['balance'] for h in holders_data if isinstance(h.get('balance'), (int, float))])
         balances_lorenz_coins = np.sort(balances_lorenz_coins)
         balances_lorenz_coins = balances_lorenz_coins[balances_lorenz_coins > 0]
         if len(balances_lorenz_coins) == 0:
             print("Error: No valid positive balances found for Lorenz curve.")
             return False, None
+        # Calculate cumulative percentage based on whole coins
         total_balance_coins = balances_lorenz_coins.sum()
         if total_balance_coins == 0:
              print("Error: Total balance is zero, cannot generate Lorenz curve.")
@@ -175,7 +173,6 @@ def plot_balance_histogram(holders_data, filename):
 # --- Helper Function to Encode Image ---
 def image_to_base64(filename):
     """Reads an image file and returns a base64 encoded data URI."""
-    # (Same as previous version)
     try:
         with open(filename, "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
@@ -194,26 +191,39 @@ def calculate_and_format_concentration(holders_data, circulating_supply):
     print("\nCalculating concentration...")
     conc_10_str = "N/A"
     conc_100_str = "N/A"
-    if not holders_data: return conc_10_str, conc_100_str
+
+    if not holders_data:
+        print("Cannot calculate concentration: No parsed holder data.")
+        return conc_10_str, conc_100_str
     if circulating_supply is None or not isinstance(circulating_supply, (int, float)) or circulating_supply <= 0:
         print(f"Cannot calculate concentration: Invalid circulating supply ({circulating_supply}).")
         return conc_10_str, conc_100_str
 
+    # Use holders with valid numeric balances (already sorted)
     filtered_holders = [h for h in holders_data if isinstance(h.get('balance'), (int, float))]
-    if not filtered_holders: return conc_10_str, conc_100_str
+
+    if not filtered_holders:
+        print("Cannot calculate concentration: No holders with valid balances found.")
+        return conc_10_str, conc_100_str
 
     try:
+        # Calculate sums using whole coin balances
         top_10_balance = sum(h['balance'] for h in filtered_holders[:10])
         top_100_balance = sum(h['balance'] for h in filtered_holders[:100])
+
+        # Calculate directly with whole coin values
         conc_10_val = (top_10_balance / circulating_supply) * 100
         conc_100_val = (top_100_balance / circulating_supply) * 100
+
         conc_10_str = f"{conc_10_val:.2f}%"
         conc_100_str = f"{conc_100_val:.2f}%"
         print("Calculations complete.")
+
     except Exception as e:
         print(f"Error during concentration calculation: {e}", file=sys.stderr)
         conc_10_str = "Error (Calc)"
         conc_100_str = "Error (Calc)"
+
     return conc_10_str, conc_100_str
 
 
@@ -239,7 +249,7 @@ def run_analysis():
     circulating_supply_data = get_api_data(API_BASE_URL_GENERAL, {'q': 'circulating'}, api_key)
     if circulating_supply_data is not None:
         try:
-            circulating_supply = float(circulating_supply_data)
+            circulating_supply = float(circulating_supply_data) # Supply is in whole coins
             print(f"Received circulating supply: {circulating_supply}")
         except ValueError:
             print(f"Error: Could not convert circulating supply data '{circulating_supply_data}' to float.", file=sys.stderr)
@@ -287,12 +297,14 @@ def run_analysis():
     # --- Generate Plots ---
     top_n_plot_success = plot_top_n_chart(parsed_holders, 20, PLOT_TOP_N_FILENAME)
     lorenz_plot_success, gini_coefficient = plot_lorenz_curve(parsed_holders, PLOT_LORENZ_FILENAME)
+    # pie_chart_success = plot_pie_chart(parsed_holders, circulating_supply, PLOT_PIE_FILENAME) # Keep removed
     hist_success = plot_balance_histogram(parsed_holders, PLOT_HIST_FILENAME)
 
     # --- Encode Images to Base64 ---
     print("\nEncoding images for HTML embedding...")
     top_n_base64 = image_to_base64(PLOT_TOP_N_FILENAME) if top_n_plot_success else None
     lorenz_base64 = image_to_base64(PLOT_LORENZ_FILENAME) if lorenz_plot_success else None
+    # pie_base64 = image_to_base64(PLOT_PIE_FILENAME) if pie_chart_success else None # Keep removed
     hist_base64 = image_to_base64(PLOT_HIST_FILENAME) if hist_success else None
 
     # --- Format Output as HTML ---
@@ -364,7 +376,6 @@ def run_analysis():
     lorenz_note_html = f'<p class="note">Gini Coefficient: {gini_str} (0 = perfect equality, 1 = perfect inequality)</p>' if lorenz_base64 and gini_str != "N/A" else ''
 
     # --- Add Interpretive Comments ---
-    # Added reference to the external context link here
     interpretation_text = f"""
     <h2>Interpretation</h2>
     <div class="interpretation">
