@@ -94,6 +94,22 @@
              margin: 20px 0;
              font-size: 0.95em;
         }
+         /* Style for the summary finding block */
+        .summary-highlight {
+             background-color: #fdd; /* Light red background */
+             border: 1px solid #d9534f; /* Red border */
+             border-left: 5px solid #d9534f; /* Thicker left red border */
+             padding: 10px 15px;
+             margin: 20px 0; /* Add some margin */
+             border-radius: 4px; /* Optional rounded corners */
+        }
+        /* Optional: Adjust heading within the highlight */
+        .summary-highlight p strong:first-child {
+             color: #d9534f; /* Make "Povzetek ugotovitve:" red */
+             display: block; /* Make it appear more like a heading */
+             margin-bottom: 5px;
+             font-size: 1.1em; /* Slightly larger font */
+        }
         .debug-info {
              margin-top: 40px;
              border-top: 2px dashed #ccc;
@@ -155,13 +171,14 @@
             <p>Ta razdelek analizira porazdelitev LANA med Top 1000 najbogatejšimi naslovi na podlagi API klica `q=rich`.</p>
             <ul>
                 <li>Top 10 imetnikov (% količine v obtoku): <strong>35.62%</strong></li>
+                <li>Top 20 imetnikov (% količine v obtoku): <strong>46.17%</strong></li>
                 <li>Top 100 imetnikov (% količine v obtoku): <strong>73.01%</strong></li>
                 <li>Ginijev koeficient (Top 1000): <strong>0.813</strong> <em>(Izračunano iz Lorenzove krivulje na podlagi podatkov `q=rich`)</em></li>
             </ul>
 
             <div class="interpretation">
                 <h3>Interpretacija</h3>
-                <p>Odstotki koncentracije so izjemno visoki: <strong>Top 10 naslovov ima v lasti več kot 35%</strong>, <strong>Top 100 pa več kot 73%</strong> vseh LANA v obtoku. To kaže na znatno koncentracijo bogastva v zelo majhnem številu denarnic. Takšna koncentracija lahko poveča tveganje za tržno manipulacijo in nestanovitnost, saj lahko odločitve nekaj velikih imetnikov ("kitov") nesorazmerno vplivajo na ceno in likvidnost, ki je na voljo manjšim udeležencem.</p>
+                <p>Odstotki koncentracije so izjemno visoki: <strong>Top 10 naslovov ima v lasti več kot 35%</strong>, <strong>Top 20 ima v lasti več kot 46%</strong>, <strong>Top 100 pa več kot 73%</strong> vseh LANA v obtoku. To kaže na znatno koncentracijo bogastva v zelo majhnem številu denarnic. Takšna koncentracija lahko poveča tveganje za tržno manipulacijo in nestanovitnost, saj lahko odločitve nekaj velikih imetnikov ("kitov") nesorazmerno vplivajo na ceno in likvidnost, ki je na voljo manjšim udeležencem.</p>
                 <p>Ginijev koeficient zagotavlja enotno število za merjenje neenakosti (0 = popolna enakost, 1 = popolna neenakost). Izračunana vrednost <strong>0.813</strong> je zelo visoka, kar potrjuje resno neravnovesje v porazdelitvi bogastva med najvišjimi naslovi, ki jih navaja API. Visoka ekonomska neenakost je lahko škodljiva, saj lahko odvrača širšo udeležbo, zmanjša hitrost kroženja denarja, če veliki imetniki ostanejo pasivni, in vzbuja pomisleke glede decentralizacije in pravičnosti ekosistema. Za več konteksta o vplivu kitov glejte <a href="https://lana.freq.band/whales-analysis.html" target="_blank" rel="noopener noreferrer">glavno stran analize</a>.</p>
             </div>
 
@@ -196,12 +213,18 @@
         <hr>
 
         <section>
-            <h2>3. Porazdelitev najditeljev blokov (analiza rudarjenja)</h2>
+            <h2>3. Porazdelitev najditeljev blokov (analiza stejkanja/rudarjenja)</h2>
+             <div class="summary-highlight">
+                 <p><strong>Povzetek ugotovitve:</strong> Primerjava med porazdelitvijo bogastva in porazdelitvijo najditeljev blokov (nagrad za stejkanje) razkriva znatno nesorazmerje. Medtem ko ima <strong>Top 20 najbogatejših naslovov v lasti približno 46.17%</strong> količine v obtoku, prejmejo približno <strong>70.2% nedavnih nagrad za stejkanje</strong> (merjeno kot odstotek zadnjih 1000 blokov, ki so jih našli navedeni stakerji).</p>
+                 <p>To kaže, da porazdelitev nagrad <strong>ni sorazmerna</strong> z bogastvom; Top 20 prejema nagrade po stopnji, ki je približno <strong>1.52-krat višja</strong>, kot bi nakazoval zgolj njihov delež bogastva. To kaže na povratno zanko, kjer se lahko koncentracija bogastva dodatno poveča zaradi mehanizma stejkanja.</p>
+                 <p class="note"><em>(Opomba: Izračuni odstotkov nagrad temeljijo na naslovih in odstotkih blokov, navedenih v razpoložljivem posnetku podatkov spletne strani.)</em></p>
+             </div>
+
             <p>Ta razdelek prikazuje, kateri naslovi ali bazeni so našli največji odstotek nedavnih blokov.</p>
             <div class="interpretation">
                 <h3>Interpretacija</h3>
-                <p>Ti podatki razkrivajo potencialno centralizacijo pri produkciji blokov LanaCoin (rudarjenju). Spodnja tabela prikazuje, da je <strong>Top 1 naslov (tudi najbogatejši) našel 15%</strong> zadnjih 1000 blokov. Več drugih naslovov iz seznama Top 10 najbogatejših se prav tako vidno pojavlja na seznamu najditeljev blokov (npr. Bogati #3, #5, #6, #7, #8, #9, #10).</p>
-                <p>To kaže na močno korelacijo med posedovanjem bogastva in ustvarjanjem novega bogastva prek nagrad za rudarjenje v ekosistemu LanaCoin. Entitete, ki imajo v lasti največ LANA, prejemajo tudi nesorazmerno velik delež na novo izrudarjenih kovancev, kar dodatno utrjuje njihove položaje in potencialno ustvarja povratno zanko, ki sčasoma povečuje koncentracijo bogastva. Ta dinamika "bogati postajajo bogatejši" je lahko pomemben pomislek za dolgoročno decentralizacijo in zdravje omrežja.</p>
+                <p>Ti podatki razkrivajo potencialno centralizacijo pri produkciji blokov LanaCoin (stejkanje/rudarjenje). Spodnja tabela prikazuje, da je <strong>Top 1 naslov (tudi najbogatejši) našel 15%</strong> zadnjih 1000 blokov. Več drugih naslovov iz seznama Top 20 najbogatejših se prav tako vidno pojavlja na seznamu najditeljev blokov (npr. Bogati #2, #3, #4, #5, #6, #7, #8, #9, #10, #11, #13, #14, #15, #17, #18, #19, #20).</p>
+                <p>To kaže na močno korelacijo med posedovanjem bogastva in ustvarjanjem novega bogastva prek nagrad za stejkanje/rudarjenje v ekosistemu LanaCoin. Entitete, ki imajo v lasti največ LANA, prejemajo tudi nesorazmerno velik delež na novo ustvarjenih kovancev, kar dodatno utrjuje njihove položaje in potencialno ustvarja povratno zanko, ki sčasoma povečuje koncentracijo bogastva. Ta dinamika "bogati postajajo bogatejši" je lahko pomemben pomislek za dolgoročno decentralizacijo in zdravje omrežja.</p>
             </div>
 
             <h3>Porazdelitev najditeljev blokov (zadnjih 1000 blokov)</h3>
@@ -258,8 +281,8 @@
         <section>
             <h2>5. Povezava do konteksta</h2>
             <p>Za dodatni kontekst in razpravo o analizi kitov LanaCoin glejte:
-            <a href="analiza-kitov_sl.html" rel="noopener noreferrer">Vpliv pasivnih velikih imetnikov ("kitov") na kripto trgih z nizkim obsegom
-</a></p>
+            <a href="https://lana.freq.band/whales-analysis.html" target="_blank" rel="noopener noreferrer">https://lana.freq.band/whales-analysis.html</a></p>
+            <p>Nazaj na stran <a href="analiza-kitov_sl.html">Analiza Kitov - Kontekst</a> (če gledate znotraj repozitorija).</p>
         </section>
 
         <hr>
