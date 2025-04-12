@@ -94,6 +94,22 @@
              margin: 20px 0;
              font-size: 0.95em;
         }
+        /* Style for the summary finding block */
+        .summary-highlight {
+             background-color: #fdd; /* Light red background */
+             border: 1px solid #d9534f; /* Red border */
+             border-left: 5px solid #d9534f; /* Thicker left red border */
+             padding: 10px 15px;
+             margin: 20px 0; /* Add some margin */
+             border-radius: 4px; /* Optional rounded corners */
+        }
+        /* Optional: Adjust heading within the highlight */
+        .summary-highlight p strong:first-child {
+             color: #d9534f; /* Make "Summary Finding:" red */
+             display: block; /* Make it appear more like a heading */
+             margin-bottom: 5px;
+             font-size: 1.1em; /* Slightly larger font */
+        }
         .debug-info {
              margin-top: 40px;
              border-top: 2px dashed #ccc;
@@ -155,13 +171,14 @@
             <p>This section analyzes the distribution of LANA among the Top 1000 richest addresses based on the `q=rich` API call.</p>
             <ul>
                 <li>Top 10 Holders (% of Circulating): <strong>35.62%</strong></li>
+                <li>Top 20 Holders (% of Circulating): <strong>46.17%</strong></li>
                 <li>Top 100 Holders (% of Circulating): <strong>73.01%</strong></li>
                 <li>Gini Coefficient (Top 1000): <strong>0.813</strong> <em>(Calculated from Lorenz Curve based on `q=rich` data)</em></li>
             </ul>
 
             <div class="interpretation">
                 <h3>Interpretation</h3>
-                <p>The concentration percentages are extremely high: the <strong>Top 10 addresses hold over 35%</strong> and the <strong>Top 100 hold over 73%</strong> of all circulating LANA. This indicates a significant concentration of wealth in a very small number of wallets. Such concentration can increase the risk of market manipulation and volatility, as decisions made by a few large holders ("whales") can disproportionately affect the price and liquidity available to smaller participants.</p>
+                <p>The concentration percentages are extremely high: the <strong>Top 10 addresses hold over 35%</strong>, the <strong>Top 20 hold over 46%</strong>, and the <strong>Top 100 hold over 73%</strong> of all circulating LANA. This indicates a significant concentration of wealth in a very small number of wallets. Such concentration can increase the risk of market manipulation and volatility, as decisions made by a few large holders ("whales") can disproportionately affect the price and liquidity available to smaller participants.</p>
                 <p>The Gini coefficient provides a single number to measure inequality (0 = perfect equality, 1 = perfect inequality). The calculated value of <strong>0.813</strong> is very high, confirming a severe imbalance in wealth distribution among the top addresses listed by the API. High economic inequality can be detrimental as it may discourage broader participation, reduce the velocity of money if large holders remain passive, and raise concerns about the decentralization and fairness of the ecosystem. For more context on whale influence, see the <a href="https://lana.freq.band/whales-analysis.html" target="_blank" rel="noopener noreferrer">main analysis page</a>.</p>
             </div>
 
@@ -196,12 +213,18 @@
         <hr>
 
         <section>
-            <h2>3. Block Finder Distribution (Mining Analysis)</h2>
+            <h2>3. Block Finder Distribution (Staking/Mining Analysis)</h2>
+            <div class="summary-highlight">
+                <p><strong>Summary Finding:</strong> A comparison between wealth distribution and block finder (staking reward) distribution reveals a significant disparity. While the <strong>Top 20 richest addresses hold approximately 46.17%</strong> of the circulating supply, they receive approximately <strong>70.2% of the recent staking rewards</strong> (measured by the percentage of the last 1000 blocks found by listed stakers).</p>
+                <p>This indicates that the reward distribution is <strong>not proportional</strong> to wealth; the Top 20 receive rewards at a rate roughly <strong>1.52 times higher</strong> than their wealth share alone would suggest. This points towards a feedback loop where wealth concentration may be further amplified by the staking mechanism.</p>
+                <p class="note"><em>(Note: Reward percentage calculations are based on the addresses and block percentages listed in the available website data snapshot.)</em></p>
+            </div>
+
             <p>This section shows which addresses or pools have found the largest percentage of recent blocks.</p>
             <div class="interpretation">
                 <h3>Interpretation</h3>
-                <p>This data reveals potential centralization in LanaCoin's block production (mining). The table below shows that the <strong>Top 1 address (also the richest) found 15%</strong> of the last 1000 blocks. Several other addresses from the Top 10 rich list also appear prominently in the block finder list (e.g., Rich #3, #5, #6, #7, #8, #9, #10).</p>
-                <p>This indicates a strong correlation between holding wealth and generating new wealth through mining rewards in the LanaCoin ecosystem. The entities that hold the most LANA are also receiving a disproportionately large share of the newly mined coins, further consolidating their positions and potentially creating a feedback loop that increases wealth concentration over time. This "rich get richer" dynamic can be a significant concern for the long-term decentralization and health of the network.</p>
+                <p>This data reveals potential centralization in LanaCoin's block production (staking/mining). The table below shows that the <strong>Top 1 address (also the richest) found 15%</strong> of the last 1000 blocks. Several other addresses from the Top 20 rich list also appear prominently in the block finder list (e.g., Rich #2, #3, #4, #5, #6, #7, #8, #9, #10, #11, #13, #14, #15, #17, #18, #19, #20).</p>
+                <p>This indicates a strong correlation between holding wealth and generating new wealth through staking/mining rewards in the LanaCoin ecosystem. The entities that hold the most LANA are also receiving a disproportionately large share of the newly generated coins, further consolidating their positions and potentially creating a feedback loop that increases wealth concentration over time. This "rich get richer" dynamic can be a significant concern for the long-term decentralization and health of the network.</p>
             </div>
 
             <h3>Block Finder Distribution (Last 1000 Blocks)</h3>

@@ -13,7 +13,7 @@ body {
     background-color: #f9f9f9;
     color: #333;
     line-height: 1.6;
-}<br clear="all">
+}
 
 h1, h2, h3 {
     color: #1a1a1a;
@@ -91,8 +91,8 @@ th {
 
     <p>Projekt LanaCoin stoji na razpotju. Analiza potrjuje znatno koncentracijo lastništva med majhnim številom "kitov", poleg ambicioznih načrtov za prenovo in rast. Medtem ko se decentralizirana narava kriptovalut pogosto hvali, trenutna struktura LanaCoina predstavlja kritično ranljivost: preveliko zanašanje na največje imetnike ("kitova ekonomija") skupaj z neločljivo potrebo po financiranem, strokovnem upravljanju lahko privede do stagnacije projekta in njegovega končnega usihanja, namesto da bi uspeval.</p>
 
-    <h2>"Kruta" realnost: prevlada kitov</h2>
-    <p>Nedavna analiza riše jasno sliko ekstremne koncentracije bogastva znotraj ekosistema LanaCoin. Top 10 imetnikov nadzoruje približno <strong>35,6 % krožeče ponudbe</strong>, medtem ko Top 100 imetnikov poseduje <strong>osupljivih 73%</strong>. Izračunani Ginijev koeficient 0,813 dodatno poudarja to visoko stopnjo neenakosti.</p>
+    <h2>Stroga realnost: prevlada kitov</h2>
+    <p>Nedavna analiza riše jasno sliko ekstremne koncentracije bogastva znotraj ekosistema LanaCoin. Top 10 imetnikov nadzoruje približno 35,6 % krožeče ponudbe, medtem ko Top 100 imetnikov poseduje osupljivih 73 %. Izračunani Ginijev koeficient 0,813 dodatno poudarja to visoko stopnjo neenakosti.</p>
 
     <p>Takšna koncentracija predstavlja znatna tveganja. Kot je navedeno v interpretaciji analize v ustvarjenem poročilu, lahko vodi do povečane tržne nestanovitnosti in daje velikim imetnikom nesorazmeren vpliv na smer projekta in tržno stabilnost. Odločitve, ki jih sprejme (ali ne sprejme) peščica akterjev, lahko drastično vplivajo na vrednost žetona in potek projekta, potencialno prevladajo nad širšimi interesi skupnosti.</p>
 
