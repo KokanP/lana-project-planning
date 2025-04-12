@@ -19,7 +19,7 @@ API_DELAY = 11
 # Filenames for saved plots
 PLOT_TOP_N_FILENAME = "top_holders_chart.png"
 PLOT_LORENZ_FILENAME = "lorenz_curve.png"
-PLOT_PIE_FILENAME = "concentration_pie_chart.png"
+# PLOT_PIE_FILENAME = "concentration_pie_chart.png" # Removed
 PLOT_HIST_FILENAME = "balance_histogram.png"
 # Link for context
 CONTEXT_URL = "https://lana.freq.band/whales-analysis.html"
@@ -63,9 +63,10 @@ def get_api_data(base_url, query_params, api_key):
         return None
 
 # --- Plotting Functions (Save to file) ---
+# (Plotting functions remain the same as previous version - plot_top_n_chart, plot_lorenz_curve, plot_balance_histogram)
+# --- plot_pie_chart remains removed ---
 def plot_top_n_chart(holders_data, num_holders_to_plot, filename):
     """Generates and saves a bar chart of top N holders."""
-    # (Same as previous version)
     print(f"\nGenerating Top {num_holders_to_plot} Holders Bar Chart...")
     if not holders_data or len(holders_data) < num_holders_to_plot:
         print(f"Error: Not enough holder data ({len(holders_data)}) to plot top {num_holders_to_plot}.")
@@ -93,7 +94,6 @@ def plot_top_n_chart(holders_data, num_holders_to_plot, filename):
 
 def plot_lorenz_curve(holders_data, filename):
     """Generates and saves a Lorenz curve plot."""
-    # (Same as previous version)
     print("\nGenerating Lorenz Curve for Wealth Distribution...")
     if not holders_data:
         print("Error: No holder data available for Lorenz curve.")
@@ -134,55 +134,8 @@ def plot_lorenz_curve(holders_data, filename):
         print(f"Error generating Lorenz curve: {e}", file=sys.stderr)
         return False, None
 
-# --- Plotting Function: Pie Chart ---
-def plot_pie_chart(holders_data, circulating_supply, filename):
-    """Generates and saves a pie chart showing concentration."""
-    # (Same as previous version)
-    print("\nGenerating Concentration Pie Chart...")
-    if not holders_data or circulating_supply is None or circulating_supply <= 0:
-        print("Error: Insufficient data for pie chart (holders/supply).")
-        return False
-    try:
-        valid_holders = [h for h in holders_data if isinstance(h.get('balance'), (int, float))]
-        if not valid_holders:
-             print("Error: No valid holder balances found for pie chart.")
-             return False
-        circ_supply_base = circulating_supply * 1e8
-        bal_top_10 = sum(h['balance'] for h in valid_holders[:10])
-        bal_11_100 = sum(h['balance'] for h in valid_holders[10:100])
-        bal_101_1000 = sum(h['balance'] for h in valid_holders[100:1000])
-        total_top_1000_bal = bal_top_10 + bal_11_100 + bal_101_1000
-        bal_remainder = circ_supply_base - total_top_1000_bal
-        bal_remainder = max(0, bal_remainder)
-        sizes_base = [bal_top_10, bal_11_100, bal_101_1000, bal_remainder]
-        labels = [
-            f'Top 10 ({bal_top_10 / circ_supply_base:.1%})',
-            f'Next 90 (11-100) ({bal_11_100 / circ_supply_base:.1%})',
-            f'Next 900 (101-1000) ({bal_101_1000 / circ_supply_base:.1%})',
-            f'Remainder ({bal_remainder / circ_supply_base:.1%})'
-        ]
-        sizes_to_plot = sizes_base
-        labels_to_plot = labels
-        if not sizes_to_plot or sum(sizes_to_plot) <= 0:
-             print("Error: No valid data slices found for pie chart after calculation.")
-             return False
-        plt.figure(figsize=(8, 8))
-        explode = [0, 0, 0, 0.1] if len(sizes_to_plot) == 4 else None
-        plt.pie(sizes_to_plot, labels=labels_to_plot, autopct='%1.1f%%', startangle=90, pctdistance=0.85, explode=explode)
-        plt.title('LanaCoin Balance Concentration by Holder Group')
-        plt.tight_layout()
-        plt.savefig(filename)
-        plt.close()
-        print(f"Successfully saved pie chart to {filename}")
-        return True
-    except Exception as e:
-        print(f"Error generating pie chart: {e}", file=sys.stderr)
-        return False
-
-# --- Histogram function ---
 def plot_balance_histogram(holders_data, filename):
     """Generates and saves a histogram of holder balances."""
-    # (Same as previous version)
     print("\nGenerating Balance Distribution Histogram...")
     if not holders_data:
         print("Error: No holder data available for histogram.")
@@ -241,13 +194,13 @@ def run_analysis():
         print("Error: Environment variable 'API_KEY' not set. Exiting.", file=sys.stderr)
         return None # Exit if no API key
 
-    # Initialize variables that might be used later, even if API calls fail
+    # Initialize variables
     circulating_supply = None
     parsed_holders = []
     gini_coefficient = None
     concentration_top_10 = "N/A"
     concentration_top_100 = "N/A"
-    rich_list_snippet_for_log = 'Not Available' # For debug section
+    rich_list_snippet_for_log = 'Not Available'
 
     # --- Fetch Circulating Supply ---
     print(f"Waiting {API_DELAY}s...")
@@ -260,10 +213,10 @@ def run_analysis():
             print(f"Received circulating supply: {circulating_supply}")
         except ValueError:
             print(f"Error: Could not convert circulating supply data '{circulating_supply_data}' to float.", file=sys.stderr)
-            # Allow continuation, but concentration will be N/A
+            # Continue, calculations will show N/A
     else:
         print("Failed to fetch circulating supply.", file=sys.stderr)
-        # Allow continuation
+        # Continue, calculations will show N/A
 
     # --- Fetch Rich List ---
     print(f"Waiting {API_DELAY}s...")
@@ -282,13 +235,25 @@ def run_analysis():
                         address = holder_data.get('addr')
                         balance_raw = holder_data.get('amount')
                         if address is not None and balance_raw is not None:
-                            balance = float(balance_raw) # Keep balance in base units
+                            # Ensure balance is treated as float for consistency
+                            balance = float(balance_raw)
                             temp_holders.append({'address': address, 'balance': balance})
+                        else:
+                             print(f"Warning: Missing 'addr' or 'amount' in holder data: {holder_data}", file=sys.stderr)
                     except (ValueError, TypeError) as e:
                         print(f"Warning: Could not parse balance for holder data {holder_data}: {e}", file=sys.stderr)
+                else:
+                     print(f"Warning: Expected dict item in rich1000 list, got {type(holder_data)}", file=sys.stderr)
+
             parsed_holders = temp_holders # Assign parsed list
             print(f"Successfully parsed {len(parsed_holders)} entries from rich list.")
-            parsed_holders.sort(key=lambda x: x['balance'], reverse=True)
+            # Sort by balance descending AFTER parsing all
+            parsed_holders.sort(key=lambda x: x.get('balance', 0), reverse=True)
+            # --- DEBUG: Print top 15 parsed holders ---
+            print("\nDebug: Top 15 Parsed Holders (after sorting):")
+            for i, h in enumerate(parsed_holders[:15]):
+                 print(f"  Rank {i+1}: Addr={h.get('address')}, Balance={h.get('balance')} (Type: {type(h.get('balance'))})")
+            # --- END DEBUG ---
         else:
             print(f"Error: Expected 'rich1000' key to contain a list.", file=sys.stderr)
     else:
@@ -296,7 +261,8 @@ def run_analysis():
 
     # --- Perform Concentration Calculations ---
     print("\nCalculating concentration...")
-    # Use the list of holders with valid balances derived during parsing
+    # Use the parsed_holders list directly (already sorted)
+    # Filter for valid balances just before summing for safety
     valid_holders = [h for h in parsed_holders if isinstance(h.get('balance'), (int, float))]
 
     if valid_holders and circulating_supply is not None and circulating_supply > 0:
@@ -304,65 +270,97 @@ def run_analysis():
         filtered_holders = valid_holders # Using list with valid balances
 
         if filtered_holders:
+            # Ensure balances are numbers before summing
             top_10_balance = sum(h['balance'] for h in filtered_holders[:10])
             top_100_balance = sum(h['balance'] for h in filtered_holders[:100])
             circ_supply_base_units = circulating_supply * 1e8
 
-            # --- Remove Concentration Debug Prints ---
-            # print(f"Debug: Circulating Supply (Base Units): {circ_supply_base_units}")
-            # print(f"Debug: Top 10 Balance (Base Units): {top_10_balance}")
-            # print(f"Debug: Top 100 Balance (Base Units): {top_100_balance}")
-            # --- End Remove Debug Prints ---
+            # --- DEBUG PRINTS for Concentration ---
+            print(f"\n--- Concentration Calculation Debug ---")
+            print(f"Circulating Supply (Float): {circulating_supply}")
+            print(f"Circulating Supply (Base Units): {circ_supply_base_units}")
+            print(f"Number of Valid Holders for Calc: {len(filtered_holders)}")
+            print(f"Top 10 Balance Sum (Base Units): {top_10_balance} (Type: {type(top_10_balance)})")
+            print(f"Top 100 Balance Sum (Base Units): {top_100_balance} (Type: {type(top_100_balance)})")
+            # --- END DEBUG PRINTS ---
 
             if circ_supply_base_units > 0: # Avoid division by zero
-                concentration_top_10 = f"{(top_10_balance / circ_supply_base_units) * 100:.2f}%"
-                concentration_top_100 = f"{(top_100_balance / circ_supply_base_units) * 100:.2f}%"
+                # Perform calculation
+                calc_top_10 = (top_10_balance / circ_supply_base_units) * 100
+                calc_top_100 = (top_100_balance / circ_supply_base_units) * 100
+                print(f"Raw Top 10 %: {calc_top_10}")
+                print(f"Raw Top 100 %: {calc_top_100}")
+                # Format results
+                concentration_top_10 = f"{calc_top_10:.2f}%"
+                concentration_top_100 = f"{calc_top_100:.2f}%"
                 print("Calculations complete.")
             else:
-                print("Error: Circulating supply is zero, cannot calculate percentages.")
+                print("Error: Circulating supply (base units) is zero, cannot calculate percentages.")
                 concentration_top_10 = "Error (Supply=0)"
                 concentration_top_100 = "Error (Supply=0)"
         else:
             print("No valid holders available for calculation.")
+            # Keep N/A default
     else:
         print("Cannot perform calculations: Missing parsed holders or valid circulating supply.")
-        # Keep default N/A values
+        # Keep N/A default
 
     # --- Generate Plots ---
     # Pass valid_holders list to plotting functions
     top_n_plot_success = plot_top_n_chart(valid_holders, 20, PLOT_TOP_N_FILENAME)
     lorenz_plot_success, gini_coefficient = plot_lorenz_curve(valid_holders, PLOT_LORENZ_FILENAME)
-    pie_chart_success = plot_pie_chart(valid_holders, circulating_supply, PLOT_PIE_FILENAME) # Added back
+    # pie_chart_success = plot_pie_chart(valid_holders, circulating_supply, PLOT_PIE_FILENAME) # Keep removed
     hist_success = plot_balance_histogram(valid_holders, PLOT_HIST_FILENAME)
 
     # --- Encode Images to Base64 ---
     print("\nEncoding images for HTML embedding...")
     top_n_base64 = image_to_base64(PLOT_TOP_N_FILENAME) if top_n_plot_success else None
     lorenz_base64 = image_to_base64(PLOT_LORENZ_FILENAME) if lorenz_plot_success else None
-    pie_base64 = image_to_base64(PLOT_PIE_FILENAME) if pie_chart_success else None # Added back
+    # pie_base64 = image_to_base64(PLOT_PIE_FILENAME) if pie_chart_success else None # Keep removed
     hist_base64 = image_to_base64(PLOT_HIST_FILENAME) if hist_success else None
 
     # --- Format Output as HTML ---
     print("\nFormatting HTML report...")
     report_time_utc = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')
 
-    # --- FIXED: Define circ_supply_str safely ---
+    # Define circ_supply_str safely
     circ_supply_str = "N/A" # Default
     if circulating_supply is not None:
         try:
             circ_supply_str = f"{circulating_supply:,.2f}"
         except Exception as e:
             print(f"Error formatting circulating_supply ({circulating_supply}): {e}", file=sys.stderr)
-            circ_supply_str = "Error" # Indicate formatting error
+            circ_supply_str = "Error"
 
     gini_str = f"{gini_coefficient:.3f}" if gini_coefficient is not None else "N/A"
+
+    # Basic CSS for styling + Debug CSS + Test Style
     html_style = """
 <style>
-  /* ... (Same CSS as before) ... */
+  body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; line-height: 1.6; padding: 20px; max-width: 1000px; margin: auto; background-color: #f9f9f9; color: #333; border: 5px solid lime !important; /* --- DEBUG STYLE --- */ }
+  h1, h2, h3 { color: #1a1a1a; border-bottom: 1px solid #ddd; padding-bottom: 6px; }
+  h1 { text-align: center; border-bottom: 2px solid #ccc; margin-bottom: 20px;}
+  h2 { margin-top: 40px; }
+  h3 { margin-top: 30px; border-bottom: none; }
+  ul { padding-left: 20px; list-style: square; }
+  li { margin-bottom: 8px; }
+  img { max-width: 100%; height: auto; display: block; margin: 15px auto; background-color: white; padding: 5px; border: 1px solid #ccc; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
+  table { border-collapse: collapse; width: 100%; margin-top: 15px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
+  th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 0.9em; }
+  th { background-color: #f2f2f2; }
+  tr:nth-child(even) { background-color: #f9f9f9; }
+  tr:hover { background-color: #f1f1f1; }
+  .note { font-size: 0.9em; color: #555; margin-top: 5px; }
+  .error { color: #d9534f; font-style: italic; }
+  .plot-section { background-color: #fff; padding: 15px; margin-bottom: 30px; border: 1px solid #eee; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  .interpretation { background-color: #eef; border-left: 4px solid #aac; padding: 10px 15px; margin: 20px 0; font-size: 0.95em; }
+  .debug-info { margin-top: 40px; border-top: 2px dashed #ccc; padding-top: 15px; }
   .debug-info summary { cursor: pointer; font-weight: bold; color: #555; margin-top: 10px;}
   .debug-info pre { background-color: #eee; padding: 10px; font-size: 0.8em; overflow-x: auto; border: 1px solid #ddd; border-radius: 4px; }
+  hr { border: 0; height: 1px; background: #ddd; margin: 30px 0; }
 </style>
 """
+
     # --- Build Top 10 Table ---
     # (Same as before, uses valid_holders)
     top_10_table_html = "<h3>Top 10 Holders Table</h3>\n"
@@ -374,9 +372,10 @@ def run_analysis():
             address = holder.get('address', 'N/A')
             balance_base = holder.get('balance', 0)
             balance_lana = balance_base / 1e8
-            percent_circ = (balance_base / (circulating_supply * 1e8)) * 100 if circulating_supply and circulating_supply > 0 else 0
+            percent_circ_val = (balance_base / (circulating_supply * 1e8)) * 100 if circulating_supply and circulating_supply > 0 else 0
+            percent_circ_str = f"{percent_circ_val:.3f}%" # Use the calculated value
             display_address = f"{address[:8]}...{address[-6:]}" if len(address) > 14 else address
-            top_10_table_html += f"<tr><td>{i+1}</td><td title='{address}'>{display_address}</td><td>{balance_lana:,.2f}</td><td>{percent_circ:.3f}%</td></tr>\n"
+            top_10_table_html += f"<tr><td>{i+1}</td><td title='{address}'>{display_address}</td><td>{balance_lana:,.2f}</td><td>{percent_circ_str}</td></tr>\n" # Use formatted string
         top_10_table_html += "</tbody>\n</table>\n"
     else:
         top_10_table_html += "<p>No holder data parsed to display table.</p>\n"
@@ -386,7 +385,7 @@ def run_analysis():
     # Prepare conditional image tags
     top_n_img_html = f'<img src="{top_n_base64}" alt="Top 20 Holders Chart">' if top_n_base64 else '<p class="error">Failed to generate Top Holders chart.</p>'
     hist_img_html = f'<img src="{hist_base64}" alt="Balance Histogram">' if hist_base64 else '<p class="error">Failed to generate Balance Histogram.</p>'
-    pie_img_html = f'<img src="{pie_base64}" alt="Concentration Pie Chart">' if pie_base64 else '<p class="error">Failed to generate Concentration Pie Chart.</p>' # Added back
+    # pie_img_html = f'<img src="{pie_base64}" alt="Concentration Pie Chart">' if pie_base64 else '<p class="error">Failed to generate Concentration Pie Chart.</p>' # Keep removed
     lorenz_img_html = f'<img src="{lorenz_base64}" alt="Lorenz Curve Chart">' if lorenz_base64 else '<p class="error">Failed to generate Lorenz Curve chart.</p>'
     lorenz_note_html = f'<p class="note">Gini Coefficient: {gini_str} (0 = perfect equality, 1 = perfect inequality)</p>' if lorenz_base64 and gini_str != "N/A" else ''
 
@@ -457,11 +456,6 @@ def run_analysis():
     </div>
 
     <div class="plot-section">
-        <h3>Wealth Concentration (Pie Chart)</h3>
-        {pie_img_html}
-    </div>
-
-    <div class="plot-section">
         <h3>Wealth Distribution (Lorenz Curve)</h3>
         {lorenz_img_html}
         {lorenz_note_html}
@@ -471,15 +465,15 @@ def run_analysis():
 
 </body>
 </html>
-""" # <<< End of the single f-string literal
+"""
 
     print("\n--- Analysis Output ---")
     print(html_string) # Print the generated HTML to stdout
     print("--- End of Output ---")
 
     # Clean up temporary plot files
-    # Added PLOT_PIE_FILENAME back to the list
-    for plot_file in [PLOT_TOP_N_FILENAME, PLOT_LORENZ_FILENAME, PLOT_PIE_FILENAME, PLOT_HIST_FILENAME]:
+    # Removed PLOT_PIE_FILENAME from list
+    for plot_file in [PLOT_TOP_N_FILENAME, PLOT_LORENZ_FILENAME, PLOT_HIST_FILENAME]:
         if os.path.exists(plot_file):
             try:
                 os.remove(plot_file)
