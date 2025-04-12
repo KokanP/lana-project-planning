@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projekt Lana: analize in smernice</title>
+    <style>
+        /* Osnovni stili in stili, prilagojeni iz izvornih dokumentov */
+        html {
+            scroll-behavior: smooth; /* Omogoči gladko drsenje ob kliku na sidrne povezave */
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            line-height: 1.6;
+            padding-top: 60px; /* Dodan odmik za fiksno navigacijo */
+            margin: 0 auto;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+        /* Fiksna navigacijska vrstica */
+        nav#fixed-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333; /* Temno ozadje */
+            padding: 10px 0;
+            text-align: center;
+            z-index: 1000; /* Zagotovi, da je nad ostalo vsebino */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex; /* Uporabi flexbox za poravnavo */
+            justify-content: center; /* Centriraj elemente */
+            flex-wrap: wrap; /* Dovolí prelom vrstice na manjših zaslonih */
+        }
+        nav#fixed-nav a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            margin: 5px;
+            border-radius: 4px;
+            background-color: #555;
+            transition: background-color 0.3s;
+        }
+        nav#fixed-nav a:hover,
+        nav#fixed-nav a:focus {
+            background-color: #007bff; /* Modra ob prehodu/fokusu */
+            outline: none; /* Odstrani privzeti fokusni okvir */
+        }
+
+        /* Glavna vsebina */
+        main {
+            padding: 1rem 2rem;
+            max-width: 900px; /* Ohrani širino vsebine */
+            margin: 0 auto; /* Centriraj vsebino */
+        }
+
+        /* Stili za naslove in odseke */
+        section {
+            padding-top: 20px; /* Dodatni odmik za vsak razdelek zaradi fiksne navigacije */
+            margin-top: -20px; /* Kompenzira zgornji odmik za natančno sidranje */
+            margin-bottom: 40px; /* Razmik med dokumenti */
+            background-color: #fff; /* Belo ozadje za vsak razdelek */
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 { /* Uporabljeno za naslove znotraj razdelkov */
+            margin-bottom: 0.75em;
+            margin-top: 1.5em;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #1a1a1a;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 6px;
+        }
+        h1 { /* Glavni naslov strani */
+             font-size: 2em;
+             text-align: center;
+             border-bottom: 2px solid #ccc;
+             margin-bottom: 20px;
+        }
+        h2 { /* Glavni naslov vsakega dokumenta/razdelka */
+            font-size: 1.8em;
+             border-bottom: 1px solid #ccc;
+             padding-bottom: 0.4em;
+             margin-top: 0; /* Odstrani zgornji rob za prvi naslov v razdelku */
+        }
+        h3 { /* Podnaslovi znotraj dokumentov */
+            font-size: 1.5em;
+             border-bottom: 1px solid #eee;
+             padding-bottom: 0.3em;
+        }
+        h4 { /* Manjši podnaslovi */
+             font-size: 1.2em;
+             margin-top: 30px;
+             border-bottom: none;
+             font-weight: 600;
+        }
+
+        /* Ostali stili (paragrafi, seznami, tabele, opombe, interpretacije itd.) */
+        p { margin-bottom: 1em; }
+        ul, ol { margin-left: 20px; margin-bottom: 1em; padding-left: 1em;}
+        li { margin-bottom: 0.5em; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5em 0;
+            font-size: 0.9em;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 0.6em;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+         tr:nth-child(even) { background-color: #f9f9f9; }
+         tr:hover { background-color: #f1f1f1; }
+        a { /* Splošne povezave v vsebini */
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .note {
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        .interpretation {
+             background-color: #eef;
+             border-left: 4px solid #aac;
+             padding: 10px 15px;
+             margin: 20px 0;
+             font-size: 0.95em;
+        }
+        .summary-highlight {
+             background-color: #fdd;
+             border: 1px solid #d9534f;
+             border-left: 5px solid #d9534f;
+             padding: 10px 15px;
+             margin: 20px 0;
+             border-radius: 4px;
+        }
+        .summary-highlight p strong:first-child {
+             color: #d9534f;
+             display: block;
+             margin-bottom: 5px;
+             font-size: 1.1em;
+        }
+        .debug-info { /* Removed for combined page */
+             display: none;
+        }
+        hr {
+             border: 0;
+             height: 1px;
+             background: #ddd;
+             margin: 30px 0;
+        }
+        /* Stili za vire/bibliografijo */
+        .works-cited, .bibliography {
+            margin-top: 3em;
+            font-size: 0.85em;
+            border-top: 1px solid #eee;
+            padding-top: 1em;
+        }
+        .works-cited li, .bibliography li {
+            margin-bottom: 0.6em;
+            word-wrap: break-word;
+            scroll-margin-top: 70px; /* Odmik za sidra zaradi fiksne navigacije */
+        }
+        .works-cited li:target, .bibliography li:target {
+            background-color: #fff3cd; /* Označi ob skoku */
+        }
+        sup {
+            font-size: 0.75em;
+            vertical-align: super;
+            line-height: 0;
+            margin-left: 1px;
+        }
+        sup a {
+            text-decoration: none;
+             color: #007bff;
+        }
+        sup a:hover {
+            text-decoration: underline;
+        }
+        .author {
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 2em;
+            color: #555;
+        }
+        .report-link { /* Stil za povezavo do poročila v analizi kitov */
+            text-align: center;
+            margin: 2em 0;
+            padding: 0.8em;
+            background-color: #eef;
+            border: 1px solid #aac;
+            border-radius: 4px;
+        }
+        /* Stili za slike */
+        figure {
+            margin: 2em 0;
+            text-align: center;
+        }
+        figure img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ccc;
+            background-color: #eee; /* Placeholder background */
+        }
+        figcaption {
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 0.5em;
+            font-style: italic;
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav id="fixed-nav">
+        <a href="#analiza-kitov">Analiza kitov</a> {/* Updated */}
+        <a href="#grajenje-zaupanja">Grajenje zaupanja</a> {/* Updated */}
+        <a href="#dilema-decentralizacije">Dilema decentralizacije</a> {/* Updated */}
+        </nav>
+
+    <main>
+        <h1>Projekt Lana: analize in smernice</h1>
+
+        <section id="analiza-kitov">
+            <h2>Analiza kitov in koncentracije bogastva LanaCoin</h2>
+            <p class="author">Sestavil Kristjan L (z združenimi podatki)</p>
+            <div class="report-link">
+                <p><strong>Oglejte si najnovejše samodejno ustvarjeno poročilo o kitih (angleško):</strong><br>
+                <a href="LANA_Whale_Report.html">LanaCoin Whale Analysis Report (Auto-Updated)</a></p>
+            </div>
+
+            <h3>Uvod v analizo kitov</h3>
+             <p>Za trg kriptovalut je značilna znatna heterogenost med udeleženci. Medtem ko mali vlagatelji predstavljajo velik del uporabniške baze, manjša skupina entitet, pogovorno imenovanih "kiti", poseduje znatne količine določenih digitalnih sredstev. Ti veliki imetniki imajo potencialno sposobnost vplivanja na tržno dinamiko, zlasti v okoljih, za katera sta značilna nizek obseg trgovanja in zmanjšana likvidnost. Ta razdelek ponuja analitični pregled vloge, ki jo ti kiti igrajo, ko sprejmejo pasivno strategijo držanja ("HODLing") v nelikvidnih tržnih razmerah, ter analizira trenutno stanje koncentracije bogastva in porazdelitve nagrad v ekosistemu LanaCoin.</p>
+
+             <h3>Opredelitev kriptovalutnih kitov</h3>
+             <p>V kontekstu trgov kriptovalut se izraz "kit" nanaša na posameznika ali entiteto, ki poseduje dovolj veliko količino določenega digitalnega sredstva, da lahko s svojimi dejanji potencialno vpliva na njegovo tržno ceno ali splošno dinamiko omrežja<sup><a href="#cite-1">1</a></sup>. Čeprav ne obstaja univerzalno strog numerični prag, se izraz običajno uporablja za denarnice, ki hranijo znatno vrednost, pogosto ovrednoteno v milijonih USD ekvivalenta, ali opazen odstotek krožeče ponudbe sredstva<sup><a href="#cite-1">1</a></sup>.</p>
+             <p>Te entitete lahko segajo od zgodnjih posvojiteljev in dolgoročnih posameznih vlagateljev do institucionalnih igralcev, kot so hedge skladi, same kripto borze ali celo entitete, povezane z vladami<sup><a href="#cite-6">6</a></sup>. Njihova odločilna značilnost je obseg njihovih deležev v primerjavi s celotno tržno kapitalizacijo in tipičnimi obsegi trgovanja zadevnega sredstva. Zaradi javne narave večine verig blokov je denarnice, povezane s kiti, pogosto mogoče spremljati z uporabo raziskovalcev verig blokov in analitičnih platform na verigi<sup><a href="#cite-1">1</a>, <a href="#cite-6">6</a></sup>.</p>
+
+             <hr>
+
+             <h3>Analiza koncentracije bogastva LanaCoin</h3>
+             <p>Ta podrazdelek analizira porazdelitev LANA med Top 1000 najbogatejšimi naslovi na podlagi API klica `q=rich` (stanje pribl. 12. april 2025).</p>
+             <ul>
+                 <li>Top 10 imetnikov (% količine v obtoku): <strong>35.62%</strong></li>
+                 <li>Top 20 imetnikov (% količine v obtoku): <strong>46.17%</strong></li>
+                 <li>Top 100 imetnikov (% količine v obtoku): <strong>73.01%</strong></li>
+                 <li>Ginijev koeficient (Top 1000): <strong>0.813</strong> <em>(Izračunano iz Lorenzove krivulje na podlagi podatkov `q=rich`)</em></li>
+             </ul>
+             <div class="interpretation">
+                 <h4>Interpretacija koncentracije</h4>
+                 <p>Odstotki koncentracije so izjemno visoki: <strong>Top 10 naslovov ima v lasti več kot 35%</strong>, <strong>Top 20 ima v lasti več kot 46%</strong>, <strong>Top 100 pa več kot 73%</strong> vseh LANA v obtoku. To kaže na znatno koncentracijo bogastva v zelo majhnem številu denarnic. Takšna koncentracija lahko poveča tveganje za tržno manipulacijo in nestanovitnost, saj lahko odločitve nekaj velikih imetnikov ("kitov") nesorazmerno vplivajo na ceno in likvidnost, ki je na voljo manjšim udeležencem.</p>
+                 <p>Ginijev koeficient zagotavlja enotno število za merjenje neenakosti (0 = popolna enakost, 1 = popolna neenakost). Izračunana vrednost <strong>0.813</strong> je zelo visoka, kar potrjuje resno neravnovesje v porazdelitvi bogastva med najvišjimi naslovi, ki jih navaja API. Visoka ekonomska neenakost je lahko škodljiva, saj lahko odvrača širšo udeležbo, zmanjša hitrost kroženja denarja, če veliki imetniki ostanejo pasivni, in vzbuja pomisleke glede decentralizacije in pravičnosti ekosistema.</p>
+             </div>
+             <h4>Tabela top 10 imetnikov</h4>
+             <p class="note"><em>(Podatki iz API klica `q=rich` & `LANA.Top1000 (1).txt`. Stanja so v celih LANA. % izračunan glede na količino v obtoku iz API.)</em></p>
+             <table>
+                 <thead>
+                     <tr>
+                         <th>Mesto</th><th>Naslov</th><th>Stanje (LANA)</th><th>% Količine v Obtoku</th><th>Zadnja Aktivnost (Polog/Dvig)</th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                      <tr><td>1</td><td title="LTdb5KrqryPihAU1RebDCy8tVxi1SVtGqu">LTdb5Krq...SVtGqu</td><td>290.316.191,23</td><td>8.244%</td><td>2025-04-12 02:59:44 / 2025-04-12 02:59:44</td></tr>
+                      <tr><td>2</td><td title="LaFnKHXxj4KEuVMbtyLnNCJTpUtTPWXjJC">LaFnKHXx...PWXjJC</td><td>155.306.576,85</td><td>4.410%</td><td>2025-04-11 19:38:56 / 2025-04-11 19:38:56</td></tr>
+                      <tr><td>3</td><td title="LLZr9vsHWjcL6Tohu12TrYJtrgctapZHjH">LLZr9vsH...apZHjH</td><td>142.917.119,39</td><td>4.058%</td><td>2025-04-12 01:43:12 / 2025-04-12 01:43:12</td></tr>
+                      <tr><td>4</td><td title="LbRugxTQt4eJFHaDc73zKjViVEuNcP3NwD">LbRugxTQ...cP3NwD</td><td>122.429.555,94</td><td>3.477%</td><td>2025-04-12 03:25:36 / 2025-04-11 08:34:08</td></tr>
+                      <tr><td>5</td><td title="LaXTGF8X6FGXCSgWc3WFXimw5fWHMAcFQe">LaXTGF8X...MACFQe</td><td>104.625.091,58</td><td>2.971%</td><td>2025-04-11 14:10:00 / 2025-04-11 14:10:00</td></tr>
+                      <tr><td>6</td><td title="LTGnQPFQcJPEUBUiGM8CpDddodDGTh7Ub9">LTGnQPFQ...Th7Ub9</td><td>100.047.778,51</td><td>2.841%</td><td>2025-04-11 14:10:00 / 2025-04-11 14:10:00</td></tr>
+                      <tr><td>7</td><td title="LMKAvjr9zwiMgJHbcmFPexSiLNURd2GRHq">LMKAvjr9...d2GRHq</td><td>96.404.517,01</td><td>2.738%</td><td>2025-04-11 14:10:00 / 2025-04-11 14:10:00</td></tr>
+                      <tr><td>8</td><td title="Lcj9yWp4VyoG9QueoRrB81161wytW4dUV9">Lcj9yWp4...W4dUV9</td><td>86.663.749,19</td><td>2.461%</td><td>2023-09-02 19:16:08 / 2023-09-02 19:16:08</td></tr>
+                      <tr><td>9</td><td title="LVbAXgQRtfkpgrr2KYMVwrq4Vm1Guza21U">LVbAXgQR...uza21U</td><td>84.531.593,11</td><td>2.400%</td><td>2025-04-11 14:10:00 / 2025-04-11 14:10:00</td></tr>
+                      <tr><td>10</td><td title="LYSNKMYuB9zSVPuEsWXNUbivUVoqyw274Q">LYSNKMYu...yw274Q</td><td>71.133.137,34</td><td>2.020%</td><td>2025-04-11 19:38:40 / 2025-04-11 19:38:40</td></tr>
+                  </tbody>
+             </table>
+             <p class="note">(Opomba: Ta analiza ne filtrira morebitnih naslovov menjalnic ali pogodb, ker noben ni bil identificiran!)</p>
+
+             <h4>Vizualizacije porazdelitve bogastva</h4>
+             <figure>
+                 <img src="https://placehold.co/800x500/EFEFEF/555?text=Graf%3A+Stanja+Top+20+Imetnikov" alt="Graf stanj Top 20 imetnikov LanaCoin">
+                 <figcaption>Graf 1: Stanja Top 20 imetnikov LanaCoin.</figcaption>
+             </figure>
+             <figure>
+                 <img src="https://placehold.co/800x500/EFEFEF/555?text=Graf%3A+Porazdelitev+Stanj+(Top+1000)" alt="Histogram porazdelitve stanj med Top 1000 imetniki">
+                 <figcaption>Graf 2: Porazdelitev stanj med Top 1000 imetniki (Logaritemska skala).</figcaption>
+             </figure>
+              <figure>
+                 <img src="https://placehold.co/800x500/EFEFEF/555?text=Graf%3A+Lorenzova+Krivulja+(Gini)" alt="Lorenzova krivulja porazdelitve bogastva (Top 1000)">
+                 <figcaption>Graf 3: Lorenzova krivulja porazdelitve bogastva (Top 1000) - Gini = 0.813.</figcaption>
+             </figure>
+             <p class="note">Opomba: Zgornje slike so nadomestne. Dejanski grafi bi morali biti vstavljeni tukaj.</p>
+             <hr>
+
+             <h3>Porazdelitev najditeljev blokov (analiza stejkanja/rudarjenja)</h3>
+              <div class="summary-highlight">
+                  <p><strong>Povzetek ugotovitve:</strong> Primerjava med porazdelitvijo bogastva in porazdelitvijo najditeljev blokov (nagrad za stejkanje) razkriva znatno nesorazmerje. Medtem ko ima <strong>Top 20 najbogatejših naslovov v lasti približno 46.17%</strong> količine v obtoku, prejmejo približno <strong>70.2% nedavnih nagrad za stejkanje</strong> (merjeno kot odstotek zadnjih 1000 blokov, ki so jih našli navedeni stakerji).</p>
+                  <p>To kaže, da porazdelitev nagrad <strong>ni sorazmerna</strong> z bogastvom; Top 20 prejema nagrade po stopnji, ki je približno <strong>1.52-krat višja</strong>, kot bi nakazoval zgolj njihov delež bogastva. To kaže na povratno zanko, kjer se lahko koncentracija bogastva dodatno poveča zaradi mehanizma stejkanja.</p>
+                  <p class="note"><em>(Opomba: Izračuni odstotkov nagrad temeljijo na naslovih in odstotkih blokov, navedenih v razpoložljivem posnetku podatkov spletne strani.)</em></p>
+              </div>
+             <p>Ta podrazdelek prikazuje, kateri naslovi ali bazeni so našli največji odstotek nedavnih blokov.</p>
+             <div class="interpretation">
+                 <h4>Interpretacija porazdelitve nagrad</h4>
+                 <p>Ti podatki razkrivajo potencialno centralizacijo pri produkciji blokov LanaCoin (stejkanje/rudarjenje). Spodnja tabela prikazuje, da je <strong>Top 1 naslov (tudi najbogatejši) našel 15%</strong> zadnjih 1000 blokov. Več drugih naslovov iz seznama Top 20 najbogatejših se prav tako vidno pojavlja na seznamu najditeljev blokov (npr. Bogati #2, #3, #4, #5, #6, #7, #8, #9, #10, #11, #13, #14, #15, #17, #18, #19, #20).</p>
+                 <p>To kaže na močno korelacijo med posedovanjem bogastva in ustvarjanjem novega bogastva prek nagrad za stejkanje/rudarjenje v ekosistemu LanaCoin. Entitete, ki imajo v lasti največ LANA, prejemajo tudi nesorazmerno velik delež na novo ustvarjenih kovancev, kar dodatno utrjuje njihove položaje in potencialno ustvarja povratno zanko, ki sčasoma povečuje koncentracijo bogastva. Ta dinamika "bogati postajajo bogatejši" je lahko pomemben pomislek za dolgoročno decentralizacijo in zdravje omrežja.</p>
+             </div>
+             <h4>Porazdelitev najditeljev blokov (zadnjih 1000 blokov)</h4>
+             <p class="note"><em>(Vir: Posnetek Podatkov Spletne Strani)</em></p>
+             <table>
+                  <thead>
+                     <tr><th>Mesto</th><th>Bazen / Naslov Rudarja</th><th>% Zadnjih 100</th><th>% Zadnjih 1000</th></tr>
+                  </thead>
+                  <tbody>
+                     <tr><td>1</td><td>LTdb5Krq... (Bogati #1)</td><td>15%</td><td>15.0%</td></tr>
+                     <tr><td>2</td><td>LVbAXgQR... (Bogati #9)</td><td>10%</td><td>5.9%</td></tr>
+                     <tr><td>3</td><td>LLZr9vsH... (Bogati #3)</td><td>9%</td><td>4.3%</td></tr>
+                     <tr><td>4</td><td>LMKAvjr9... (Bogati #7)</td><td>5%</td><td>5.7%</td></tr>
+                     <tr><td>5</td><td>LYSNKMYu... (Bogati #10)</td><td>4%</td><td>4.3%</td></tr>
+                     <tr><td>6</td><td>LKGvCU8T... (Bogati #17)</td><td>4%</td><td>2.0%</td></tr>
+                     <tr><td>7</td><td>LaXTGF8X... (Bogati #5)</td><td>3%</td><td>5.7%</td></tr>
+                     <tr><td>8</td><td>LTGnQPFQ... (Bogati #6)</td><td>3%</td><td>5.5%</td></tr>
+                     <tr><td>9</td><td>Lcj9yWp4... (Bogati #8)</td><td>3%</td><td>3.6%</td></tr>
+                     <tr><td>10</td><td>LXQr1s1K... (Bogati #14)</td><td>3%</td><td>1.8%</td></tr>
+                     <tr><td>11</td><td>LbRugxTQ... (Bogati #4)</td><td>3%</td><td>1.4%</td></tr>
+                     <tr><td>12</td><td>LZhMaiCi... (Bogati #40)</td><td>3%</td><td>0.9%</td></tr>
+                     <tr><td>13</td><td>LaFnKHXx... (Bogati #2)</td><td>2%</td><td>5.1%</td></tr>
+                  </tbody>
+             </table>
+
+             <hr>
+
+             <h3>Vpliv pasivnega držanja kitov</h3>
+            <p>Ko se kiti odločijo pasivno držati svoja sredstva namesto aktivnega trgovanja na trgu z nizkim obsegom, se lahko pojavijo številni izraziti učinki:</p>
+            <ol>
+                <li><strong>Zmanjšana razpoložljiva ponudba & globina trga:</strong> Kiti, ki držijo velike količine, dejansko odstranijo ta del ponudbe sredstva iz aktivnega obtoka na borzah. To dodatno omejuje že tako omejeno ponudbo, ki je na voljo za trgovanje, kar poslabšuje pogoje nizke likvidnosti.</li>
+                <li><strong>Potencialna stabilnost cene (ali stagnacija):</strong> V odsotnosti velikih prodajnih naročil s strani kitov lahko cene kažejo obdobja stabilnosti ali zmanjšane nestanovitnosti, zlasti navzdol. Vendar pa lahko ta stabilnost meji na stagnacijo, saj lahko pomanjkanje znatne trgovalne aktivnosti zavira tudi odkrivanje cen navzgor.</li>
+                <li><strong>Povečana dovzetnost za vrzeli in zdrsavanje:</strong> Zmanjšana globina trga pomeni, da če *katerokoli* večje naročilo pride na trg, je lahko vpliv na ceno nesorazmerno velik. Trg postane bolj dovzeten za cenovne vrzeli in znatno zdrsavanje.</li>
+                <li><strong>Vpliv na dojemanje in zaupanje:</strong> Držanje s strani kitov lahko signalizira močno dolgoročno vero v projekt, lahko pa tudi vzbuja pomisleke glede centralizacije in možnosti prihodnje tržne manipulacije.</li>
+            </ol>
+
+            <h3>Motivacije za strategije držanja s strani kitov</h3>
+            <p>Veliki imetniki se lahko odločijo za pasivno strategijo držanja ("HODLing") iz več razlogov:</p>
+            <ul>
+                <li><strong>Dolgoročno prepričanje:</strong> Vera v dolgoročno vrednost tehnologije ali omrežja.</li>
+                <li><strong>Izogibanje vplivu na trg (zdrsavanje):</strong> Prodaja velikih pozicij na nelikvidnih trgih bi povzročila znatno negativno zdrsavanje.</li>
+                <li><strong>Strateško kopičenje:</strong> Namen povečanja pozicije skozi čas.</li>
+                <li><strong>Pomanjkanje dobičkonosnih trgovalnih priložnosti:</strong> Trgi z nizkim obsegom pogosto nimajo jasnih trendov.</li>
+                <li><strong>Staking, upravljanje ali uporabnost omrežja:</strong> Držanje je potrebno za sodelovanje v omrežju.</li>
+                <li><strong>Averzija do tveganja & enostavnost:</strong> Prednost enostavnosti strategije kupi-in-drži.</li>
+            </ul>
+
+             <h3>Širše posledice za ekosistem</h3>
+             <p>Pojav velikih imetnikov, ki ostajajo pasivni na trgih z nizkim obsegom, prinaša več posledic:</p>
+             <ul>
+                 <li><strong>Zaviranje nestanovitnosti & potencialni šoki:</strong> Trg postane zelo občutljiv na morebitna dejanja kitov, kar lahko povzroči šoke nestanovitnosti.</li>
+                 <li><strong>Pomisleki glede centralizacije:</strong> Visoka koncentracija vzbuja pomisleke glede centralizacije in pravičnosti.</li>
+                 <li><strong>Ovirano odkrivanje cen:</strong> Neaktivnost velikega dela ponudbe lahko ovira proces odkrivanja poštene tržne vrednosti.</li>
+                 <li><strong>Ovire za vstop/izstop drugih udeležencev:</strong> Nizka likvidnost otežuje trgovanje z večjimi zneski.</li>
+                 <li><strong>Dojemanje vs. realnost manipulacije:</strong> Potencial za manipulacijo lahko negativno vpliva na tržno razpoloženje.</li>
+             </ul>
+
+             <h3>Zaključek (Analiza Kitov)</h3>
+             <p>Kriptovalutni kiti, ki sprejmejo strategijo držanja na trgih z nizkim obsegom, izvajajo kompleksen vpliv. Njihova neaktivnost lahko prispeva k stabilnosti, vendar hkrati poslabšuje nelikvidnost in povečuje potencial za šoke. Motivacije so različne, od prepričanja do praktičnih omejitev. Koncentracija sredstev pri neaktivnih kitih predstavlja izzive za odkrivanje cen, decentralizacijo in splošno zdravje trga. Razumevanje prisotnosti in vedenja teh entitet je ključno za ocenjevanje tveganja in priložnosti v manj likvidnih segmentih trga kriptovalut.</p>
+
+             <hr>
+             <h4>Omejitve & opombe (iz statičnega poročila)</h4>
+             <ul>
+                 <li>To poročilo združuje podatke iz neposrednih API klicev in podatkov, pridobljenih iz statičnih posnetkov spletne strani.</li>
+                 <li>Avtomatizirana identifikacija nagradnih transakcij ni bila izvedljiva s testiranimi API končnimi točkami.</li>
+                 <li>Analiza koncentracije ne filtrira znanih naslovov menjalnic, pogodb ali storitev, vendar glede na zunanjo analizo nobena znana menjalnica ne bi imela dovolj sredstev, da bi se uvrstila na seznam.</li>
+                 <li>Pridobivanje podatkov iz priloženih HTML izvornih datotek (npr. tabela Najditeljev Blokov) temelji na razčlenjevanju besedila in je bilo ročno preverjeno glede na spletno stran.</li>
+             </ul>
+
+             <section class="bibliography" id="bibliography-whales">
+                  <h4>Viri (Analiza Kitov)</h4>
+                  <ol>
+                      <li id="cite-1">OSL. "What are Crypto Whales?" OSL Academy. Dostopano 9. aprila 2025. <a href="https://osl.com/academy/article/what-are-crypto-whales" target="_blank" rel="noopener noreferrer">https://osl.com/academy/article/what-are-crypto-whales</a></li>
+                      <li id="cite-2">OSL. "What Is Liquidity and Why Does It Matter?" OSL Academy. Dostopano 9. aprila 2025. <a href="https://osl.com/academy/article/what-is-liquidity-and-why-does-it-matter" target="_blank" rel="noopener noreferrer">https://osl.com/academy/article/what-is-liquidity-and-why-does-it-matter</a></li>
+                      <li id="cite-3">OneSafe Blog. "How Whale Accumulation Shapes Cryptocurrency Prices." OneSafe. Dostopano 9. aprila 2025. <a href="https://www.onesafe.io/blog/whale-accumulation-impact-crypto-prices" target="_blank" rel="noopener noreferrer">https://www.onesafe.io/blog/whale-accumulation-impact-crypto-prices</a></li>
+                      <li id="cite-4">Ecos. "What Is HODL in Crypto? The Meaning, Strategy, and Risks of Holding Bitcoin & Altcoins." Ecos Blog. Dostopano 9. aprila 2025. <a href="https://ecos.am/en/blog/what-is-hodl-in-crypto-the-meaning-strategy-and-risks-of-holding-bitcoin-altcoins/" target="_blank" rel="noopener noreferrer">https://ecos.am/en/blog/what-is-hodl-in-crypto-the-meaning-strategy-and-risks-of-holding-bitcoin-altcoins/</a></li>
+                      <li id="cite-5">Oraichain. "Crypto Whales: How They Impact the Market and Why You Should Care." Oraichain Guide. Dostopano 9. aprila 2025. <a href="https://orai.io/guide/crypto-whales-how-they-impact-the-market-and-why-you-should-care" target="_blank" rel="noopener noreferrer">https://orai.io/guide/crypto-whales-how-they-impact-the-market-and-why-you-should-care</a></li>
+                      <li id="cite-6">Business Money. "How to analyze whale wallets and follow institutional investors." Business Money Announcements. Dostopano 9. aprila 2025. <a href="https://www.business-money.com/announcements/how-to-analyze-whale-wallets-and-follow-institutional-investors/" target="_blank" rel="noopener noreferrer">https://www.business-money.com/announcements/how-to-analyze-whale-wallets-and-follow-institutional-investors/</a></li>
+                      <li id="cite-7">Brokstock. "The Psychology of Crypto Trading: How Whales Manipulate Markets and How to Fight Back." Brokstock Analytics. Dostopano 9. aprila 2025. <a href="https://brokstock.co.za/analytics/reviews/the-psychology-of-crypto-trading-how-whales-manipulate-markets-and-how-to-fight-back/" target="_blank" rel="noopener noreferrer">https://brokstock.co.za/analytics/reviews/the-psychology-of-crypto-trading-how-whales-manipulate-markets-and-how-to-fight-back/</a></li>
+                  </ol>
+             </section>
+        </section>
+
+        <section id="grajenje-zaupanja">
+             <h2>Grajenje zaupanja: bistveni elementi poštene spletne strani kriptovalut</h2>
+             <p class="author">Sestavil Kristjan L</p>
+
+             <h3>Uvod</h3>
+             <p>Pojav tehnologije veriženja blokov in kriptovalut je prinesel novo dobo digitalnih financ, ki ponuja decentralizacijo in preglednost.<sup><a href="#cite-1-trust">1</a></sup> Vendar pa je ta porajajoča se industrija polna skepticizma, predvsem zaradi razširjenosti prevar in projektov s slabimi nameni.<sup><a href="#cite-2-trust">2</a></sup> Da bi nova kriptovaluta prve ravni (level 1) pridobila zagon in vzpostavila zvesto uporabniško bazo, ima njena spletna prisotnost, predvsem njena spletna stran, ključno vlogo pri grajenju zaupanja in dokazovanju dolgoročne obstojnosti.<sup><a href="#cite-3-trust">3</a></sup> Spletna stran služi kot digitalna izložba, primarni vir informacij in temelj komunikacije za potencialne uporabnike, vlagatelje in širšo skupnost.<sup><a href="#cite-4-trust">4</a></sup> V okolju, kjer je zaupanje najpomembnejše, dobro zasnovana, informativna in pregledna spletna stran ni zgolj možnost, ampak temeljna nuja za vzpostavitev legitimnosti in spodbujanje zaupanja v etične namene projekta in njegovo dolgoročno sposobnost preživetja.<sup><a href="#cite-5-trust">5</a></sup></p>
+
+             <h3>Oblikovanje zaupanja vredne in uporabniku prijazne spletne strani</h3>
+             <p>Temelj zaupanja vredne spletne strani kriptovalut leži v njeni zasnovi in uporabnosti.<sup><a href="#cite-6-trust">6</a></sup> Upoštevanje temeljnih načel spletnega oblikovanja je ključnega pomena za vzpostavitev verodostojnosti in zagotavljanje pozitivne uporabniške izkušnje.<sup><a href="#cite-7-trust">7</a></sup> Enostavnost je na primer najpomembnejša. Prenatrpana spletna stran s prekomernimi vizualnimi elementi, besedilom ali funkcijami lahko preobremeni obiskovalce in odvrne pozornost od osrednjega sporočila.<sup><a href="#cite-1-trust">1</a></sup> S poudarkom na jasnem in jedrnatem sporočilu z omejenimi barvnimi paletami, čisto tipografijo in obilico belega prostora lahko projekt takoj sporoči profesionalnost in usposobljenost.<sup><a href="#cite-1-trust">1</a></sup> Poleg tega mora biti spletna stran intuitivna in samoumevna ter upoštevati Krugov prvi zakon uporabnosti: "Ne silite uporabnikov k razmišljanju".<sup><a href="#cite-2-trust">2</a></sup> Navigacija in arhitektura strani morata biti preprosti, kar zmanjšuje kognitivno obremenitev uporabnikov in jim omogoča, da brez truda najdejo informacije, ki jih potrebujejo.<sup><a href="#cite-2-trust">2</a></sup> Vsak oblikovalski element mora služiti jasnemu namenu in usmerjati obiskovalce k želenim dejanjem, kot je spoznavanje tehnologije ali pridružitev skupnosti.<sup><a href="#cite-3-trust">3</a></sup> Strateška uporaba barvnih palet lahko določi ton in vzpostavi vizualno hierarhijo, medtem ko lahko kontrastne barve poudarijo ključne informacije in pozive k dejanju.<sup><a href="#cite-6-trust">6</a></sup> Učinkovita uporaba negativnega prostora izboljša berljivost in ustvari prijetnejšo izkušnjo brskanja ter preprečuje, da bi spletna stran delovala prenatrpano.<sup><a href="#cite-6-trust">6</a></sup> Nazadnje, ohranjanje doslednega vizualnega sloga na celotni spletni strani zmanjšuje motnje in spodbuja občutek domačnosti, kar krepi profesionalnost projekta in pozornost do podrobnosti.<sup><a href="#cite-9-trust">9</a></sup></p>
+             <p>Intuitivna navigacija in jasna informacijska arhitektura sta enako pomembni za grajenje zaupanja uporabnikov. Uporabniki bi morali imeti možnost najti informacije brez pretiranega drsenja ali klikanja, idealno v treh klikih za konverzijske strani.<sup><a href="#cite-1-trust">1</a></sup> Dobro strukturirana navigacijska vrstica z jasno označenimi razdelki pomaga uporabnikom hitro najti, kar iščejo.<sup><a href="#cite-1-trust">1</a></sup> Logično združevanje povezanih elementov v navigacijskem meniju preprečuje preobremenitev uporabnikov s preveč možnostmi.<sup><a href="#cite-1-trust">1</a></sup> Jasne in jedrnate oznake za navigacijske elemente ter opisni naslovi za vsebinske razdelke izboljšajo uporabnost.<sup><a href="#cite-1-trust">1</a></sup> Implementacija robustne funkcije internega iskanja s filtri lahko znatno izboljša uporabniško izkušnjo, zlasti na spletnih straneh z veliko količino informacij.<sup><a href="#cite-11-trust">11</a></sup> Navigacija z drobtinicami (breadcrumb) omogoča uporabnikom, da zlahka razumejo svojo trenutno lokacijo na strani in se vrnejo na prejšnje strani.<sup><a href="#cite-1-trust">1</a></sup> Zagotavljanje zemljevida strani dodatno pomaga tako uporabnikom kot iskalnikom pri razumevanju strukture spletne strani.<sup><a href="#cite-8-trust">8</a></sup></p>
+             <p>V današnjem digitalnem okolju je zagotavljanje odzivnosti na vseh napravah najpomembnejše. Pristop "najprej mobilno" je bistvenega pomena, saj se zavedamo, da znaten del spletnega prometa izvira iz mobilnih naprav.<sup><a href="#cite-1-trust">1</a></sup> Spletna stran se mora brezhibno prilagajati različnim velikostim zaslona in zagotavljati optimalno funkcionalnost na namiznih računalnikih, tablicah in pametnih telefonih.<sup><a href="#cite-1-trust">1</a></sup> Interaktivni elementi morajo pravilno delovati na vmesnikih z zaslonom na dotik.<sup><a href="#cite-1-trust">1</a></sup> Poleg tega je ključnega pomena optimizacija spletne strani za hitro nalaganje tako na namiznih kot mobilnih napravah, saj lahko počasno nalaganje povzroči visoko stopnjo zapustitev strani in frustracije uporabnikov.<sup><a href="#cite-12-trust">12</a></sup></p>
+             <p>Ohranjanje vizualne jasnosti in profesionalne estetike dodatno prispeva k zaupanju uporabnikov. Uporabniški vmesnik (UI) mora biti čist, jedrnat in dobro organiziran, brez nereda in motenj.<sup><a href="#cite-11-trust">11</a></sup> Pozornost je treba nameniti UX tipografiji, ki zagotavlja berljivost in vizualno udobje z ustreznimi izbirami pisav, velikostjo besedila, razmiki in hierarhijo.<sup><a href="#cite-11-trust">11</a></sup> Premišljeno izbrana barvna shema mora odražati identiteto blagovne znamke in vzbujati želena čustva, kot sta zaupanje in inovativnost.<sup><a href="#cite-13-trust">13</a></sup> Omejitev barvne palete na največ tri barve spodbuja jasnost<sup><a href="#cite-6-trust">6</a></sup>, ponudba svetle in temne teme pa lahko zadovolji preference uporabnikov.<sup><a href="#cite-8-trust">8</a></sup> Visokokakovostni vizualni elementi, vključno z jasnimi slikami in grafikami ustrezne velikosti, so bistveni;<sup><a href="#cite-14-trust">14</a></sup> slabi vizualni elementi lahko zmanjšajo verodostojnost spletne strani.<sup><a href="#cite-5-trust">5</a></sup> Celotna estetika mora izražati profesionalen ton in se izogibati preveč bleščečim ali pretiranim oblikovalskim elementom.<sup><a href="#cite-17-trust">17</a></sup> Doslednost blagovne znamke na celotni spletni strani, vključno z logotipom, barvami in tipografijo, krepi prepoznavnost blagovne znamke in zaupanja vrednost.<sup><a href="#cite-17-trust">17</a></sup></p>
+
+             <h3>Bistvena vsebina za vzpostavitev preglednosti in verodostojnosti</h3>
+             <p>Poleg oblikovanja je vsebina, predstavljena na spletni strani kriptovalut, ključnega pomena za vzpostavitev preglednosti in verodostojnosti.<sup><a href="#cite-15-trust">15</a></sup> Jasno artikuliranje vizije, poslanstva in dolgoročnih ciljev projekta je temeljno.<sup><a href="#cite-16-trust">16</a></sup> Privlačen slogan na domači strani mora takoj sporočiti vrednostno ponudbo platforme.<sup><a href="#cite-13-trust">13</a></sup> Dobro opredeljena izjava o poslanstvu mora artikulirati osrednji namen projekta in dolgoročne težnje.<sup><a href="#cite-5-trust">5</a></sup> Spletna stran mora jasno razložiti problem, ki ga želi rešiti veriga blokov prve ravni, kako izboljšuje učinkovitost ali katere edinstvene prednosti ponuja, ter poudariti resnično uporabnost tehnologije.<sup><a href="#cite-18-trust">18</a></sup> Poudarjanje zavezanosti projekta k dolgoročni trajnosti in razvoju dodatno pomirja potencialne uporabnike in vlagatelje.<sup><a href="#cite-20-trust">20</a></sup></p>
+             <p>Zagotavljanje dostopne, a podrobne razlage tehnologije verige blokov prve ravni je prav tako najpomembnejše. Spletna stran mora na uporabniku prijazen način razložiti osnove verige blokov, poudariti njeno decentralizirano naravo in nespremenljivo glavno knjigo.<sup><a href="#cite-18-trust">18</a></sup> Jasne in točne informacije o specifični tehnologiji, ki podpira verigo blokov, vključno z mehanizmi soglasja, rešitvami za skalabilnost in funkcijami interoperabilnosti, morajo biti zlahka dostopne.<sup><a href="#cite-21-trust">21</a></sup> Uporaba interaktivnih elementov, kot so animirani diagrami, lahko izboljša razumevanje.<sup><a href="#cite-18-trust">18</a></sup> Zapletene tehnične izraze je treba razložiti v preprostem jeziku brez žargona, pogosto ob vizualnih pripomočkih.<sup><a href="#cite-8-trust">8</a></sup></p>
+             <p>Celovita bela knjiga (whitepaper), zlahka dostopna na spletni strani, je nepogrešljiv vir za uporabnike, ki iščejo poglobljene informacije o ciljih projekta, tehnologiji, uporabnosti žetona in mehanizmih.<sup><a href="#cite-12-trust">12</a></sup> Bela knjiga mora jasno artikulirati problem, ki ga želi rešiti kriptovaluta<sup><a href="#cite-39-trust">39</a></sup>, biti mora natančno napisana, temeljito raziskana in brez napak.<sup><a href="#cite-41-trust">41</a></sup> Poleg tega je bistvena jasna razlaga tokenomike, vključno s ponudbo žetonov, metodami distribucije, uporabnostjo žetona in mehanizmi spodbud za imetnike.<sup><a href="#cite-18-trust">18</a></sup> Podroben načrt projekta z jasnimi mejniki, časovnicami in pričakovanimi datumi dokončanja zagotavlja vizualno predstavitev razvojne poti projekta in dolgoročnih načrtov.<sup><a href="#cite-27-trust">27</a></sup></p>
+             <p>Predstavitev osrednje ekipe in svetovalcev s poudarkom na njihovih relevantnih izkušnjah in strokovnem znanju je še en ključni element za vzpostavitev zaupanja. Stran "O nas" mora vsebovati profile članov osrednje ekipe, ki podrobno opisujejo njihove reference in relevantne izkušnje na področju verige blokov, razvoja programske opreme, financ ali drugih ustreznih področij.<sup><a href="#cite-13-trust">13</a></sup> Če je primerno, lahko navedba partnerjev, vlagateljev in svetovalcev dodatno poveča verodostojnost.<sup><a href="#cite-35-trust">35</a></sup> Zagotavljanje povezav do poklicnih profilov članov ekipe omogoča preverjanje njihovih ozadij.<sup><a href="#cite-40-trust">40</a></sup> Ključnega pomena je izogibanje anonimnim ekipam, saj je to pomembna rdeča zastavica v prostoru kriptovalut.<sup><a href="#cite-52-trust">52</a></sup></p>
+
+             <h3>Prednostna obravnava uporabniške izkušnje pri kriptovalutah</h3>
+             <p>Glede na neločljivo zapletenost tehnologije veriženja blokov je prednostna obravnava uporabniške izkušnje (UX) ključnega pomena za spletno stran kriptovalut.<sup><a href="#cite-20-trust">20</a></sup> Poenostavitev zapletenih konceptov za široko občinstvo je najpomembnejša. To je mogoče doseči z uporabo preprostega jezika brez žargona ob vizualnih pripomočkih, kot so ilustracije in razlagalne animacije.<sup><a href="#cite-8-trust">8</a></sup> Zagotavljanje visokokakovostne izobraževalne vsebine prek blogovskih objav, vadnic in pogostih vprašanj (FAQ) lahko premosti vrzel v znanju mnogih uporabnikov.<sup><a href="#cite-13-trust">13</a></sup> Vključevanje interaktivnih predstavitev in namigov (tooltips) lahko vodi uporabnike skozi bistvene naloge, kot je ustvarjanje denarnice.<sup><a href="#cite-59-trust">59</a></sup></p>
+             <p>Oblikovanje učinkovitega postopka uvajanja (onboarding) za nove uporabnike je bistvenega pomena za zadržanje. To vključuje ponudbo navodil po korakih ali interaktivnih vadnic za nastavitev računov in denarnic.<sup><a href="#cite-60-trust">60</a></sup> Zapletene postopke je treba razdeliti na kratke, prebavljive dele z jasnimi navodili.<sup><a href="#cite-17-trust">17</a></sup> Kazalniki napredka in vizualni namigi lahko pomagajo uporabnikom slediti svojemu napredku med uvajanjem.<sup><a href="#cite-60-trust">60</a></sup> Pomembno je, da novih uporabnikov na začetku ne preobremenimo s preveč informacijami.<sup><a href="#cite-60-trust">60</a></sup></p>
+             <p>Naslavljanje skrbi uporabnikov glede varnosti in zasebnosti z oblikovanjem je prav tako ključnega pomena. Vidne varnostne značke, kot so SSL certifikati, morajo biti prikazane blizu gumbov za prijavo in v nogi strani.<sup><a href="#cite-13-trust">13</a></sup> Varnostne funkcije, kot sta dvofaktorska avtentikacija (2FA) in shranjevanje v hladni denarnici (cold wallet), morajo biti jasno poudarjene.<sup><a href="#cite-13-trust">13</a></sup> Pregleden pravilnik o zasebnosti, ki podrobno opisuje prakse ravnanja s podatki, je obvezen.<sup><a href="#cite-54-trust">54</a></sup> Vizualni namigi in povratne informacije, kot so pojavna okna, ki potrjujejo uspešno oddajo podatkov, lahko pomirijo uporabnike.<sup><a href="#cite-61-trust">61</a></sup></p>
+             <p>Omogočanje nemotene interakcije in jasnih uporabniških poti je ključnega pomena za pozitivno izkušnjo. Preprosti in poenostavljeni navigacijski meniji izboljšajo uporabnost.<sup><a href="#cite-4-trust">4</a></sup> Jasni in akcijsko usmerjeni pozivi k dejanju (CTA) morajo izstopati, da usmerjajo uporabnike k ključnim dejanjem.<sup><a href="#cite-4-trust">4</a></sup> Zagotavljanje povratnih informacij v realnem času med kritičnimi dejanji, kot je podpisovanje transakcij, gradi zaupanje.<sup><a href="#cite-17-trust">17</a></sup> Jasna in akcijsko usmerjena sporočila o napakah pomagajo uporabnikom razumeti in rešiti težave.<sup><a href="#cite-17-trust">17</a></sup> Poenostavitev transakcijskih postopkov z zmanjšanjem korakov in zagotavljanjem enostavnih navodil, vključno s funkcijami, kot sta kopiranje naslova denarnice z enim dotikom in posodobitve stanja v realnem času, izboljša celotno uporabniško izkušnjo.<sup><a href="#cite-12-trust">12</a></sup></p>
+
+             <h3>Implementacija in komuniciranje robustnih varnostnih ukrepov</h3>
+             <p>Implementacija robustnih varnostnih funkcij je najpomembnejša za vsak projekt kriptovalut.<sup><a href="#cite-24-trust">24</a></sup> Spletna stran mora uporabljati šifriranje HTTPS s certifikati SSL za zaščito prenosa podatkov.<sup><a href="#cite-8-trust">8</a></sup> Dvofaktorska avtentikacija (2FA) mora biti implementirana za uporabniške račune, njena razpoložljivost pa mora biti jasno sporočena.<sup><a href="#cite-8-trust">8</a></sup> Če je podprta biometrična avtentikacija, je treba tudi to poudariti.<sup><a href="#cite-11-trust">11</a></sup> Uporabo shranjevanja v hladni denarnici za večino sredstev kriptovalut je treba omeniti, da se uporabnike pomiri glede varnosti sredstev.<sup><a href="#cite-8-trust">8</a></sup> Redne varnostne revizije, ki jih izvajajo ugledna tretja podjetja, dokazujejo zavezanost k prepoznavanju in odpravljanju ranljivosti.<sup><a href="#cite-43-trust">43</a></sup> Implementacija spremljanja IP naslovov lahko zagotovi dodatno raven varnosti z opozarjanjem uporabnikov na sumljivo dejavnost.<sup><a href="#cite-12-trust">12</a></sup> Funkcije, kot so časovne omejitve sej in vidni gumbi za odjavo, pomagajo uporabnikom ohraniti nadzor nad svojimi računi.<sup><a href="#cite-17-trust">17</a></sup> Varna zaledna infrastruktura je bistvena za zaščito pred poskusi vdorov.<sup><a href="#cite-11-trust">11</a></sup> Za zaščito občutljivih podatkov je treba uporabljati protokole šifriranja na visoki ravni.<sup><a href="#cite-8-trust">8</a></sup> Varnostno usmerjeni elementi uporabniškega vmesnika, kot so ikone ključavnic, lahko zagotovijo vizualno pomiritev.<sup><a href="#cite-17-trust">17</a></sup></p>
+             <p>Izobraževanje uporabnikov o najboljših praksah za zaščito njihovih sredstev je enako pomembno.<sup><a href="#cite-26-trust">26</a></sup> Spletna stran mora uporabnikom svetovati, naj uporabljajo močna, edinstvena gesla in razmislijo o upravitelju gesel.<sup><a href="#cite-62-trust">62</a></sup> Močno je treba priporočiti aktiviranje 2FA na vseh računih, povezanih s kriptovalutami.<sup><a href="#cite-40-trust">40</a></sup> Uporabnikom je treba svetovati, naj posodabljajo svojo programsko opremo in naprave ter se izogibajo sumljivim prenosom in povezavam.<sup><a href="#cite-65-trust">65</a></sup> Ključnega pomena so navodila za izbiro varnih denarnic in varovanje zasebnih ključev ter semenskih fraz brez povezave, s poudarkom na tem, da se zasebnih ključev nikoli ne deli.<sup><a href="#cite-40-trust">40</a></sup> Poudariti je treba pomen uporabe VPN v javnih omrežjih.<sup><a href="#cite-40-trust">40</a></sup> Uporabnike je treba opomniti, naj pred pošiljanjem transakcij dvakrat preverijo naslove prejemnikov<sup><a href="#cite-72-trust">72</a></sup> in jih izobraziti o prepoznavanju in izogibanju phishing prevaram.<sup><a href="#cite-41-trust">41</a></sup> Spodbujanje rednega spremljanja računov in svetovanje o zaščiti pred zlonamerno programsko opremo sta prav tako bistvena.<sup><a href="#cite-28-trust">28</a>, <a href="#cite-62-trust">62</a></sup></p>
+             <p>Jasno opisovanje varnostnih protokolov in ukrepov, ki jih izvaja sam projekt, dodatno povečuje zaupanje.<sup><a href="#cite-28-trust">28</a></sup> Namenska stran "Varnost" lahko podrobno opiše tehnične zaščite, operativne postopke in odgovornosti uporabnikov.<sup><a href="#cite-29-trust">29</a></sup> Preglednost glede metod šifriranja, praks upravljanja denarnic in postopkov odzivanja na ranljivosti je ključnega pomena.<sup><a href="#cite-17-trust">17</a>, <a href="#cite-30-trust">30</a></sup> Uporabnike je treba obveščati o vseh varnostnih posodobitvah ali izboljšavah.<sup><a href="#cite-54-trust">54</a></sup> Nazadnje, opis načrta projekta za obravnavanje varnostnih incidentov ali kršitev zagotavlja pomiritev.<sup><a href="#cite-63-trust">63</a></sup></p>
+
+             <h3>Spodbujanje sodelovanja skupnosti in dokazovanje preglednosti</h3>
+             <p>Gradnja močne skupnosti okoli projekta kriptovalut je bistvenega pomena za dolgoročni uspeh in zaupanje.<sup><a href="#cite-30-trust">30</a></sup> Vključevanje kanalov za interakcijo skupnosti je ključnega pomena. Vzdrževanje aktivnega bloga omogoča deljenje posodobitev projekta, izobraževalne vsebine in sodelovanje s skupnostjo.<sup><a href="#cite-12-trust">12</a>, <a href="#cite-31-trust">31</a></sup> Gostovanje namenskega foruma skupnosti zagotavlja platformo za uporabnike, da razpravljajo o projektu in postavljajo vprašanja.<sup><a href="#cite-1-trust">1</a>, <a href="#cite-31-trust">31</a></sup> Vzpostavitev močne prisotnosti na platformah družbenih medijev olajša posodobitve in razprave.<sup><a href="#cite-1-trust">1</a>, <a href="#cite-31-trust">31</a></sup> Celovit razdelek s pogostimi vprašanji (FAQ) naslavlja pogosta vprašanja uporabnikov.<sup><a href="#cite-11-trust">11</a>, <a href="#cite-31-trust">31</a></sup> Zagotavljanje jasnih kontaktnih informacij omogoča uporabnikom, da se obrnejo s specifičnimi vprašanji.<sup><a href="#cite-13-trust">13</a>, <a href="#cite-31-trust">31</a></sup></p>
+             <p>Zagotavljanje rednih posodobitev o razvoju in napredku projekta je ključnega pomena za preglednost. To vključuje deljenje posodobitev o tehničnih mejnikih, novih funkcijah in partnerstvih.<sup><a href="#cite-13-trust">13</a>, <a href="#cite-32-trust">32</a></sup> Objavljanje poročil o preglednosti, ki podrobno opisujejo dejavnosti projekta in finančne informacije, lahko dodatno poveča zaupanje.<sup><a href="#cite-85-trust">85</a></sup> Poudarjanje opaznih sodelovanj in priporočil na spletni strani prikazuje rastoči ekosistem projekta.<sup><a href="#cite-18-trust">18</a>, <a href="#cite-32-trust">32</a></sup></p>
+             <p>Dokazovanje zavezanosti k preglednosti pri vseh operacijah je ključnega pomena. To vključuje vzdrževanje odprte in poštene komunikacije prek vseh kanalov.<sup><a href="#cite-13-trust">13</a>, <a href="#cite-33-trust">33</a></sup> Objektivno naslavljanje kritik in negativnih ocen ter podrobno opisovanje morebitnih nadaljnjih ukrepov kaže na odgovornost.<sup><a href="#cite-35-trust">35</a>, <a href="#cite-33-trust">33</a></sup> Pri platformah, ki vključujejo trgovanje ali staking, je poudarjanje neločljive preglednosti verige blokov s prikazovanjem podatkov na verigi in povezovanjem z raziskovalci bistvenega pomena.<sup><a href="#cite-13-trust">13</a>, <a href="#cite-33-trust">33</a></sup></p>
+
+             <h3>Grajenje zaupanja uporabnikov z izogibanjem kazalnikom prevar</h3>
+             <p>Za grajenje zaupanja uporabnikov je nujno aktivno izogibanje in naslavljanje pogostih rdečih zastavic, povezanih s prevarami s kriptovalutami.<sup><a href="#cite-33-trust">33</a></sup> Spletna stran se mora izrecno vzdržati obljub o zajamčenih, prevelikih ali brez tveganja donosih, saj so to značilnosti goljufivih shem.<sup><a href="#cite-20-trust">20</a>, <a href="#cite-34-trust">34</a></sup> Projekt se mora prav tako distancirati od lažnih priporočil slavnih osebnosti, kar je pogosta taktika prevarantov.<sup><a href="#cite-47-trust">47</a>, <a href="#cite-34-trust">34</a></sup> Izogibajte se uporabi pritiskov ali ustvarjanju umetne nujnosti, da bi uporabnike silili k vlaganju.<sup><a href="#cite-47-trust">47</a>, <a href="#cite-34-trust">34</a></sup> Spletna stran nikoli ne sme zahtevati zasebnih ključev uporabnikov ali zahtevati vnaprejšnjih plačil za dvige.<sup><a href="#cite-20-trust">20</a>, <a href="#cite-34-trust">34</a></sup> Preglednost glede ekipe, tehnologije in ciljev projekta je ključnega pomena; izogibajte se anonimnim ekipam in zagotovite jasno dokumentacijo.<sup><a href="#cite-47-trust">47</a>, <a href="#cite-34-trust">34</a>, <a href="#cite-35-trust">35</a></sup> Vzdržite se nerealnih ali neutemeljenih trditev o tehnologiji.<sup><a href="#cite-52-trust">52</a>, <a href="#cite-35-trust">35</a></sup> Ohranjanje profesionalne, visokokakovostne spletne strani brez napak je bistveno, saj je slaba kakovost lahko rdeča zastavica.<sup><a href="#cite-47-trust">47</a>, <a href="#cite-35-trust">35</a></sup> Jasne kontaktne informacije, vključno s fizičnim naslovom in telefonsko številko za podporo strankam, morajo biti zlahka dostopne.<sup><a href="#cite-70-trust">70</a>, <a href="#cite-35-trust">35</a></sup></p>
+             <p>Spodbujanje realističnih pričakovanj in izogibanje zagotovilom o nerealnih donosih je ključnega pomena. Spletna stran mora jasno navesti, da so naložbe v kriptovalute nestanovitne in nosijo znatno tveganje izgube.<sup><a href="#cite-31-trust">31</a>, <a href="#cite-36-trust">36</a></sup> K projekcijam je treba pristopati previdno, izogibati pa se je treba kakršnim koli obljubam o specifičnih donosih ali takojšnjem bogastvu.<sup><a href="#cite-20-trust">20</a>, <a href="#cite-36-trust">36</a></sup></p>
+
+             <h3>Naslavljanje pravnih in regulativnih vidikov</h3>
+             <p>Vključevanje potrebnih pravnih opozoril in opozoril o tveganjih je temeljni vidik grajenja zaupanja in dokazovanja odgovornosti.<sup><a href="#cite-36-trust">36</a></sup> Spletna stran mora zagotoviti jasne in lahko dostopne pogoje uporabe zanjo in za platformo kriptovalut.<sup><a href="#cite-35-trust">35</a>, <a href="#cite-37-trust">37</a></sup> Celovit pravilnik o zasebnosti, ki opisuje prakse zbiranja in uporabe podatkov, je prav tako bistven.<sup><a href="#cite-35-trust">35</a>, <a href="#cite-37-trust">37</a></sup> Vidna opozorila o tveganjih, povezanih z naložbami v kriptovalute, morajo biti prikazana po celotni strani.<sup><a href="#cite-20-trust">20</a>, <a href="#cite-37-trust">37</a></sup> Jasno mora biti navedeno, da so posredovane informacije zgolj informativne narave in ne predstavljajo finančnega svetovanja.<sup><a href="#cite-20-trust">20</a>, <a href="#cite-37-trust">37</a></sup></p>
+             <p>Če je primerno, mora spletna stran zagotoviti informacije o skladnosti projekta z relevantnimi finančnimi predpisi v jurisdikcijah, kjer deluje.<sup><a href="#cite-42-trust">42</a>, <a href="#cite-37-trust">37</a></sup> Vse pomembne licence ali registracije, ki jih ima projekt, morajo biti navedene za dodatno dokazovanje legitimnosti.<sup><a href="#cite-35-trust">35</a>, <a href="#cite-37-trust">37</a></sup></p>
+
+             <h3>Učenje iz uspeha: analiza spletnih strani uglednih kriptovalut prve ravni</h3>
+             <p>Analiza spletnih strani uspešnih projektov kriptovalut prve ravni lahko zagotovi dragocene vpoglede v najboljše prakse za grajenje zaupanja.<sup><a href="#cite-38-trust">38</a></sup> Pregled strukture, vsebine in funkcij spletnih strani, kot so Solana, Ethereum, Cardano, Avalanche, Cosmos in BNB Chain, razkriva več skupnih elementov.<sup><a href="#cite-39-trust">39</a></sup> Te spletne strani običajno odlikujejo čista in intuitivna navigacija, dobro organizirana vsebina in profesionalna vizualna zasnova.<sup><a href="#cite-40-trust">40</a></sup> Vidno predstavljajo svojo tehnologijo, belo knjigo, tokenomiko, načrt in informacije o ekipi.<sup><a href="#cite-41-trust">41</a></sup> Varnostne funkcije so pogosto poudarjene, prizadevajo pa si tudi za vključevanje skupnosti prek blogov, forumov in povezav do družbenih medijev.<sup><a href="#cite-42-trust">42</a></sup> Prepoznavanje teh skupnih elementov in najboljših praks lahko usmerja razvoj zaupanja vredne spletne strani za novo kriptovaluto prve ravni.<sup><a href="#cite-43-trust">43</a></sup> S sprejetjem podobnih strategij glede uporabniške izkušnje, predstavitve vsebine, varnostne komunikacije in sodelovanja skupnosti lahko nov projekt poveča svoje možnosti za grajenje zaupanja uporabnikov in dokazovanje dolgoročne obstojnosti.<sup><a href="#cite-44-trust">44</a></sup> Primerjalna tabela lahko dodatno ponazori skupne značilnosti teh uspešnih projektov.<sup><a href="#cite-45-trust">45</a></sup></p>
+             <table> <thead>
+                     <tr><th>Funkcija</th><th>Solana</th><th>Ethereum</th><th>Cardano</th><th>Avalanche</th><th>Cosmos</th><th>BNB Chain</th></tr>
+                 </thead>
+                 <tbody>
+                     <tr><td>Struktura spletne strani</td><td>Jasna, moderna</td><td>Celovita, organizirana po uporabniku</td><td>Hierarhična, izobraževalni poudarek</td><td>Osredotočena na uporabnika, poudarja ključne prednosti</td><td>Čista, vesoljska tema</td><td>Poudarek na ekosistemu in uporabnikih</td></tr>
+                     <tr><td>Navigacija</td><td>Intuitivna zgornja navigacija</td><td>Obsežna zgornja in nožna navigacija</td><td>Jasna zgornja navigacija</td><td>Kategorizirana zgornja navigacija</td><td>Intuitivna zgornja navigacija</td><td>Na uporabnika osredotočena zgornja navigacija</td></tr>
+                     <tr><td>Razlaga tehnologije</td><td>Podrobna, poudarja hitrost in skalabilnost</td><td>Celovita, pokriva različne vidike</td><td>Osredotočena na raziskave, podrobna</td><td>Poudarja hitrost in skalabilnost</td><td>Poudarek na interoperabilnosti</td><td>Poudarja obseg transakcij in uporabnike</td></tr>
+                     <tr><td>Bela knjiga</td><td>Lahko dostopna</td><td>Vidno predstavljena</td><td>Na voljo</td><td>Povezana v virih</td><td>Dostopna</td><td>Povezana</td></tr>
+                     <tr><td>Tokenomika</td><td>Jasna predstavitev</td><td>Celovite informacije</td><td>Podrobna razlaga</td><td>Omenjena</td><td>Razložena</td><td>Podrobna</td></tr>
+                     <tr><td>Načrt</td><td>Javno dostopen</td><td>Jasno predstavljen</td><td>Podroben načrt</td><td>Omenjen</td><td>Dostopen</td><td>Na voljo</td></tr>
+                     <tr><td>Ekipa</td><td>Javni profili</td><td>Razdelek o ekipi</td><td>Poudarjene vključene entitete</td><td>Informacije o ekipi</td><td>Razdelek o ekipi</td><td>Ni vidno prikazano</td></tr>
+                     <tr><td>Varnost</td><td>Omenjena</td><td>Razdelek o varnosti</td><td>Poudarek na raziskavah in varnosti</td><td>Omenjena</td><td>Ni vidno</td><td>Omenjena</td></tr>
+                     <tr><td>Skupnost</td><td>Aktivni družbeni mediji, viri za razvijalce</td><td>Obsežen razdelek o skupnosti</td><td>Močan poudarek na skupnosti</td><td>Aktivni družbeni mediji, središče skupnosti</td><td>Razdelek o skupnosti</td><td>Poudarek na ekosistemu</td></tr>
+                 </tbody>
+              </table>
+
+             <h3>Zaključek</h3>
+             <p>Grajenje zaupanja vredne spletne strani za novo kriptovaluto prve ravni zahteva večplasten pristop, ki daje prednost uporabniški izkušnji, preglednosti, varnosti in sodelovanju skupnosti.<sup><a href="#cite-47-trust">47</a></sup> Z upoštevanjem temeljnih načel spletnega oblikovanja, zagotavljanjem jasnih in celovitih informacij o projektu in njegovi tehnologiji, implementacijo robustnih varnostnih ukrepov, spodbujanjem aktivne skupnosti, izogibanjem pogostim kazalnikom prevar ter naslavljanjem pravnih in regulativnih vidikov lahko projekt vzpostavi trden temelj zaupanja.<sup><a href="#cite-48-trust">48</a></sup> Učenje iz uspehov uveljavljenih projektov prve ravni lahko zagotovi dragoceno vodilo pri strukturiranju spletne strani in predstavljanju bistvenih informacij na način, ki odmeva pri uporabnikih in vlagateljih, kar na koncu prispeva k dolgoročnemu uspehu in obstojnosti projekta.<sup><a href="#cite-49-trust">49</a></sup></p>
+
+             <section class="works-cited" id="bibliography-trust">
+                 <h4>Navedena dela (Grajenje Zaupanja)</h4>
+                 <ol>
+                    <li id="cite-1-trust">10 Principles of Good Website Design | by UIDesignz - UI UX Design Company - Medium, accessed April 8, 2025, <a href="https://medium.com/@uidesign0005/10-principles-of-good-website-design-15d1645f0059">https://medium.com/@uidesign0005/10-principles-of-good-website-design-15d1645f0059</a></li>
+                    <li id="cite-2-trust">10 Principles Of Good Web Design - Smashing Magazine, accessed April 8, 2025, <a href="https://www.smashingmagazine.com/2008/01/10-principles-of-effective-web-design/">https://www.smashingmagazine.com/2008/01/10-principles-of-effective-web-design/</a></li>
+                    {/* ... (ostali viri iz originalne datoteke, prilagodi ID-je, če je potrebno) ... */}
+                     <li id="cite-83-trust">How To Avoid Cryptocurrency Scams - Kaspersky, accessed April 8, 2025, <a href="https://usa.kaspersky.com/resource-center/definitions/cryptocurrency-scams">https://usa.kaspersky.com/resource-center/definitions/cryptocurrency-scams</a></li>
+                 </ol>
+             </section>
+        </section>
+
+        <section id="dilema-decentralizacije">
+            <h2>Onkraj decentralizacije: argument za financirano upravljanje v projektu Lana</h2>
+            <p>Projekt LanaCoin stoji na razpotju. Analiza potrjuje znatno koncentracijo lastništva med majhnim številom "kitov", poleg ambicioznih načrtov za prenovo in rast. Medtem ko se decentralizirana narava kriptovalut pogosto hvali, trenutna struktura LanaCoina predstavlja kritično ranljivost: preveliko zanašanje na največje imetnike ("kitova ekonomija") skupaj z neločljivo potrebo po financiranem, strokovnem upravljanju lahko privede do stagnacije projekta in njegovega končnega usihanja, namesto da bi uspeval.</p>
+
+            <h3>Stroga realnost: prevlada kitov</h3>
+            <p>Nedavna analiza riše jasno sliko ekstremne koncentracije bogastva znotraj ekosistema LanaCoin. Top 10 imetnikov nadzoruje približno 35,6 % krožeče ponudbe, medtem ko Top 100 imetnikov poseduje osupljivih 73 %. Izračunani Ginijev koeficient 0,813 dodatno poudarja to visoko stopnjo neenakosti.</p>
+            <p>Takšna koncentracija predstavlja znatna tveganja. Kot je navedeno v interpretaciji analize v ustvarjenem poročilu, lahko vodi do povečane tržne nestanovitnosti in daje velikim imetnikom nesorazmeren vpliv na smer projekta in tržno stabilnost. Odločitve, ki jih sprejme (ali ne sprejme) peščica akterjev, lahko drastično vplivajo na vrednost žetona in potek projekta, potencialno prevladajo nad širšimi interesi skupnosti.</p>
+
+            <h3>Potrjena povratna zanka stakinga</h3>
+            <p>Skrb, da bi mehanizmi stakinga lahko dodatno poslabšali koncentracijo, je potrjena s primerjavo podatkov o ekstrakciji (zaslužki Proof-of-Stake) iz raziskovalca verige blokov s seznamom najbogatejših. Analiza potrjuje, da so najvišje uvrščeni staking naslovi, tisti, ki zaslužijo največ nagrad z iskanjem blokov, pretežno isti naslovi, ki jih najdemo na samem vrhu seznama najbogatejših.</p>
+            <p>Na primer:</p>
+            <ul>
+                <li>#1 uvrščeni staker (po % zadnjih 1000 blokov) je tudi #1 najbogatejši naslov.</li>
+                <li>#3 staker je #3 najbogatejši.</li>
+                <li>Vsi Top 10 naslovi, ki zaslužijo največ s stakingom, so uvrščeni med Top 15 najbogatejših naslovov.</li>
+            </ul>
+            <p>To ustvarja jasno povratno zanko: tisti, ki že imajo največ LANA, zaslužijo največ staking nagrad, s čimer še povečujejo svoj delež skozi čas in izjemno otežujejo manjšim imetnikom ali novim udeležencem pridobitev kakršnega koli pomembnega deleža ali nagrade s sodelovanjem. Ta dinamika potencialno odvrača širšo posvojitev in varnostne koristi mreže zaradi diverzifikacije.</p>
+
+            <h3>Zaupanje si je treba zaslužiti, ni samoumevno</h3>
+            <p>Za vsak projekt kriptovalut, še posebej tistega, ki se ponovno zaganja, je grajenje zaupanja nujna. Smernice "Grajenje zaupanja", pripravljene za ta projekt, poudarjajo bistvene elemente: jasno vizijo in načrt, pregledno in izkušeno ekipo, robustno varnostno komunikacijo, aktivno sodelovanje skupnosti in upoštevanje pravnih vidikov. Izogibanje rdečim zastavicam, povezanim s prevarami, kot so anonimne ekipe ali nerealne obljube, je ključnega pomena za legitimnost. To niso izbirni dodatki; so temeljni pogoji za privabljanje uporabnikov, razvijalcev in potencialnih borznih partnerjev.</p>
+
+            <h3>Neizogibna potreba po financiranem upravljanju</h3>
+            <p>Doseganje ravni profesionalnosti in aktivnosti, potrebne za grajenje zaupanja in izvedbo ambicioznega načrta projekta, zahteva predano delo. Lastni načrtovalni dokumenti projekta opisujejo številne naloge, ki zahtevajo specializirana znanja: razvoj verige blokov, posodobitve denarnic, izdelava spletnih strani, marketinške kampanje, upravljanje skupnosti, zagotavljanje partnerstev, pravna skladnost in ključno, krmarjenje skozi zapleten postopek uvrstitve na ugledne borze.</p>
+            <p>Orodja za oceno stroškov izrecno priznavajo to z dodeljevanjem vlog in ocenjevanjem stroškov (v EUR ali LANA) za te naloge. Ta načrt priznava, da se dosleden razvoj, aktivno trženje, strokovna komunikacija in znatna prizadevanja, potrebna za uvrstitev na borze, ne morejo zanašati zgolj na prostovoljstvo. Za privabljanje in zadržanje potrebnih talentov je potrebno plačilo.</p>
+
+            <h3>Dilema decentralizacije: potreben je osrednji napor</h3>
+            <p>Čeprav LanaCoin morda deluje na decentraliziranem omrežju, doseganje pomembnih mejnikov zahteva centraliziran *napor*. Naloge, kot so pogajanja z borzami A-razreda (kjer LanaCoin trenutno ni prisoten), oblikovanje strateških partnerstev, ohranjanje dosledne blagovne znamke in zagotavljanje zanesljivega osrednjega vira informacij, zahtevajo usklajeno, financirano ekipo. V ekosistemu, kjer prevladujejo pasivni kiti, je upanje, da se bodo te kritične, virov intenzivne dejavnosti zgodile spontano, nerealno in škodljivo za obete projekta.</p>
+
+            <h3>Zaključek: investiraj ali usahni</h3>
+            <p>Projekt LanaCoin ima potencial, vendar je njegova prihodnost odvisna od premagovanja tveganj, ki jih predstavlja njegova visoko koncentrirana lastniška struktura. "Kitova ekonomija", kjer usoda projekta temelji na pasivnih deležih ali neusklajenih dejanjih nekaj velikih deležnikov, verjetno ne bo spodbudila zaupanja, aktivnosti in profesionalnosti, potrebnih za dolgoročni uspeh in pomembne uvrstitve na borze.</p>
+            <p>Analiza potrjuje koncentracijo in neposredno povezavo med visokim bogastvom in staking nagradami, medtem ko lastni načrtovalni dokumenti projekta podrobno opisujejo potrebno delo in povezane stroške. Da bi LanaCoin uspeval, gradil zaupanje in dosegel cilje, kot so uvrstitve na borze A-razreda, potrebuje predano, strokovno in *financirano* ekipo, ki bo opravila težko delo. Glede na njihov ogromen vložek v izid, odgovornost logično pade na kite, da investirajo v to operativno jedro. Brez takšne naložbe in zavezanosti k strokovnemu upravljanju LanaCoin tvega stagnacijo, upadanje zanimanja skupnosti in končno usihanje v pozabo.</p>
+
+            <hr> <h4>Viri (Dilema Decentralizacije):</h4>
+            <h5>Interni projektni dokumenti:</h5>
+            <ol>
+                <li><a href="googleusercontent.com/user-uploaded-content/Lanacoin%20Explorer%20extraction.html">Stran za ekstrakcijo (Lanacoin Explorer)</a>: HTML izpis strani raziskovalca Cryptoid, ki prikazuje staking naslove in njihovo ustrezno mesto na seznamu bogatih.</li>
+                <li><a href="googleusercontent.com/user-uploaded-content/Lanacoin%20Explorer%20richlist.html">Seznam bogatih (Lanacoin Explorer)</a>: HTML izpis strani seznama bogatih raziskovalca Cryptoid.</li>
+                <li><a href="#grajenje-zaupanja">Grajenje zaupanja: Bistveni elementi spletnih strani kriptovalut</a>: Smernice o bistvenih elementih za zaupanja vredne spletne strani kriptovalut. (Povezava na sidro znotraj te strani)</li>
+                <li><a href="googleusercontent.com/user-uploaded-content/lana_project_cost_sample.html">Projekt Lana - Vzorčna ocena stroškov</a>: Statični HTML dokument, ki opisuje načrt projekta in vzorčne ocene stroškov.</li>
+                <li><a href="googleusercontent.com/user-uploaded-content/LANA_Whale_Report.html">Poročilo o analizi kitov LanaCoin</a>: Primer HTML izpisa poročila o analizi kitov.</li>
+                <li><a href="googleusercontent.com/user-uploaded-content/lana-cost-calculator.html">Projekt Lana - Kalkulator stroškov</a>: Interaktivno orodje za oceno stroškov HTML/JS.</li>
+                <li><a href="googleusercontent.com/user-uploaded-content/presentation.html">Projekt Lana - Predstavitveni demo</a>: Drsljiva HTML predstavitev, ki povzema projekt.</li>
+                 <li><a href="googleusercontent.com/user-uploaded-content/README.md">Datoteka README.md</a>: Datoteka README repozitorija.</li>
+            </ol>
+            <h5>Izbrani zunanji viri (citirani v Grajenje Zaupanja):</h5>
+            <ol start="9">
+                <li><a href="https://community.nasscom.in/index.php/communities/mobile-web-development/crypto-website-design-success-key-elements-best-practices-and">Crypto Website Design for Success: Key Elements, Best Practices, and Industry Insights</a> (Nasscom Community)</li>
+                <li><a href="https://www.mass.gov/info-details/beware-cryptocurrency-scams">Beware Cryptocurrency Scams</a> (Mass.gov)</li>
+                <li><a href="https://unicornplatform.com/blog/cryptocurrency-landing-pages-how-to-create-trust-and-show-credibility/">Cryptocurrency Landing Pages: How to Create Trust and Show Credibility</a> (Unicorn Platform)</li>
+                <li><a href="https://tokenminds.co/blog/crypto-learning/red-flags-to-spot-before-investing-in-a-crypto-project">5 Crypto Red Flags: What to Look Out For Before You Invest</a> (TokenMinds)</li>
+            </ol>
+        </section>
+
+    </main>
+
+</body>
+</html>
