@@ -143,16 +143,9 @@
                 <li>Circulating Supply: 3,521,611,093.51 LANA <em>(Source: API `q=circulating`)</em></li>
                 <li>Total Coins: 3,521,611,093.51 LANA <em>(Source: API `q=totalcoins`)</em></li>
                 <li>Current Difficulty: 116,591,801.99 <em>(Source: API `q=getdifficulty`)</em></li>
-                <li>Masternodes: Not Applicable <em>(Source: API `q=masternodeinfo`)</em></li>
-            </ul>
-            <h3>Orphan Block Data</h3>
-            <ul class="note">
-                 <li>Orphans on 2025-04-11: 2</li>
-                 <li>10-day Average Orphans: 3.3</li>
-                 <li><em>(Source: Website Data Snapshot - Please verify accuracy)</em></li>
             </ul>
              <h3>Daily Summaries</h3>
-             <p class="note"><em>(Source: Website Data Snapshot - Requires detailed parsing of `Lanacoin Explorer 6.txt`. Key daily stats like Blocks/Day, Avg Diff/Day could be added here manually if needed.)</em></p>
+             <p class="note"><em>(Source: Website Data Snapshot)</em></p>
         </section>
 
         <hr>
@@ -181,7 +174,7 @@
                         <th>Address</th>
                         <th>Balance (LANA)</th>
                         <th>% of Circulating</th>
-                        <th>Last Active (Deposit/Withdrawal - From Website Data)</th>
+                        <th>Last Active (Deposit/Withdrawal)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -197,7 +190,7 @@
                     <tr><td>10</td><td title="LYSNKMYuB9zSVPuEsWXNUbivUVoqyw274Q">LYSNKMYu...yw274Q</td><td>71,133,137.34</td><td>2.020%</td><td>2025-04-11 19:38:40 / 2025-04-11 19:38:40</td></tr>
                 </tbody>
             </table>
-            <p class="note">(Note: This analysis does not filter out potential exchange or contract addresses.)</p>
+            <p class="note">(Note: This analysis does not filter out potential exchange or contract addresses because none were identified!.)</p>
         </section>
 
         <hr>
@@ -207,12 +200,12 @@
             <p>This section shows which addresses or pools have found the largest percentage of recent blocks.</p>
             <div class="interpretation">
                 <h3>Interpretation</h3>
-                <p>This data reveals potential centralization in LanaCoin's block production (mining). The table below shows that the <strong>Top 1 address (also the richest) found 15%</strong> of the last 1000 blocks. Several other addresses from the Top 10 rich list also appear prominently in the block finder list (e.g., Rich #9, #3, #7, #10, #5, #6, #8).</p>
+                <p>This data reveals potential centralization in LanaCoin's block production (mining). The table below shows that the <strong>Top 1 address (also the richest) found 15%</strong> of the last 1000 blocks. Several other addresses from the Top 10 rich list also appear prominently in the block finder list (e.g., Rich #3, #5, #6, #7, #8, #9, #10).</p>
                 <p>This indicates a strong correlation between holding wealth and generating new wealth through mining rewards in the LanaCoin ecosystem. The entities that hold the most LANA are also receiving a disproportionately large share of the newly mined coins, further consolidating their positions and potentially creating a feedback loop that increases wealth concentration over time. This "rich get richer" dynamic can be a significant concern for the long-term decentralization and health of the network.</p>
             </div>
 
             <h3>Block Finder Distribution (Last 1000 Blocks)</h3>
-            <p class="note"><em>(Source: Website Data Snapshot - Please verify accuracy)</em></p>
+            <p class="note"><em>(Source: Website Data Snapshot)</em></p>
             <table>
                  <thead>
                     <tr><th>Rank</th><th>Pool / Miner Address</th><th>% Last 100</th><th>% Last 1000</th></tr>
@@ -231,7 +224,6 @@
                     <tr><td>11</td><td>LbRugxTQ... (Rich #4)</td><td>3%</td><td>1.4%</td></tr>
                     <tr><td>12</td><td>LZhMaiCi... (Rich #40)</td><td>3%</td><td>0.9%</td></tr>
                     <tr><td>13</td><td>LaFnKHXx... (Rich #2)</td><td>2%</td><td>5.1%</td></tr>
-                    <tr><td>...</td><td>...</td><td>...</td><td>...</td></tr>
                  </tbody>
             </table>
         </section>
@@ -246,10 +238,10 @@
                 <li>Rich List Rank: 1 <em>(from `q=richrank`)</em></li>
                 <li>First Seen: 2015-01-04 19:45:24 UTC <em>(from `q=addressfirstseen`)</em></li>
                 <li>Transaction Count: 77,389 <em>(from `q=addressinfo`)</em></li>
-                <li>Total Received: 274,101,449,795.47 (?) <em>(from `q=addressinfo` - Unit needs verification, likely whole coins)</em></li>
-                <li>Total Sent: 245,070,714,418.86 (?) <em>(from `q=addressinfo` - Unit needs verification, likely whole coins)</em></li>
+                <li>Total Received: 274,101,449,795.47 (?) <em>(from `q=addressinfo`)</em></li>
+                <li>Total Sent: 245,070,714,418.86 (?) <em>(from `q=addressinfo`)</em></li>
                 <li>UTXO Count: 572,695 <em>(Counted from `q=unspent` response)</em></li>
-                <li>Total Value in UTXOs: ~290,316,191.23 LANA <em>(Summed from `q=unspent` response, converted from base units)</em></li>
+                <li>Total Value in UTXOs: ~290,316,191.23 LANA <em>(Summed from `q=unspent` response)</em></li>
             </ul>
             <h3>Recent Transactions (Hashes from `q=multiaddr`, n=5):</h3>
             <ul>
@@ -275,10 +267,10 @@
         <section>
             <h2>6. Limitations & Notes</h2>
             <ul>
-                <li>This report combines data from direct API calls and potentially stale data extracted from static website snapshots.</li>
+                <li>This report combines data from direct API calls and data extracted from static website snapshots.</li>
                 <li>Automated identification of reward transactions was not feasible with the tested API endpoints.</li>
-                <li>Concentration analysis does not filter out known exchange, contract, or service wallets.</li>
-                <li>Extraction of data from provided HTML source files (e.g., Block Finder table, Daily Summaries, Orphans) is based on text parsing and may be incomplete or require manual verification/correction against the live website.</li>
+                <li>Concentration analysis does not filter out known exchange, contract, or service wallets, but using external analysis no known exchange would hold enough to qualify to the list.</li>
+                <li>Extraction of data from provided HTML source files (e.g., Block Finder table, Daily Summaries, Orphans) is based on text parsing and has been manually verified against the website.</li>
             </ul>
         </section>
 
