@@ -20,9 +20,19 @@ The interactive cost calculator and links to other documents are hosted at:
 * **[`static_lana_report.html`](./static_lana_report.html)**: Static report combining API and website data analysis. *(Manually generated snapshot)*
 * **[`whales-analysis.html`](./whales-analysis.html)**: An analytical article examining the role and impact of cryptocurrency "whales" holding assets in low-volume market conditions. *(Direct Link to Whale Analysis Context)*
     * **[`LANA_Whale_Report.html`](./LANA_Whale_Report.html)**: Automated report showing LanaCoin top holder concentration and distribution analysis. *(Auto-updated daily via GitHub Actions)*
+* **[`lana_decentralization_dilemma.html`](./lana_decentralization_dilemma.html)**: Analysis of wealth concentration risks and the need for funded project management. *(Direct Link to Decentralization Dilemma Analysis)*
 * **[`Building-Trust.html`](./Building-Trust.html)**: Static HTML version of the 'Building Trust: Essential Website Elements for Level 1 Blockchain Cryptocurrencies' guidelines document. *(Direct Link to Trust Guidelines)*
 
 * **`README.md`**: This file, explaining the repository contents.
+
+## Slovenska Različica Dokumentov
+
+Spodaj so povezave do slovenskih prevodov ključnih dokumentov. Prevedeni so bili bistveni deli, povezani s projektom, za lažje razumevanje.
+
+* **[`staticno_porocilo_lana_sl.html`](./staticno_porocilo_lana_sl.html)**: Statično poročilo analize verige LanaCoin.
+* **[`analiza-kitov_sl.html`](./analiza-kitov_sl.html)**: Vpliv kitov na kripto trgih z nizkim obsegom.
+* **[`lana_decentralizacija_dilema_sl.html`](./lana_decentralizacija_dilema_sl.html)**: Onkraj decentralizacije: argument za financirano upravljanje v projektu Lana.
+* **[`grajenje-zaupanja_sl.html`](./grajenje-zaupanja_sl.html)**: Grajenje zaupanja: bistveni elementi spletne strani kriptovalut.
 
 ## Using the Interactive Calculator (`lana-cost-calculator.html`)
 

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vpliv kitov na kripto trgih z nizkim obsegom</title> {/* Changed to sentence case */}
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            line-height: 1.6;
+            padding: 1rem 2rem;
+            margin: 0 auto;
+            max-width: 900px;
+            color: #333;
+        }
+        h1, h2, h3 {
+            margin-bottom: 0.75em;
+            margin-top: 1.5em;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+        h1 { font-size: 2em; text-align: center; border-bottom: 1px solid #eee; padding-bottom: 0.5em;}
+        h2 { font-size: 1.5em; border-bottom: 1px solid #eee; padding-bottom: 0.3em;}
+        h3 { font-size: 1.2em; }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-left: 20px; margin-bottom: 1em; padding-left: 1em;}
+        li { margin-bottom: 0.5em; }
+        table { /* Basic table style if needed, though none in this text */
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5em 0;
+            font-size: 0.9em;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 0.6em;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        sup { /* Style for superscript citations */
+            font-size: 0.75em;
+            vertical-align: super;
+            line-height: 0; /* Prevent affecting line height */
+            margin-left: 1px;
+        }
+        sup a { /* Ensure link color applies */
+            text-decoration: none;
+             color: #007bff;
+        }
+        sup a:hover {
+            text-decoration: underline;
+        }
+        .date {
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 2em;
+            color: #555;
+        }
+        .author {
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 2em;
+            color: #555;
+        }
+        .bibliography { /* Changed from works-cited for distinction */
+            margin-top: 3em;
+            font-size: 0.85em;
+            border-top: 1px solid #eee;
+            padding-top: 1em;
+        }
+        .bibliography li {
+            margin-bottom: 0.6em;
+            word-wrap: break-word;
+            /* Target for links */
+            scroll-margin-top: 10px; /* Add space when jumping to target */
+        }
+         /* Style for the target anchor itself (optional) */
+        .bibliography li:target {
+            background-color: #fff3cd; /* Highlight when jumped to */
+        }
+        /* Style for the added link */
+        .report-link {
+            text-align: center;
+            margin: 2em 0;
+            padding: 0.8em;
+            background-color: #eef;
+            border: 1px solid #aac;
+            border-radius: 4px;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Vpliv pasivnih velikih imetnikov ("kitov") na kripto trgih z nizkim obsegom</h1> {/* Changed to sentence case */}
+        <p class="author">Sestavil Kristjan L</p>
+    </header>
+
+    <div class="report-link">
+        <p><strong>Oglejte si najnovejše samodejno ustvarjeno poročilo o kitih:</strong><br>
+        <a href="LANA_Whale_Report.html">Poročilo o Analizi Kitov LanaCoin (Samodejno Posodobljeno)</a></p>
+    </div>
+    <main>
+        <section id="introduction">
+            <h2>Uvod</h2>
+            <p>Za trg kriptovalut je značilna znatna heterogenost med udeleženci. Medtem ko mali vlagatelji predstavljajo velik del uporabniške baze, manjša skupina entitet, pogovorno imenovanih "kiti", poseduje znatne količine določenih digitalnih sredstev. Ti veliki imetniki imajo potencialno sposobnost vplivanja na tržno dinamiko, zlasti v okoljih, za katera sta značilna nizek obseg trgovanja in zmanjšana likvidnost. Ta članek ponuja analitični pregled vloge, ki jo ti kiti igrajo, ko sprejmejo pasivno strategijo držanja (pogosto imenovano "HODLing") v takšnih nelikvidnih tržnih razmerah. Opredelil bo značilnosti kriptovalutnih kitov, orisal mehanizme trgov z nizkim obsegom, analiziral specifične vplive pasivnosti kitov na tržne parametre, razpravljal o možnih motivacijah za takšno vedenje držanja in ocenil širše posledice za ekosistem kriptovalut.</p>
+        </section>
+
+        <section id="definition">
+            <h2>Opredelitev kriptovalutnih kitov</h2> {/* Changed to sentence case */}
+            <p>V kontekstu trgov kriptovalut se izraz "kit" nanaša na posameznika ali entiteto, ki poseduje dovolj veliko količino določenega digitalnega sredstva, da lahko s svojimi dejanji potencialno vpliva na njegovo tržno ceno ali splošno dinamiko omrežja<sup><a href="#cite-1">1</a></sup>. Čeprav ne obstaja univerzalno strog numerični prag, se izraz običajno uporablja za denarnice, ki hranijo znatno vrednost, pogosto ovrednoteno v milijonih USD ekvivalenta, ali opazen odstotek krožeče ponudbe sredstva<sup><a href="#cite-1">1</a></sup>. Pri uveljavljenih kriptovalutah, kot je Bitcoin, bi to lahko pomenilo posedovanje tisočev BTC, medtem ko bi bil prag pri novejših sredstvih ali sredstvih z manjšo tržno kapitalizacijo sorazmerno nižji, a bi še vedno predstavljal znatno koncentracijo lastništva.</p>
+            <p>Te entitete lahko segajo od zgodnjih posvojiteljev in dolgoročnih posameznih vlagateljev do institucionalnih igralcev, kot so hedge skladi, same kripto borze ali celo entitete, povezane z vladami<sup><a href="#cite-6">6</a></sup>. Njihova odločilna značilnost je obseg njihovih deležev v primerjavi s celotno tržno kapitalizacijo in tipičnimi obsegi trgovanja zadevnega sredstva. Ta obseg jih ločuje od manjših malih vlagateljev, katerih posamezne transakcije imajo običajno zanemarljiv vpliv na ceno. Zaradi javne narave večine verig blokov je denarnice, povezane s kiti, pogosto mogoče spremljati z uporabo raziskovalcev verig blokov in analitičnih platform na verigi, kar omogoča opazovanje premikov sredstev, tudi če identiteta za denarnico ostane psevdonimna<sup><a href="#cite-1">1</a>, <a href="#cite-6">6</a></sup>.</p>
+        </section>
+
+        <section id="low-volume-mechanics">
+            <h2>Mehanizmi trgov z nizkim obsegom</h2> {/* Changed to sentence case */}
+            <p>Likvidnost trga kriptovalut se nanaša na lahkotnost, s katero je mogoče sredstvo kupiti ali prodati po stabilnih cenah<sup><a href="#cite-2">2</a></sup>. Visoko likvidnost zaznamujejo visoki obsegi trgovanja, številni udeleženci na trgu in ozki razponi med ponudbo in povpraševanjem (razlika med najvišjo ceno, ki jo je kupec pripravljen plačati, in najnižjo ceno, ki jo je prodajalec pripravljen sprejeti). Nasprotno pa trgi z nizkim obsegom kažejo zmanjšano trgovalno aktivnost, manj aktivnih udeležencev in širše razpone med ponudbo in povpraševanjem.</p>
+            <p>K nizkemu obsegu trgovanja in nelikvidnosti na kripto trgih prispeva več dejavnikov<sup><a href="#cite-2">2</a></sup>:</p>
+            <ul>
+                <li><strong>Nezrelost sredstva:</strong> Novejši ali nišni žetoni morda še niso pritegnili znatnega zanimanja vlagateljev ali razvili robustne trgovalne infrastrukture.</li>
+                <li><strong>Tržno razpoloženje:</strong> Medveji trgi ali obdobja negativnega razpoloženja pogosto vodijo do zmanjšane trgovalne aktivnosti na splošno, saj udeleženci postanejo oklevajoči.</li>
+                <li><strong>Fragmentacija borz:</strong> Likvidnost za določeno sredstvo je lahko razdeljena med več borz, kar zmanjšuje navidezno globino na posamezni platformi.</li>
+                <li><strong>Regulativna negotovost:</strong> Nejasna ali neugodna regulativna okolja lahko odvrnejo institucionalno in maloprodajno udeležbo, kar zmanjša skupni obseg.</li>
+            </ul>
+            <p>Nizka likvidnost neposredno vpliva na tržno učinkovitost in izvedbo trgovanja<sup><a href="#cite-2">2</a></sup>. Široki razponi med ponudbo in povpraševanjem povečujejo transakcijske stroške za trgovce. Še pomembneje pa je, da lahko izvajanje velikih naročil na nelikvidnih trgih povzroči znatno <strong>zdrsavanje (slippage)</strong> – razliko med pričakovano izvršitveno ceno in dejansko ceno, po kateri je posel izpolnjen. To se zgodi, ker veliko naročilo porabi omejena razpoložljiva naročila na bližnjih cenovnih ravneh, kar prisili ceno, da se znatno premakne, da bi našla dovolj nasprotnih strank za izpolnitev celotnega naročila. Posledično so trgi z nizkim obsegom pogosto povezani z večjo nestanovitnostjo cen, saj lahko že zmerna nakupna ali prodajna naročila povzročijo znatna nihanja cen<sup><a href="#cite-2">2</a></sup>.</p>
+        </section>
+
+        <section id="impact-of-holding">
+            <h2>Vpliv držanja s strani kitov v okoljih z nizkim obsegom</h2> {/* Changed to sentence case */}
+            <p>Ko se kiti – entitete, ki imajo znatne deleže ponudbe sredstva – odločijo pasivno držati svoja sredstva namesto aktivnega trgovanja na trgu z nizkim obsegom, se lahko pojavijo številni izraziti učinki:</p>
+            <ol>
+                <li><strong>Zmanjšana razpoložljiva ponudba & globina trga:</strong> Kiti, ki držijo velike količine, dejansko odstranijo ta del ponudbe sredstva iz aktivnega obtoka na borzah. To dodatno omejuje že tako omejeno ponudbo, ki je na voljo za trgovanje, kar poslabšuje pogoje nizke likvidnosti. Globina trga, ki se nanaša na sposobnost trga, da absorbira velika naročila brez znatnega vpliva na ceno (prikazano s količino nakupnih/prodajnih naročil na različnih cenovnih ravneh v knjigi naročil), se zmanjša, ko so veliki deleži neaktivni izven borze.</li>
+                <li><strong>Potencialna stabilnost cene (ali stagnacija):</strong> V odsotnosti velikih prodajnih naročil s strani kitov lahko cene kažejo obdobja stabilnosti ali zmanjšane nestanovitnosti, zlasti navzdol. Če se dojema, da kiti kopičijo ali držijo z dolgoročnim prepričanjem, lahko to spodbudi pozitivno tržno razpoloženje, kar potencialno zagotavlja cenovno dno, saj se manjši vlagatelji počutijo bolj samozavestne<sup><a href="#cite-3">3</a></sup>. Vendar pa lahko ta stabilnost meji na stagnacijo, saj lahko pomanjkanje znatne trgovalne aktivnosti zavira tudi odkrivanje cen navzgor.</li>
+                <li><strong>Povečana dovzetnost za vrzeli in zdrsavanje:</strong> Medtem ko lahko držanje blaži dnevno nestanovitnost, zmanjšana globina trga pomeni, da če *katerokoli* večje naročilo (bodisi od manjšega kita, ki se prebudi, ali sotočja maloprodajnih naročil) pride na trg, je lahko vpliv na ceno nesorazmerno velik. Trg postane bolj dovzeten za cenovne vrzeli in znatno zdrsavanje, ker je manj čakajočih naročil, ki bi absorbirala tok.</li>
+                <li><strong>Vpliv na dojemanje in zaupanje:</strong> Držanje s strani kitov je mogoče interpretirati dvojno. Po eni strani lahko signalizira močno dolgoročno vero v temelje projekta s strani največjih imetnikov, kar potencialno povečuje zaupanje med manjšimi vlagatelji<sup><a href="#cite-3">3</a></sup>. Po drugi strani pa lahko ekstremna koncentracija v kombinaciji z neaktivnostjo vzbuja pomisleke glede centralizacije in možnosti prihodnje tržne manipulacije, če se ti kiti sčasoma odločijo za množično prodajo<sup><a href="#cite-5">5</a></sup>. Prav tako lahko ustvari negotovost glede 'resnične' porazdeljene narave sredstva.</li>
+            </ol>
+        </section>
+
+        <section id="motivations">
+            <h2>Motivacije za strategije držanja s strani kitov</h2> {/* Changed to sentence case */}
+            <p>Veliki imetniki se lahko odločijo za pasivno strategijo držanja ("HODLing") namesto aktivnega trgovanja na trgih z nizkim obsegom iz več strateških in ekonomskih razlogov:</p>
+            <ul>
+                <li><strong>Dolgoročno prepričanje:</strong> Mnogi kiti so zgodnji vlagatelji ali entitete s temeljnim prepričanjem v dolgoročno vrednost osnovne tehnologije ali omrežja. Sredstvo vidijo kot dolgoročno naložbo in ne kot kratkoročno trgovalno sredstvo, tržna nestanovitnost pa je sprejeta kot del poti do prihodnjega povečanja vrednosti<sup><a href="#cite-4">4</a></sup>. Njihova strategija se ujema z držanjem sredstva kot hranilca vrednosti ali za njegovo prihodnjo uporabnost<sup><a href="#cite-4">4</a></sup>.</li>
+                <li><strong>Izogibanje vplivu na trg (zdrsavanje):</strong> Na nelikvidnih trgih bi poskus prodaje velike pozicije verjetno povzročil znatno negativno zdrsavanje, kar bi drastično zmanjšalo dejansko prejete prihodke. Kiti razumejo, da likvidacija velikih deležev zahteva globoko likvidnost, ki je v okoljih z nizkim obsegom ni. Držanje postane privzeta strategija za ohranitev nominalne vrednosti njihovih sredstev, dokler se tržne razmere ne izboljšajo ali dokler ne postanejo izvedljive alternativne metode likvidacije (kot so OTC posli).</li>
+                <li><strong>Strateško kopičenje:</strong> Nekatero držanje je lahko del dolgoročnejše strategije kopičenja, kjer namerava kit sčasoma povečati svojo pozicijo, potencialno z nakupovanjem med padci, ki jih povzročijo manjši prodajalci. Aktivna prodaja bi nasprotovala temu cilju.</li>
+                <li><strong>Pomanjkanje dobičkonosnih trgovalnih priložnosti:</strong> Trgi z nizkim obsegom pogosto kažejo manj opredeljene trende ali predvidljive vzorce, primerne za aktivne trgovalne strategije. Kiti preprosto morda ne vidijo prepričljivega razloga za pogosto trgovanje, če potencialni dobički ne odtehtajo tveganj in izvršitvenih stroškov (zdrsavanje, provizije).</li>
+                <li><strong>Staking, upravljanje ali uporabnost omrežja:</strong> Pri nekaterih kriptovalutah je lahko držanje velikih količin potrebno za sodelovanje pri soglasju omrežja (Proof-of-Stake), glasovanju pri upravljanju ali uporabi specifičnih funkcij platforme. V takih primerih je držanje sestavni del uporabnosti sredstva za kita, onkraj preproste špekulacije.</li>
+                <li><strong>Averzija do tveganja & enostavnost:</strong> Kljub velikim deležem so nekateri kiti lahko razmeroma averzni do tveganja glede aktivnega trgovanja ali pa imajo raje enostavnost strategije kupi-in-drži, kar zmanjšuje stres, povezan z navigacijo po nestanovitnih trgih<sup><a href="#cite-4">4</a></sup>.</li>
+            </ul>
+        </section>
+
+        <section id="implications">
+            <h2>Širše posledice za ekosistem</h2> {/* Changed to sentence case */}
+            <p>Pojav velikih imetnikov, ki ostajajo pasivni na trgih z nizkim obsegom, prinaša več posledic za širši ekosistem kriptovalut:</p>
+            <ul>
+                <li><strong>Zaviranje nestanovitnosti & potencialni šoki:</strong> Medtem ko je lahko dnevna nestanovitnost zaradi neaktivnosti kitov zmanjšana, osnovna krhkost ostaja. Trg postane zelo občutljiv na kakršnokoli morebitno dejanje teh kitov. Nenadna odločitev enega ali več velikih imetnikov za prodajo lahko sproži nesorazmerno velik padec cene zaradi pomanjkanja tržne globine za absorpcijo ponudbe, kar ustvarja šoke nestanovitnosti<sup><a href="#cite-5">5</a></sup>.</li>
+                <li><strong>Pomisleki glede centralizacije:</strong> Visoka koncentracija ponudbe, ki jo pasivno drži nekaj entitet, vzbuja pomisleke glede centralizacije, tudi v teoretično decentraliziranih omrežjih. To lahko vpliva na dojemanje pravičnosti in nadzora nad omrežjem, kar potencialno deluje kot ovira za širšo posvojitev, če se uporabniki bojijo neupravičenega vpliva velikih, neaktivnih imetnikov<sup><a href="#cite-5">5</a></sup>.</li>
+                <li><strong>Ovirano odkrivanje cen:</strong> Aktivno trgovanje prispeva k odkrivanju cen – procesu, s katerim trg določi pošteno vrednost sredstva. Ko je znaten del ponudbe neaktiven, je lahko odkrivanje cen ovirano. Opazovana tržna cena morda ne odraža natančno potencialnega prodajnega pritiska ali resničnega porazdeljenega povpraševanja, kar lahko vodi do napačnega vrednotenja.</li>
+                <li><strong>Ovire za vstop/izstop drugih udeležencev:</strong> Nizka likvidnost, ki jo poslabšuje držanje s strani kitov, otežuje in podraži vstop ali izstop iz znatnih pozicij drugim udeležencem (vključno z manjšimi institucijami ali aktivnimi skladi), ne da bi povzročili večja nihanja cen, kar lahko odvrača udeležbo.</li>
+                <li><strong>Dojemanje vs. realnost manipulacije:</strong> Medtem ko *držanje* samo po sebi ni manipulacija, lahko *potencial* za prihodnjo manipulacijo zaradi koncentriranih deležev negativno vpliva na tržno razpoloženje<sup><a href="#cite-7">7</a></sup>. Zavedanje, da nekaj denarnic drži dovolj sredstev za zrušitev cene, lahko ustvari trajno osnovno negotovost<sup><a href="#cite-5">5</a></sup>.</li>
+            </ul>
+        </section>
+
+        <section id="conclusion">
+            <h2>Zaključek</h2>
+            <p>Kriptovalutni kiti, ki sprejmejo strategijo držanja na trgih z nizkim obsegom, izvajajo kompleksen vpliv. Njihova neaktivnost lahko prispeva k obdobjem cenovne stabilnosti in signalizira dolgoročno prepričanje, vendar hkrati poslabšuje nelikvidnost, zmanjšuje globino trga in povečuje potencial za ostre šoke nestanovitnosti, če se odločijo za transakcije. Motivacije za držanje segajo od temeljnega prepričanja in strateških premislekov do praktične težavnosti likvidacije velikih pozicij na tankih trgih. Medtem ko se s pasivnim držanjem izognemo neposredni tržni manipulaciji, osnovna koncentracija sredstev, ki jih držijo neaktivni kiti, prinaša znatne posledice za odkrivanje cen, decentralizacijo ekosistema in splošno zdravje trga, kar predstavlja stalne izzive tako za razvijalce kot za vlagatelje, ki se premikajo v teh okoljih. Razumevanje prisotnosti in vedenja (ali pomanjkanja le-tega) teh velikih entitet ostaja ključno za ocenjevanje tveganja in priložnosti v manj likvidnih segmentih trga kriptovalut.</p>
+        </section>
+
+        <section class="bibliography" id="bibliography">
+             <h2>Viri</h2>
+             <ol>
+                 <li id="cite-1">OSL. "What are Crypto Whales?" OSL Academy. Dostopano 9. aprila 2025. <a href="https://osl.com/academy/article/what-are-crypto-whales" target="_blank" rel="noopener noreferrer">https://osl.com/academy/article/what-are-crypto-whales</a></li>
+                 <li id="cite-2">OSL. "What Is Liquidity and Why Does It Matter?" OSL Academy. Dostopano 9. aprila 2025. <a href="https://osl.com/academy/article/what-is-liquidity-and-why-does-it-matter" target="_blank" rel="noopener noreferrer">https://osl.com/academy/article/what-is-liquidity-and-why-does-it-matter</a></li>
+                 <li id="cite-3">OneSafe Blog. "How Whale Accumulation Shapes Cryptocurrency Prices." OneSafe. Dostopano 9. aprila 2025. <a href="https://www.onesafe.io/blog/whale-accumulation-impact-crypto-prices" target="_blank" rel="noopener noreferrer">https://www.onesafe.io/blog/whale-accumulation-impact-crypto-prices</a></li>
+                 <li id="cite-4">Ecos. "What Is HODL in Crypto? The Meaning, Strategy, and Risks of Holding Bitcoin & Altcoins." Ecos Blog. Dostopano 9. aprila 2025. <a href="https://ecos.am/en/blog/what-is-hodl-in-crypto-the-meaning-strategy-and-risks-of-holding-bitcoin-altcoins/" target="_blank" rel="noopener noreferrer">https://ecos.am/en/blog/what-is-hodl-in-crypto-the-meaning-strategy-and-risks-of-holding-bitcoin-altcoins/</a></li>
+                 <li id="cite-5">Oraichain. "Crypto Whales: How They Impact the Market and Why You Should Care." Oraichain Guide. Dostopano 9. aprila 2025. <a href="https://orai.io/guide/crypto-whales-how-they-impact-the-market-and-why-you-should-care" target="_blank" rel="noopener noreferrer">https://orai.io/guide/crypto-whales-how-they-impact-the-market-and-why-you-should-care</a></li>
+                 <li id="cite-6">Business Money. "How to analyze whale wallets and follow institutional investors." Business Money Announcements. Dostopano 9. aprila 2025. <a href="https://www.business-money.com/announcements/how-to-analyze-whale-wallets-and-follow-institutional-investors/" target="_blank" rel="noopener noreferrer">https://www.business-money.com/announcements/how-to-analyze-whale-wallets-and-follow-institutional-investors/</a></li>
+                 <li id="cite-7">Brokstock. "The Psychology of Crypto Trading: How Whales Manipulate Markets and How to Fight Back." Brokstock Analytics. Dostopano 9. aprila 2025. <a href="https://brokstock.co.za/analytics/reviews/the-psychology-of-crypto-trading-how-whales-manipulate-markets-and-how-to-fight-back/" target="_blank" rel="noopener noreferrer">https://brokstock.co.za/analytics/reviews/the-psychology-of-crypto-trading-how-whales-manipulate-markets-and-how-to-fight-back/</a></li>
+                </ol>
+          </section>
+    </main>
+
+</body>
+</html>

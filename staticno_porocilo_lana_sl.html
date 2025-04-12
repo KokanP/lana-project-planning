@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statično poročilo analize verige LanaCoin</title>
+    <style>
+        /* Combined and adapted styles from whales-analysis.html and generate_report_html.py */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            line-height: 1.6;
+            padding: 1rem 2rem;
+            margin: 0 auto;
+            max-width: 900px;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+        h1, h2, h3 {
+            margin-bottom: 0.75em;
+            margin-top: 1.5em;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #1a1a1a;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 6px;
+        }
+        h1 {
+            font-size: 2em;
+            text-align: center;
+            border-bottom: 2px solid #ccc;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 1.5em;
+            margin-top: 40px;
+             border-bottom: 1px solid #eee; /* Use lighter border like whales-analysis */
+             padding-bottom: 0.3em;
+        }
+        h3 {
+            font-size: 1.2em;
+            margin-top: 30px;
+            border-bottom: none;
+        }
+        p {
+            margin-bottom: 1em;
+        }
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 1em;
+            padding-left: 1em;
+        }
+        li {
+            margin-bottom: 0.5em; /* Adjusted from 0.8em used in python script */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5em 0;
+            font-size: 0.9em;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+        th, td {
+            border: 1px solid #ccc; /* Use lighter border like whales-analysis */
+            padding: 0.6em; /* Use padding like whales-analysis */
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+         tr:nth-child(even) { background-color: #f9f9f9; }
+         tr:hover { background-color: #f1f1f1; }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .note {
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 5px;
+        }
+        .error { /* Style for potential future errors */
+             color: #d9534f;
+             font-style: italic;
+        }
+        .interpretation {
+             background-color: #eef;
+             border-left: 4px solid #aac;
+             padding: 10px 15px;
+             margin: 20px 0;
+             font-size: 0.95em;
+        }
+        .debug-info {
+             margin-top: 40px;
+             border-top: 2px dashed #ccc;
+             padding-top: 15px;
+        }
+        .debug-info summary {
+             cursor: pointer;
+             font-weight: bold;
+             color: #555;
+             margin-top: 10px;
+             font-size: 0.9em;
+        }
+        .debug-info pre {
+             background-color: #f0f0f0;
+             padding: 8px;
+             font-size: 0.75em; /* Smaller font for debug */
+             overflow-x: auto;
+             border: 1px solid #ddd;
+             border-radius: 4px;
+             white-space: pre-wrap; /* Allow wrapping */
+             word-wrap: break-word; /* Break long words */
+        }
+        hr {
+             border: 0;
+             height: 1px;
+             background: #ddd;
+             margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Statično poročilo analize verige LanaCoin</h1>
+        <p style="text-align:center; font-size: 0.9em; color: #555;">
+            Poročilo ustvarjeno: 2025-04-12<br>
+            Viri podatkov: Rezultati API klicev `chainz.cryptoid.info` (pribl. 2025-04-12 03:08 UTC) in posnetki podatkov spletne strani.<br>
+            <em>Opomba: Podatki spletne strani odražajo stanje v določenem trenutku.</em>
+        </p>
+    </header>
+
+    <main>
+        <section>
+            <h2>1. Povzetek splošnega stanja verige</h2>
+            <p>Ta razdelek ponuja posnetek osnovnih statistik omrežja LanaCoin.</p>
+            <ul>
+                <li>Trenutna višina bloka: 950849 <em>(Vir: API `q=getblockcount`)</em></li>
+                <li>Količina v obtoku: 3.521.611.093,51 LANA <em>(Vir: API `q=circulating`)</em></li>
+                <li>Skupno število kovancev: 3.521.611.093,51 LANA <em>(Vir: API `q=totalcoins`)</em></li>
+                <li>Trenutna težavnost: 116.591.801,99 <em>(Vir: API `q=getdifficulty`)</em></li>
+            </ul>
+             <h3>Dnevni povzetki</h3>
+             <p class="note"><em>(Vir: Posnetek Podatkov Spletne Strani)</em></p>
+        </section>
+
+        <hr>
+
+        <section>
+            <h2>2. Analiza koncentracije bogastva</h2>
+            <p>Ta razdelek analizira porazdelitev LANA med Top 1000 najbogatejšimi naslovi na podlagi API klica `q=rich`.</p>
+            <ul>
+                <li>Top 10 imetnikov (% količine v obtoku): <strong>35.62%</strong></li>
+                <li>Top 100 imetnikov (% količine v obtoku): <strong>73.01%</strong></li>
+                <li>Ginijev koeficient (Top 1000): <strong>0.813</strong> <em>(Izračunano iz Lorenzove krivulje na podlagi podatkov `q=rich`)</em></li>
+            </ul>
+
+            <div class="interpretation">
+                <h3>Interpretacija</h3>
+                <p>Odstotki koncentracije so izjemno visoki: <strong>Top 10 naslovov ima v lasti več kot 35%</strong>, <strong>Top 100 pa več kot 73%</strong> vseh LANA v obtoku. To kaže na znatno koncentracijo bogastva v zelo majhnem številu denarnic. Takšna koncentracija lahko poveča tveganje za tržno manipulacijo in nestanovitnost, saj lahko odločitve nekaj velikih imetnikov ("kitov") nesorazmerno vplivajo na ceno in likvidnost, ki je na voljo manjšim udeležencem.</p>
+                <p>Ginijev koeficient zagotavlja enotno število za merjenje neenakosti (0 = popolna enakost, 1 = popolna neenakost). Izračunana vrednost <strong>0.813</strong> je zelo visoka, kar potrjuje resno neravnovesje v porazdelitvi bogastva med najvišjimi naslovi, ki jih navaja API. Visoka ekonomska neenakost je lahko škodljiva, saj lahko odvrača širšo udeležbo, zmanjša hitrost kroženja denarja, če veliki imetniki ostanejo pasivni, in vzbuja pomisleke glede decentralizacije in pravičnosti ekosistema. Za več konteksta o vplivu kitov glejte <a href="https://lana.freq.band/whales-analysis.html" target="_blank" rel="noopener noreferrer">glavno stran analize</a>.</p>
+            </div>
+
+            <h3>Tabela top 10 imetnikov</h3>
+            <p class="note"><em>(Podatki iz API klica `q=rich` & `LANA.Top1000 (1).txt`. Stanja so v celih LANA. % izračunan glede na količino v obtoku iz API.)</em></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mesto</th>
+                        <th>Naslov</th>
+                        <th>Stanje (LANA)</th>
+                        <th>% Količine v Obtoku</th>
+                        <th>Zadnja Aktivnost (Polog/Dvig)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                     <tr><td>1</td><td title="LTdb5KrqryPihAU1RebDCy8tVxi1SVtGqu">LTdb5Krq...SVtGqu</td><td>290.316.191,23</td><td>8.244%</td><td>2025-04-12 02:59:44 / 2025-04-12 02:59:44</td></tr>
+                     <tr><td>2</td><td title="LaFnKHXxj4KEuVMbtyLnNCJTpUtTPWXjJC">LaFnKHXx...PWXjJC</td><td>155.306.576,85</td><td>4.410%</td><td>2025-04-11 19:38:56 / 2025-04-11 19:38:56</td></tr>
+                     <tr><td>3</td><td title="LLZr9vsHWjcL6Tohu12TrYJtrgctapZHjH">LLZr9vsH...apZHjH</td><td>142.917.119,39</td><td>4.058%</td><td>2025-04-12 01:43:12 / 2025-04-12 01:43:12</td></tr>
+                     <tr><td>4</td><td title="LbRugxTQt4eJFHaDc73zKjViVEuNcP3NwD">LbRugxTQ...cP3NwD</td><td>122.429.555,94</td><td>3.477%</td><td>2025-04-12 03:25:36 / 2025-04-11 08:34:08</td></tr>
+                     <tr><td>5</td><td title="LaXTGF8X6FGXCSgWc3WFXimw5fWHMAcFQe">LaXTGF8X...MACFQe</td><td>104.625.091,58</td><td>2.971%</td><td>2025-04-11 14:10:00 / 2025-04-11 14:10:00</td></tr>
+                     <tr><td>6</td><td title="LTGnQPFQcJPEUBUiGM8CpDddodDGTh7Ub9">LTGnQPFQ...Th7Ub9</td><td>100.047.778,51</td><td>2.841%</td><td>2025-04-11 14:10:00 / 2025-04-11 14:10:00</td></tr>
+                     <tr><td>7</td><td title="LMKAvjr9zwiMgJHbcmFPexSiLNURd2GRHq">LMKAvjr9...d2GRHq</td><td>96.404.517,01</td><td>2.738%</td><td>2025-04-11 14:10:00 / 2025-04-11 14:10:00</td></tr>
+                     <tr><td>8</td><td title="Lcj9yWp4VyoG9QueoRrB81161wytW4dUV9">Lcj9yWp4...W4dUV9</td><td>86.663.749,19</td><td>2.461%</td><td>2023-09-02 19:16:08 / 2023-09-02 19:16:08</td></tr>
+                     <tr><td>9</td><td title="LVbAXgQRtfkpgrr2KYMVwrq4Vm1Guza21U">LVbAXgQR...uza21U</td><td>84.531.593,11</td><td>2.400%</td><td>2025-04-11 14:10:00 / 2025-04-11 14:10:00</td></tr>
+                     <tr><td>10</td><td title="LYSNKMYuB9zSVPuEsWXNUbivUVoqyw274Q">LYSNKMYu...yw274Q</td><td>71.133.137,34</td><td>2.020%</td><td>2025-04-11 19:38:40 / 2025-04-11 19:38:40</td></tr>
+                 </tbody>
+            </table>
+             <p class="note">(Opomba: Ta analiza ne filtrira morebitnih naslovov menjalnic ali pogodb, ker noben ni bil identificiran!)</p>
+        </section>
+
+        <hr>
+
+        <section>
+            <h2>3. Porazdelitev najditeljev blokov (analiza rudarjenja)</h2>
+            <p>Ta razdelek prikazuje, kateri naslovi ali bazeni so našli največji odstotek nedavnih blokov.</p>
+            <div class="interpretation">
+                <h3>Interpretacija</h3>
+                <p>Ti podatki razkrivajo potencialno centralizacijo pri produkciji blokov LanaCoin (rudarjenju). Spodnja tabela prikazuje, da je <strong>Top 1 naslov (tudi najbogatejši) našel 15%</strong> zadnjih 1000 blokov. Več drugih naslovov iz seznama Top 10 najbogatejših se prav tako vidno pojavlja na seznamu najditeljev blokov (npr. Bogati #3, #5, #6, #7, #8, #9, #10).</p>
+                <p>To kaže na močno korelacijo med posedovanjem bogastva in ustvarjanjem novega bogastva prek nagrad za rudarjenje v ekosistemu LanaCoin. Entitete, ki imajo v lasti največ LANA, prejemajo tudi nesorazmerno velik delež na novo izrudarjenih kovancev, kar dodatno utrjuje njihove položaje in potencialno ustvarja povratno zanko, ki sčasoma povečuje koncentracijo bogastva. Ta dinamika "bogati postajajo bogatejši" je lahko pomemben pomislek za dolgoročno decentralizacijo in zdravje omrežja.</p>
+            </div>
+
+            <h3>Porazdelitev najditeljev blokov (zadnjih 1000 blokov)</h3>
+            <p class="note"><em>(Vir: Posnetek Podatkov Spletne Strani)</em></p>
+            <table>
+                 <thead>
+                    <tr><th>Mesto</th><th>Bazen / Naslov Rudarja</th><th>% Zadnjih 100</th><th>% Zadnjih 1000</th></tr>
+                 </thead>
+                 <tbody>
+                    <tr><td>1</td><td>LTdb5Krq... (Bogati #1)</td><td>15%</td><td>15.0%</td></tr>
+                    <tr><td>2</td><td>LVbAXgQR... (Bogati #9)</td><td>10%</td><td>5.9%</td></tr>
+                    <tr><td>3</td><td>LLZr9vsH... (Bogati #3)</td><td>9%</td><td>4.3%</td></tr>
+                    <tr><td>4</td><td>LMKAvjr9... (Bogati #7)</td><td>5%</td><td>5.7%</td></tr>
+                    <tr><td>5</td><td>LYSNKMYu... (Bogati #10)</td><td>4%</td><td>4.3%</td></tr>
+                    <tr><td>6</td><td>LKGvCU8T... (Bogati #17)</td><td>4%</td><td>2.0%</td></tr>
+                    <tr><td>7</td><td>LaXTGF8X... (Bogati #5)</td><td>3%</td><td>5.7%</td></tr>
+                    <tr><td>8</td><td>LTGnQPFQ... (Bogati #6)</td><td>3%</td><td>5.5%</td></tr>
+                    <tr><td>9</td><td>Lcj9yWp4... (Bogati #8)</td><td>3%</td><td>3.6%</td></tr>
+                    <tr><td>10</td><td>LXQr1s1K... (Bogati #14)</td><td>3%</td><td>1.8%</td></tr>
+                    <tr><td>11</td><td>LbRugxTQ... (Bogati #4)</td><td>3%</td><td>1.4%</td></tr>
+                    <tr><td>12</td><td>LZhMaiCi... (Bogati #40)</td><td>3%</td><td>0.9%</td></tr>
+                    <tr><td>13</td><td>LaFnKHXx... (Bogati #2)</td><td>2%</td><td>5.1%</td></tr>
+                 </tbody>
+            </table>
+        </section>
+
+        <hr>
+
+        <section>
+             <h2>4. Primer posnetka naslova: `LTdb5KrqryPihAU1RebDCy8tVxi1SVtGqu` (Bogati #1)</h2>
+             <p>Podatki, pridobljeni iz API klicev za ta specifični naslov:</p>
+             <ul>
+                <li>Trenutno stanje: 290.316.191,23 LANA <em>(iz `q=getbalance`)</em></li>
+                <li>Mesto na seznamu bogatih: 1 <em>(iz `q=richrank`)</em></li>
+                <li>Prvič viden: 2015-01-04 19:45:24 UTC <em>(iz `q=addressfirstseen`)</em></li>
+                <li>Število transakcij: 77.389 <em>(iz `q=addressinfo`)</em></li>
+                <li>Skupno prejeto: 274.101.449.795,47 (?) <em>(iz `q=addressinfo`)</em></li>
+                <li>Skupno poslano: 245.070.714.418,86 (?) <em>(iz `q=addressinfo`)</em></li>
+                <li>Število UTXO: 572.695 <em>(Prešteto iz odgovora `q=unspent`)</em></li>
+                <li>Skupna vrednost v UTXO: ~290.316.191,23 LANA <em>(Sešteto iz odgovora `q=unspent`)</em></li>
+            </ul>
+            <h3>Nedavne transakcije (Hashi iz `q=multiaddr`, n=5):</h3>
+            <ul>
+                <li>`b38048c77741757c8a62a51c0d00ebd34455ec692036b5e31b055d13d14b769a` (2025-04-11 23:27:44 UTC)</li>
+                <li>`1ff4af3aa7f6e93aac096db23c217f902a6e2d7a12bf32fd7b091b7aee3c21ea` (2025-04-11 22:27:44 UTC)</li>
+                <li>`8aa63f1bb3384c5a60a6ea64354a072aed0d05be7a4d69daea414dd5376b2e5b` (2025-04-11 19:38:40 UTC)</li>
+                <li>`c385894279fcca06715eee688198fe79e7117fe41bd274e45d17af64caa8dc4d` (2025-04-11 20:27:28 UTC)</li>
+                <li>`abd6080c016dc0374a3ac04271d38df36ca6ef620efec3a038bdebda090d66e1` (2025-04-11 20:26:56 UTC)</li>
+            </ul>
+        </section>
+
+        <hr>
+
+        <section>
+            <h2>5. Povezava do konteksta</h2>
+            <p>Za dodatni kontekst in razpravo o analizi kitov LanaCoin glejte:
+            <a href="https://lana.freq.band/whales-analysis.html" target="_blank" rel="noopener noreferrer">https://lana.freq.band/whales-analysis.html</a></p>
+            <p>Nazaj na stran <a href="whales-analysis.html">Analiza Kitov - Kontekst</a> (če gledate znotraj repozitorija).</p>
+        </section>
+
+        <hr>
+
+        <section>
+            <h2>6. Omejitve & opombe</h2>
+            <ul>
+                <li>To poročilo združuje podatke iz neposrednih API klicev in podatkov, pridobljenih iz statičnih posnetkov spletne strani.</li>
+                <li>Avtomatizirana identifikacija nagradnih transakcij ni bila izvedljiva s testiranimi API končnimi točkami.</li>
+                <li>Analiza koncentracije ne filtrira znanih naslovov menjalnic, pogodb ali storitev, vendar glede na zunanjo analizo nobena znana menjalnica ne bi imela dovolj sredstev, da bi se uvrstila na seznam.</li>
+                <li>Pridobivanje podatkov iz priloženih HTML izvornih datotek (npr. tabela Najditeljev Blokov, Dnevni Povzetki, Sirote) temelji na razčlenjevanju besedila in je bilo ročno preverjeno glede na spletno stran.</li>
+            </ul>
+        </section>
+
+        <div class="debug-info">
+            <details>
+                <summary>Odlomki surovih podatkov (za odpravljanje napak)</summary>
+                <h3>Odlomek seznama bogatih (iz q=rich):</h3>
+                <pre><code>{'total': 3521611093.508488, 'rich1000': [{'amount': 290316191.227574, 'addr': 'LTdb5KrqryPihAU1RebDCy8tVxi1SVtGqu', 'wallet': 78322}, {'amount': 155306576.851586, 'addr': 'LaFnKHXxj4KEuVMbtyLnNCJTpUtTPWXjJC', 'wallet': 96575}, {'amount': 142917119.385308, 'addr': 'LLZr9vsHWjcL6Tohu12TrYJtrgctapZHjH', 'wallet': 213166}, {'amount': 122429555.94246, 'addr': 'LbRugxTQt4eJFHaDc73zKjViVEuNcP3NwD', 'wallet': 166701}, {'amount': 104625091.579161, 'addr': 'LaXTGF8X6FGXCSgWc3WFXimw5fWHMAcFQe', 'wallet': ...</code></pre>
+                <p class="note">Polni podatki seznama bogatih so na voljo preko API klica q=rich.</p>
+
+                <h3>Odlomek MultiAddr (samo prvi testiran naslov - q=multiaddr, n=5):</h3>
+                <pre><code>{'addresses': [{'address': 'LTdb5KrqryPihAU1RebDCy8tVxi1SVtGqu', 'total_sent': 245070714418857776, 'total_received': 274101449795473279, 'final_balance': 29030735376615503, 'n_tx': 77389}], 'txs': [{'hash': 'b38048c77741757c8a62a51c0d00ebd34455ec692036b5e31b055d13d14b769a', 'confirmations': 10, 'change': 453846178974, 'time_utc': '2025-04-11T23:27:44Z', 'n': 2}, {'hash': 'b38048c77741757c8a62a51c0d00ebd34455ec692036b5e31b055d13d14b769a', 'confirmations': 10, 'change': 453846000000, 'time_utc': '2025-04-11T23:27:44Z', 'n': 1}, {'hash': 'b38048c77741757c8a62a51c0d00ebd34455ec692036b5e31b055d13d14b769a', 'confirmations': 10, 'change': -667786049795, 'time_utc': '2025-04-11T23:27:44Z'}, {'hash': '1ff4af3aa7f6e93aac096db23c217f902a6e2d7a12bf32fd7b091b7aee3c21ea', 'confirmations': 19, 'change': 419624838297, 'time_utc': '2025-04-11T22:27:44Z', 'n': 2}, {'hash': '1ff4af3aa7f6e93aac096db23c217f902a6e2d7a12bf32fd7b091b7aee3c21ea', 'confirmations': 19, 'change': 419622999999, 'time_utc': '2025-04-11T22:27:44Z', 'n': 1}]}...</code></pre>
+
+                <h3>Odlomek neporabljenih izhodov (prvi testiran naslov - q=unspent):</h3>
+                <pre><code>{'unspent_outputs': [{'tx_hash': 'b38048c77741757c8a62a51c0d00ebd34455ec692036b5e31b055d13d14b769a', 'tx_ouput_n': 1, 'value': 453846000000, 'confirmations': 10, 'script': '76a9145c394d80bcd5525edd67777d3566c39ee52a387288ac', 'addr': 'LTdb5KrqryPihAU1RebDCy8tVxi1SVtGqu'}, {'tx_hash': 'b38048c77741757c8a62a51c0d00ebd34455ec692036b5e31b055d13d14b769a', 'tx_ouput_n': 2, 'value': 453846178974, 'confirmations': 10, 'script': '76a9145c394d80bcd5525edd67777d3566c39ee52a387288ac', 'addr': 'LTdb5KrqryPihAU1RebDCy8tVxi1SVtGqu'}, {'tx_hash': '1ff4af3aa7f6e93aac096db23c217f902a6e2d7a12bf32fd7b091b7aee3c21ea', 'tx_ouput_n': 1, 'value': 419622999999, 'confirmations': 19, 'script': '76a9145c394d80bcd5525edd67777d3566c39ee52a387288ac', 'addr': 'LTdb5KrqryPihAU1RebDCy8tVxi1SVtGqu'}, {'tx_hash': '1ff4af3aa7f6e93aac096db23c217f902a6e2d7a12bf32fd7b091b7aee3c21ea', 'tx_ouput_n': 2, 'value': 419624838297, 'confirmations': 19, 'script': '76a9145c394d80bcd5525edd67777d3566c39ee52a387288ac', 'addr': 'LTdb5KrqryPihAU1RebDCy8tVxi1SVtGqu'}, {'tx_hash': '8aa63f1bb3384c5a60a6ea64354a072aed0d05be7a4d69daea414dd5376b2e5b', 'tx_ouput_n': 1, 'value': 366129000000, 'confirmations': 42, 'script': '76a9145c394d80bcd5525edd67777d3566c39ee52a387288ac', 'addr': 'LTdb5KrqryPihAU1RebDCy8tVxi1SVtGqu'}, ... ]}</code></pre>
+            </details>
+        </div>
+
+    </main>
+
+</body>
+</html>
