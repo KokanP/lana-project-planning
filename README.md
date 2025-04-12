@@ -16,6 +16,9 @@ The interactive cost calculator and links to other documents are hosted at:
 * **[`presentation.html`](./presentation.html)**: A scrollable presentation demo covering the project plan, calculator, sample costs, and next steps. *(Direct Link to Presentation Demo)*
 * **[`whales-analysis.html`](./whales-analysis.html)**: An analytical article examining the role and impact of cryptocurrency "whales" holding assets in low-volume market conditions. *(Direct Link to Whale Analysis Context)*
     * **[`LANA_Whale_Report.html`](./LANA_Whale_Report.html)**: Automated report showing LanaCoin top holder concentration and distribution analysis. *(Auto-updated daily via GitHub Actions)*
+* **[`whales-analysis.html`](./whales-analysis.html)**: An analytical article examining the role and impact of cryptocurrency "whales"... *(Direct Link to Whale Analysis Context)*
+    * **[`LANA_Whale_Report.html`](./LANA_Whale_Report.html)**: Automated report showing LanaCoin top holder concentration... *(Auto-updated daily via GitHub Actions)*
+    * **[`static_lana_report.html`](./static_lana_report.html)**: Static report combining API and website data analysis. *(Manually generated snapshot)* <--- Add this line
 * **`README.md`**: This file, explaining the repository contents.
 
 ## Using the Interactive Calculator (`lana-cost-calculator.html`)
