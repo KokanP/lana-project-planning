@@ -6,7 +6,9 @@ on:
 jobs:
   run-api-tests:
     runs-on: ubuntu-latest
-    # No permissions needed as it doesn't commit files
+    # --- ADDED: Permissions to allow committing back to the repo ---
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout code
@@ -23,12 +25,40 @@ jobs:
           pip install requests # Only dependency for the test script
 
       - name: Run API Test Script
+        # The script now writes output to api_test_results.txt
+        # Progress/errors still go to stderr (workflow logs)
         id: test
         env:
-          # Pass the repository secret CRYPTOID_API_KEY as API_KEY env variable
-          # Script will run even if key is missing, but key-required endpoints will fail/be skipped
           API_KEY: ${{ secrets.CRYPTOID_API_KEY }}
         run: |
-          # Run the test script - output will go to workflow logs
+          # Run the test script - it handles writing to the output file
           python api_test_script.py
+
+      # --- ADDED: Step to commit the results file ---
+      - name: Commit Test Results
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+          OUTPUT_FILE="api_test_results.txt"
+
+          # Add the output file to git staging
+          echo "Adding $OUTPUT_FILE to git"
+          # Use || true in case the script failed before creating the file
+          git add $OUTPUT_FILE || echo "$OUTPUT_FILE not found, skipping add."
+
+          echo "Checking for changes in $OUTPUT_FILE..."
+          # Commit only if the output file has changed or was created
+          # Check specifically if the target file is staged for commit
+          if git diff --staged --quiet $OUTPUT_FILE; then
+            echo "No changes detected in $OUTPUT_FILE."
+          else
+            echo "Changes detected in $OUTPUT_FILE, attempting commit..."
+            # Commit only the output file explicitly
+            git commit -m "Update API test results" $OUTPUT_FILE
+            echo "Pushing changes..."
+            # Push using default GITHUB_TOKEN (needs 'contents: write' permission)
+            git push
+            echo "Changes pushed."
+          fi
 
