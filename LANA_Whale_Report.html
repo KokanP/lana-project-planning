@@ -51,15 +51,15 @@ Formatting HTML report...
   .plot-section { background-color: #fff; padding: 15px; margin-bottom: 30px; border: 1px solid #eee; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
   .interpretation { background-color: #eef; border-left: 4px solid #aac; padding: 10px 15px; margin: 20px 0; font-size: 0.95em; }
   .debug-info { margin-top: 40px; border-top: 2px dashed #ccc; padding-top: 15px; }
-  .debug-info summary { cursor: pointer; font-weight: bold; color: #555; margin-top: 10px;}
-  .debug-info pre { background-color: #eee; padding: 10px; font-size: 0.8em; overflow-x: auto; border: 1px solid #ddd; border-radius: 4px; }
+  .debug-info summary { cursor: pointer; font-weight: bold; color: #555; margin-top: 10px; font-size: 0.9em; }
+  .debug-info pre { background-color: #f0f0f0; padding: 8px; font-size: 0.75em; /* Made font smaller */ overflow-x: auto; border: 1px solid #ddd; border-radius: 4px; }
   hr { border: 0; height: 1px; background: #ddd; margin: 30px 0; }
 </style>
 
 </head>
 <body>
     <h1>LanaCoin Whale Analysis Report</h1>
-    <p><strong>Data Fetched:</strong> 2025-04-12 01:53:52 UTC</p>
+    <p><strong>Data Fetched:</strong> 2025-04-12 02:08:25 UTC</p>
     <p><strong>Circulating Supply:</strong> 3,521,597,062.85 LANA</p>
 
     <h2>Top Holder Concentration</h2>
@@ -94,7 +94,8 @@ Formatting HTML report...
         <p>The concentration metrics (Top 10: <strong>35.62%</strong>, Top 100: <strong>73.01%</strong>) show the percentage of the total circulating supply held by the wealthiest addresses. High percentages indicate that wealth is concentrated in fewer hands, which can potentially lead to increased market volatility or influence by large holders ("whales").</p>
         <p>The Gini coefficient (0.813) derived from the Lorenz curve provides a single measure of inequality. A value closer to 1 signifies higher inequality in balance distribution among the analyzed holders, while a value closer to 0 indicates more equal distribution.</p>
         <p>The histogram visualizes how many addresses fall into different balance ranges (note the logarithmic scale). A distribution heavily skewed towards the right (higher balances) with a long tail also suggests significant wealth concentration.</p>
-        <p>Remember, this analysis is based on the top 1000 addresses returned by the API and does not filter out potential exchange or contract addresses. For further context and discussion on LanaCoin whale analysis, see: <a href="https://lana.freq.band/whales-analysis.html" target="_blank" rel="noopener noreferrer">https://lana.freq.band/whales-analysis.html</a></p>
+        <p>Remember, this analysis is based on the top 1000 addresses returned by the API and does not filter out potential exchange or contract addresses. For further context and discussion on LanaCoin whale analysis, see the <a href="https://lana.freq.band/whales-analysis.html" target="_blank" rel="noopener noreferrer">main analysis page</a>.</p>
+        <p>Return to <a href="whales-analysis.html">Whales Analysis Context</a> page.</p>
     </div>
     
 
