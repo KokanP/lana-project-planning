@@ -22,7 +22,6 @@ PLOT_LORENZ_FILENAME = "lorenz_curve.png"
 PLOT_HIST_FILENAME = "balance_histogram.png"
 # Link for context
 CONTEXT_URL = "https://lana.freq.band/whales-analysis.html"
-# BASE_UNITS_PER_COIN = 1e8 # Removed - Balances are in whole coins
 
 # --- Helper Function for API Calls ---
 def get_api_data(base_url, query_params, api_key):
@@ -170,7 +169,6 @@ def plot_balance_histogram(holders_data, filename):
 # --- Helper Function to Encode Image ---
 def image_to_base64(filename):
     """Reads an image file and returns a base64 encoded data URI."""
-    # (Same as previous version)
     try:
         with open(filename, "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
@@ -209,10 +207,9 @@ def calculate_and_format_concentration(holders_data, circulating_supply):
         top_10_balance = sum(h['balance'] for h in filtered_holders[:10])
         top_100_balance = sum(h['balance'] for h in filtered_holders[:100])
 
-        # --- CORRECTED CALCULATION: Use whole coin supply ---
+        # Calculate directly with whole coin values
         conc_10_val = (top_10_balance / circulating_supply) * 100
         conc_100_val = (top_100_balance / circulating_supply) * 100
-        # --- END CORRECTION ---
 
         conc_10_str = f"{conc_10_val:.2f}%"
         conc_100_str = f"{conc_100_val:.2f}%"
@@ -321,7 +318,7 @@ def run_analysis():
 
     gini_str = f"{gini_coefficient:.3f}" if gini_coefficient is not None else "N/A"
 
-    # Basic CSS for styling
+    # Basic CSS for styling + Debug CSS adjustments
     html_style = """
 <style>
   body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; line-height: 1.6; padding: 20px; max-width: 1000px; margin: auto; background-color: #f9f9f9; color: #333; }
@@ -342,8 +339,8 @@ def run_analysis():
   .plot-section { background-color: #fff; padding: 15px; margin-bottom: 30px; border: 1px solid #eee; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
   .interpretation { background-color: #eef; border-left: 4px solid #aac; padding: 10px 15px; margin: 20px 0; font-size: 0.95em; }
   .debug-info { margin-top: 40px; border-top: 2px dashed #ccc; padding-top: 15px; }
-  .debug-info summary { cursor: pointer; font-weight: bold; color: #555; margin-top: 10px;}
-  .debug-info pre { background-color: #eee; padding: 10px; font-size: 0.8em; overflow-x: auto; border: 1px solid #ddd; border-radius: 4px; }
+  .debug-info summary { cursor: pointer; font-weight: bold; color: #555; margin-top: 10px; font-size: 0.9em; } /* Smaller summary */
+  .debug-info pre { background-color: #f0f0f0; padding: 8px; font-size: 0.75em; /* Made font smaller */ overflow-x: auto; border: 1px solid #ddd; border-radius: 4px; }
   hr { border: 0; height: 1px; background: #ddd; margin: 30px 0; }
 </style>
 """
@@ -356,8 +353,7 @@ def run_analysis():
         for i in range(num_to_show):
             holder = parsed_holders[i]
             address = holder.get('address', 'N/A')
-            balance_coins = holder.get('balance', 0) # This is already in whole coins
-            # Calculate percentage string directly for table using whole coins
+            balance_coins = holder.get('balance', 0)
             percent_circ_val = (balance_coins / circulating_supply) * 100 if circulating_supply and circulating_supply > 0 else 0
             percent_circ_str = f"{percent_circ_val:.3f}%"
             display_address = f"{address[:8]}...{address[-6:]}" if len(address) > 14 else address
@@ -400,6 +396,7 @@ def run_analysis():
 
 
     # --- Construct Final HTML ---
+    # Ensure debug info is at the very end before </body>
     html_string = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -449,7 +446,7 @@ def run_analysis():
 
 </body>
 </html>
-"""
+""" # <<< End of the single f-string literal
 
     print("\n--- Analysis Output ---")
     print(html_string) # Print the generated HTML to stdout
