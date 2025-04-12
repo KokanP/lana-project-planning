@@ -11,18 +11,21 @@ import numpy as np # For calculations
 import matplotlib
 matplotlib.use('Agg') # Use non-interactive backend BEFORE importing pyplot
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker # For formatting axes
 
 # --- Constants ---
 API_BASE_URL_GENERAL = "https://chainz.cryptoid.info/lana/api.dws"
 API_DELAY = 11
-# Filenames for temporary plot files
+# Filenames for saved plots
 PLOT_TOP_N_FILENAME = "top_holders_chart.png"
 PLOT_LORENZ_FILENAME = "lorenz_curve.png"
+PLOT_PIE_FILENAME = "concentration_pie_chart.png"
+PLOT_HIST_FILENAME = "balance_histogram.png"
 
 # --- Helper Function for API Calls ---
 def get_api_data(base_url, query_params, api_key):
     """ Fetches data using API key from a specified base URL """
-    # (Same as in analysis_py_with_plots)
+    # (Same as previous version)
     if not api_key:
         print("Error: API Key is required but not provided.", file=sys.stderr)
         return None
@@ -60,7 +63,7 @@ def get_api_data(base_url, query_params, api_key):
 # --- Plotting Functions (Save to file) ---
 def plot_top_n_chart(holders_data, num_holders_to_plot, filename):
     """Generates and saves a bar chart of top N holders."""
-    # (Same plotting logic as in analysis_py_with_plots)
+    # (Same as previous version)
     print(f"\nGenerating Top {num_holders_to_plot} Holders Bar Chart...")
     if not holders_data or len(holders_data) < num_holders_to_plot:
         print(f"Error: Not enough holder data ({len(holders_data)}) to plot top {num_holders_to_plot}.")
@@ -88,7 +91,7 @@ def plot_top_n_chart(holders_data, num_holders_to_plot, filename):
 
 def plot_lorenz_curve(holders_data, filename):
     """Generates and saves a Lorenz curve plot."""
-    # (Same plotting logic as in analysis_py_with_plots)
+    # (Same as previous version)
     print("\nGenerating Lorenz Curve for Wealth Distribution...")
     if not holders_data:
         print("Error: No holder data available for Lorenz curve.")
@@ -129,21 +132,114 @@ def plot_lorenz_curve(holders_data, filename):
         print(f"Error generating Lorenz curve: {e}", file=sys.stderr)
         return False, None
 
+# --- NEW Plotting Function: Pie Chart ---
+def plot_pie_chart(holders_data, circulating_supply, filename):
+    """Generates and saves a pie chart showing concentration."""
+    print("\nGenerating Concentration Pie Chart...")
+    if not holders_data or circulating_supply is None or circulating_supply <= 0:
+        print("Error: Insufficient data for pie chart.")
+        return False
+    try:
+        # Calculate balances for segments
+        bal_top_10 = sum(float(h.get('balance', 0)) for h in holders_data[:10])
+        bal_11_100 = sum(float(h.get('balance', 0)) for h in holders_data[10:100])
+        bal_101_1000 = sum(float(h.get('balance', 0)) for h in holders_data[100:]) # Assumes up to 1000 holders
+        total_top_1000_bal = bal_top_10 + bal_11_100 + bal_101_1000
+
+        # Calculate remainder (estimate based on circulating supply)
+        # Note: This might be slightly inaccurate if total supply != sum of rich list + remainder
+        bal_remainder = (circulating_supply * 1e8) - total_top_1000_bal
+        # Ensure remainder isn't negative due to API data discrepancies
+        bal_remainder = max(0, bal_remainder)
+
+        # Data for pie chart (convert back to LANA for readability)
+        sizes = [bal_top_10 / 1e8, bal_11_100 / 1e8, bal_101_1000 / 1e8, bal_remainder / 1e8]
+        labels = [
+            f'Top 10 ({bal_top_10 / (circulating_supply * 1e8):.1%})',
+            f'Next 90 (11-100) ({bal_11_100 / (circulating_supply * 1e8):.1%})',
+            f'Next 900 (101-1000) ({bal_101_1000 / (circulating_supply * 1e8):.1%})',
+            f'Remainder ({bal_remainder / (circulating_supply * 1e8):.1%})'
+        ]
+        # Filter out slices with zero balance for cleaner chart
+        non_zero_sizes = [size for size in sizes if size > 0.001 * circulating_supply] # Threshold to avoid tiny slices
+        non_zero_labels = [labels[i] for i, size in enumerate(sizes) if size > 0.001 * circulating_supply]
+
+        if not non_zero_sizes:
+             print("Error: No significant slices found for pie chart.")
+             return False
+
+        plt.figure(figsize=(8, 8))
+        plt.pie(non_zero_sizes, labels=non_zero_labels, autopct='%1.1f%%', startangle=90, pctdistance=0.85)
+        # Draw circle for doughnut chart look (optional)
+        # centre_circle = plt.Circle((0,0),0.70,fc='white')
+        # fig = plt.gcf()
+        # fig.gca().add_artist(centre_circle)
+        plt.title('LanaCoin Balance Concentration by Holder Group')
+        plt.tight_layout()
+        plt.savefig(filename)
+        plt.close()
+        print(f"Successfully saved pie chart to {filename}")
+        return True
+    except Exception as e:
+        print(f"Error generating pie chart: {e}", file=sys.stderr)
+        return False
+
+# --- NEW Plotting Function: Histogram ---
+def plot_balance_histogram(holders_data, filename):
+    """Generates and saves a histogram of holder balances."""
+    print("\nGenerating Balance Distribution Histogram...")
+    if not holders_data:
+        print("Error: No holder data available for histogram.")
+        return False
+    try:
+        # Extract balances in LANA, filter out non-positive
+        balances_hist = np.array([float(h.get('balance', 0)) / 1e8 for h in holders_data if isinstance(h.get('balance'), (int, float))])
+        balances_hist = balances_hist[balances_hist > 0]
+
+        if len(balances_hist) == 0:
+            print("Error: No valid positive balances found for histogram.")
+            return False
+
+        plt.figure(figsize=(10, 6))
+        # Use logarithmic bins for better visualization of skewed data
+        # Calculate log range
+        min_log_bal = np.log10(balances_hist.min())
+        max_log_bal = np.log10(balances_hist.max())
+        # Create log-spaced bins (e.g., 10, 100, 1k, 10k...)
+        log_bins = np.logspace(min_log_bal, max_log_bal, num=15) # Adjust num bins as needed
+
+        plt.hist(balances_hist, bins=log_bins, edgecolor='black')
+        plt.xscale('log') # Use logarithmic scale for x-axis (balance)
+        plt.yscale('log') # Use logarithmic scale for y-axis (count) - optional
+        plt.xlabel("Balance Held (LANA) - Log Scale")
+        plt.ylabel("Number of Holders - Log Scale")
+        plt.title(f"Distribution of Balances within Top {len(holders_data)} Holders")
+        # Format x-axis ticks to show numbers instead of powers of 10
+        plt.gca().xaxis.set_major_formatter(mticker.FormatStrFormatter('%d'))
+        plt.grid(True, which='both', linestyle='--', alpha=0.5)
+        plt.tight_layout()
+        plt.savefig(filename)
+        plt.close()
+        print(f"Successfully saved balance histogram to {filename}")
+        return True
+    except Exception as e:
+        print(f"Error generating balance histogram: {e}", file=sys.stderr)
+        return False
+
 # --- Helper Function to Encode Image ---
 def image_to_base64(filename):
     """Reads an image file and returns a base64 encoded data URI."""
+    # (Same as previous version)
     try:
         with open(filename, "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
-        # Check file extension for correct MIME type
-        mime_type = "image/png" # Default assumption
+        mime_type = "image/png"
         if filename.lower().endswith(".jpg") or filename.lower().endswith(".jpeg"):
             mime_type = "image/jpeg"
         elif filename.lower().endswith(".gif"):
              mime_type = "image/gif"
         elif filename.lower().endswith(".svg"):
              mime_type = "image/svg+xml"
-
         return f"data:{mime_type};base64,{encoded_string}"
     except FileNotFoundError:
         print(f"Error: Image file not found: {filename}", file=sys.stderr)
@@ -194,7 +290,7 @@ def run_analysis():
                         address = holder_data.get('addr')
                         balance_raw = holder_data.get('amount')
                         if address is not None and balance_raw is not None:
-                            balance = float(balance_raw)
+                            balance = float(balance_raw) # Keep balance in base units for calculations
                             parsed_holders.append({'address': address, 'balance': balance})
                     except (ValueError, TypeError) as e:
                         print(f"Warning: Could not parse balance for holder data {holder_data}: {e}", file=sys.stderr)
@@ -214,8 +310,9 @@ def run_analysis():
         if filtered_holders:
             top_10_balance = sum(h['balance'] for h in filtered_holders[:10])
             top_100_balance = sum(h['balance'] for h in filtered_holders[:100])
-            concentration_top_10 = f"{(top_10_balance / circulating_supply) * 100:.2f}%"
-            concentration_top_100 = f"{(top_100_balance / circulating_supply) * 100:.2f}%"
+            # Use 1e8 for conversion here explicitly
+            concentration_top_10 = f"{(top_10_balance / (circulating_supply * 1e8)) * 100:.2f}%"
+            concentration_top_100 = f"{(top_100_balance / (circulating_supply * 1e8)) * 100:.2f}%"
             print("Calculations complete.")
         else:
             print("No holders available for calculation.")
@@ -225,11 +322,15 @@ def run_analysis():
     # --- Generate Plots ---
     top_n_plot_success = plot_top_n_chart(parsed_holders, 20, PLOT_TOP_N_FILENAME)
     lorenz_plot_success, gini_coefficient = plot_lorenz_curve(parsed_holders, PLOT_LORENZ_FILENAME)
+    pie_chart_success = plot_pie_chart(parsed_holders, circulating_supply, PLOT_PIE_FILENAME)
+    hist_success = plot_balance_histogram(parsed_holders, PLOT_HIST_FILENAME)
 
     # --- Encode Images to Base64 ---
     print("\nEncoding images for HTML embedding...")
     top_n_base64 = image_to_base64(PLOT_TOP_N_FILENAME) if top_n_plot_success else None
     lorenz_base64 = image_to_base64(PLOT_LORENZ_FILENAME) if lorenz_plot_success else None
+    pie_base64 = image_to_base64(PLOT_PIE_FILENAME) if pie_chart_success else None
+    hist_base64 = image_to_base64(PLOT_HIST_FILENAME) if hist_success else None
 
     # --- Format Output as HTML ---
     print("\nFormatting HTML report...")
@@ -240,18 +341,43 @@ def run_analysis():
     # Basic CSS for styling
     html_style = """
 <style>
-  body { font-family: sans-serif; line-height: 1.6; padding: 20px; max-width: 900px; margin: auto; }
-  h1, h2, h3 { color: #333; }
-  h2 { border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 30px; }
-  h3 { margin-top: 25px; }
-  ul { padding-left: 20px; }
-  li { margin-bottom: 5px; }
-  img { max-width: 100%; height: auto; display: block; margin-top: 10px; border: 1px solid #ddd; }
-  .note { font-size: 0.9em; color: #555; }
-  .error { color: red; font-style: italic; }
-  .plot-section { margin-bottom: 30px; }
+  body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; line-height: 1.6; padding: 20px; max-width: 1000px; margin: auto; background-color: #f9f9f9; color: #333; }
+  h1, h2, h3 { color: #1a1a1a; border-bottom: 1px solid #ddd; padding-bottom: 6px; }
+  h1 { text-align: center; border-bottom: 2px solid #ccc; margin-bottom: 20px;}
+  h2 { margin-top: 40px; }
+  h3 { margin-top: 30px; border-bottom: none; }
+  ul { padding-left: 20px; list-style: square; }
+  li { margin-bottom: 8px; }
+  img { max-width: 100%; height: auto; display: block; margin: 15px auto; background-color: white; padding: 5px; border: 1px solid #ccc; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
+  table { border-collapse: collapse; width: 100%; margin-top: 15px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
+  th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+  th { background-color: #f2f2f2; }
+  tr:nth-child(even) { background-color: #f9f9f9; }
+  tr:hover { background-color: #f1f1f1; }
+  .note { font-size: 0.9em; color: #555; margin-top: 5px; }
+  .error { color: #d9534f; font-style: italic; }
+  .plot-section { background-color: #fff; padding: 15px; margin-bottom: 30px; border: 1px solid #eee; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  hr { border: 0; height: 1px; background: #ddd; margin: 30px 0; }
 </style>
 """
+
+    # --- Build Top 10 Table ---
+    top_10_table_html = "<h3>Top 10 Holders Table</h3>\n"
+    if parsed_holders:
+        top_10_table_html += "<table>\n<thead><tr><th>Rank</th><th>Address</th><th>Balance (LANA)</th><th>% of Circulating</th></tr></thead>\n<tbody>\n"
+        # Ensure we don't go out of bounds
+        num_to_show = min(10, len(parsed_holders))
+        for i in range(num_to_show):
+            holder = parsed_holders[i]
+            address = holder.get('address', 'N/A')
+            balance_base = holder.get('balance', 0)
+            balance_lana = balance_base / 1e8
+            percent_circ = (balance_base / (circulating_supply * 1e8)) * 100 if circulating_supply and circulating_supply > 0 else 0
+            top_10_table_html += f"<tr><td>{i+1}</td><td>{address}</td><td>{balance_lana:,.2f}</td><td>{percent_circ:.3f}%</td></tr>\n"
+        top_10_table_html += "</tbody>\n</table>\n"
+    else:
+        top_10_table_html += "<p>No holder data parsed to display table.</p>\n"
+
 
     # Build HTML string
     html_string = f"""<!DOCTYPE html>
@@ -275,6 +401,8 @@ def run_analysis():
     </ul>
     <p class="note">(Note: Concentration based on raw API data. Known exchange/contract addresses are NOT filtered out.)</p>
 
+    {top_10_table_html}
+
     <hr>
 
     <h2>Visualizations</h2>
@@ -288,7 +416,24 @@ def run_analysis():
         html_string += '        <p class="error">Failed to generate Top Holders chart.</p>\n'
     html_string += "    </div>\n" # Close plot-section
 
-    html_string += """
+    <div class="plot-section">
+        <h3>Balance Distribution (Top 1000 Holders)</h3>
+"""
+    if hist_base64:
+        html_string += f'        <img src="{hist_base64}" alt="Balance Histogram">\n'
+    else:
+        html_string += '        <p class="error">Failed to generate Balance Histogram.</p>\n'
+    html_string += "    </div>\n" # Close plot-section
+
+    <div class="plot-section">
+        <h3>Wealth Concentration (Pie Chart)</h3>
+"""
+    if pie_base64:
+        html_string += f'        <img src="{pie_base64}" alt="Concentration Pie Chart">\n'
+    else:
+        html_string += '        <p class="error">Failed to generate Concentration Pie Chart.</p>\n'
+    html_string += "    </div>\n" # Close plot-section
+
     <div class="plot-section">
         <h3>Wealth Distribution (Lorenz Curve)</h3>
 """
@@ -308,6 +453,16 @@ def run_analysis():
     # Print the final HTML string to standard output
     # The workflow will redirect this to an HTML file
     print(html_string)
+
+    # Clean up temporary plot files
+    for plot_file in [PLOT_TOP_N_FILENAME, PLOT_LORENZ_FILENAME, PLOT_PIE_FILENAME, PLOT_HIST_FILENAME]:
+        if os.path.exists(plot_file):
+            try:
+                os.remove(plot_file)
+                print(f"Removed temporary plot file: {plot_file}")
+            except OSError as e:
+                print(f"Error removing temporary plot file {plot_file}: {e}", file=sys.stderr)
+
 
     return True # Indicate success for workflow
 
