@@ -1,0 +1,84 @@
+name: Fetch LanaCoin Address Data
+
+on:
+  schedule:
+    # Example: Run weekly on Sunday at 5 AM UTC
+    - cron: '0 5 * * 0'
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  fetch-data:
+    runs-on: ubuntu-latest
+    # Grant permissions for the GITHUB_TOKEN to push changes back to the repo
+    permissions:
+      contents: write # Needed to commit changes back
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Run Data Fetch Script
+        # Runs the new script and redirects standard output (status report)
+        id: fetch
+        env:
+          API_KEY: ${{ secrets.CRYPTOID_API_KEY }}
+        run: |
+          # Use the new script name here
+          python fetch_address_data.py > fetch_status_report.md
+          # Check if the status report file was created
+          if [ ! -s fetch_status_report.md ]; then
+            echo "Data fetch script report (stdout) is empty or script failed." >&2
+            exit 1 # Fail the workflow if the report is empty
+          else
+            echo "Data fetch script finished and produced status report."
+          fi
+          # Check if the JSON data file was created
+          if [ ! -f address_transactions.json ]; then
+             echo "Warning: address_transactions.json file not found." >&2
+             # Decide if this is a fatal error - maybe allow partial data?
+             # exit 1
+          else
+             echo "Found address_transactions.json file."
+          fi
+
+      - name: Commit Data and Report
+        # Commits both the status report and the raw JSON data
+        if: true # Ensure this step runs
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+          # Define the report file and data file names
+          TARGET_REPORT_FILE="DATA_FETCH_REPORT.md" # Use a distinct name
+          JSON_DATA_FILE="address_transactions.json"
+
+          echo "Copying status report output to $TARGET_REPORT_FILE"
+          cp fetch_status_report.md $TARGET_REPORT_FILE || echo "fetch_status_report.md not found, skipping copy."
+
+          # Add both the report file and the JSON data file to git staging
+          echo "Adding $TARGET_REPORT_FILE and $JSON_DATA_FILE to git"
+          # Use || true for add in case JSON wasn't created but we want to commit report
+          git add $TARGET_REPORT_FILE
+          git add $JSON_DATA_FILE || echo "JSON file not added."
+
+          echo "Checking for changes..."
+          # Commit only if there are changes staged in tracked files
+          if output=$(git status --porcelain) && [ -z "$output" ]; then
+            echo "No changes detected to commit."
+          else
+            echo "Changes detected, attempting commit..."
+            git commit -m "Update LanaCoin address data and fetch report"
+            echo "Pushing changes..."
+            git push
+            echo "Changes pushed."
+          fi
