@@ -25,7 +25,7 @@ The interactive cost calculator and links to other documents are hosted at:
 
 * **`README.md`**: This file, explaining the repository contents.
 
-## Slovenska Različica Dokumentov
+## Slovenske različice dokumentov
 
 Spodaj so povezave do slovenskih prevodov ključnih dokumentov. Prevedeni so bili bistveni deli, povezani s projektom, za lažje razumevanje.
 
