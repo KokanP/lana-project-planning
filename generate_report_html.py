@@ -27,6 +27,7 @@ CONTEXT_URL = "https://lana.freq.band/whales-analysis.html" # External context l
 # --- Helper Function for API Calls ---
 def get_api_data(base_url, query_params, api_key):
     """ Fetches data using API key from a specified base URL """
+    # (Same as previous version)
     if not api_key:
         print("Error: API Key is required but not provided.", file=sys.stderr)
         return None
@@ -50,7 +51,6 @@ def get_api_data(base_url, query_params, api_key):
                  print(f"Error: Failed to decode JSON/JSONP response. Response text: {text_response[:200]}...", file=sys.stderr)
                  return None
         else:
-             # Assume plain text number for circulating supply etc.
              return response.text.strip()
     except requests.exceptions.Timeout:
         print(f"Error: API request timed out for params: {query_params}", file=sys.stderr)
@@ -63,6 +63,7 @@ def get_api_data(base_url, query_params, api_key):
         return None
 
 # --- Plotting Functions (Save to file) ---
+# (Plotting functions remain the same - plot_top_n_chart, plot_lorenz_curve, plot_balance_histogram)
 def plot_top_n_chart(holders_data, num_holders_to_plot, filename):
     """Generates and saves a bar chart of top N holders."""
     print(f"\nGenerating Top {num_holders_to_plot} Holders Bar Chart...")
@@ -97,14 +98,12 @@ def plot_lorenz_curve(holders_data, filename):
         print("Error: No holder data available for Lorenz curve.")
         return False, None
     try:
-        # Use balances directly (already in whole coins as floats)
         balances_lorenz_coins = np.array([h['balance'] for h in holders_data if isinstance(h.get('balance'), (int, float))])
         balances_lorenz_coins = np.sort(balances_lorenz_coins)
         balances_lorenz_coins = balances_lorenz_coins[balances_lorenz_coins > 0]
         if len(balances_lorenz_coins) == 0:
             print("Error: No valid positive balances found for Lorenz curve.")
             return False, None
-        # Calculate cumulative percentage based on whole coins
         total_balance_coins = balances_lorenz_coins.sum()
         if total_balance_coins == 0:
              print("Error: Total balance is zero, cannot generate Lorenz curve.")
@@ -173,6 +172,7 @@ def plot_balance_histogram(holders_data, filename):
 # --- Helper Function to Encode Image ---
 def image_to_base64(filename):
     """Reads an image file and returns a base64 encoded data URI."""
+    # (Same as previous version)
     try:
         with open(filename, "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
@@ -325,27 +325,30 @@ def run_analysis():
     # Basic CSS for styling + Debug CSS adjustments
     html_style = """
 <style>
-  body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; line-height: 1.6; padding: 20px; max-width: 1000px; margin: auto; background-color: #f9f9f9; color: #333; }
-  h1, h2, h3 { color: #1a1a1a; border-bottom: 1px solid #ddd; padding-bottom: 6px; }
-  h1 { text-align: center; border-bottom: 2px solid #ccc; margin-bottom: 20px;}
-  h2 { margin-top: 40px; }
-  h3 { margin-top: 30px; border-bottom: none; }
-  ul { padding-left: 20px; list-style: square; }
-  li { margin-bottom: 8px; }
-  img { max-width: 100%; height: auto; display: block; margin: 15px auto; background-color: white; padding: 5px; border: 1px solid #ccc; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
-  table { border-collapse: collapse; width: 100%; margin-top: 15px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
-  th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 0.9em; }
-  th { background-color: #f2f2f2; }
-  tr:nth-child(even) { background-color: #f9f9f9; }
-  tr:hover { background-color: #f1f1f1; }
-  .note { font-size: 0.9em; color: #555; margin-top: 5px; }
-  .error { color: #d9534f; font-style: italic; }
-  .plot-section { background-color: #fff; padding: 15px; margin-bottom: 30px; border: 1px solid #eee; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-  .interpretation { background-color: #eef; border-left: 4px solid #aac; padding: 10px 15px; margin: 20px 0; font-size: 0.95em; }
-  .debug-info { margin-top: 40px; border-top: 2px dashed #ccc; padding-top: 15px; }
-  .debug-info summary { cursor: pointer; font-weight: bold; color: #555; margin-top: 10px; font-size: 0.9em; }
-  .debug-info pre { background-color: #f0f0f0; padding: 8px; font-size: 0.75em; /* Made font smaller */ overflow-x: auto; border: 1px solid #ddd; border-radius: 4px; }
-  hr { border: 0; height: 1px; background: #ddd; margin: 30px 0; }
+  /* --- CSS Test Style --- */
+  /* body {{ background-color: yellow !important; }} */ /* Uncomment this line to test if CSS is applying at all */
+
+  body {{ font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; line-height: 1.6; padding: 20px; max-width: 1000px; margin: auto; background-color: #f9f9f9; color: #333; }}
+  h1, h2, h3 {{ color: #1a1a1a; border-bottom: 1px solid #ddd; padding-bottom: 6px; }}
+  h1 {{ text-align: center; border-bottom: 2px solid #ccc; margin-bottom: 20px;}}
+  h2 {{ margin-top: 40px; }}
+  h3 {{ margin-top: 30px; border-bottom: none; }}
+  ul {{ padding-left: 20px; list-style: square; }}
+  li {{ margin-bottom: 8px; }}
+  img {{ max-width: 100%; height: auto; display: block; margin: 15px auto; background-color: white; padding: 5px; border: 1px solid #ccc; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); }}
+  table {{ border-collapse: collapse; width: 100%; margin-top: 15px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); }}
+  th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 0.9em; }}
+  th {{ background-color: #f2f2f2; }}
+  tr:nth-child(even) {{ background-color: #f9f9f9; }}
+  tr:hover {{ background-color: #f1f1f1; }}
+  .note {{ font-size: 0.9em; color: #555; margin-top: 5px; }}
+  .error {{ color: #d9534f; font-style: italic; }}
+  .plot-section {{ background-color: #fff; padding: 15px; margin-bottom: 30px; border: 1px solid #eee; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }}
+  .interpretation {{ background-color: #eef; border-left: 4px solid #aac; padding: 10px 15px; margin: 20px 0; font-size: 0.95em; }}
+  .debug-info {{ margin-top: 40px; border-top: 2px dashed #ccc; padding-top: 15px; }}
+  .debug-info summary {{ cursor: pointer; font-weight: bold; color: #555; margin-top: 10px; font-size: 0.9em; }}
+  .debug-info pre {{ background-color: #f0f0f0; padding: 8px; font-size: 0.75em; /* Smaller font for debug */ overflow-x: auto; border: 1px solid #ddd; border-radius: 4px; }}
+  hr {{ border: 0; height: 1px; background: #ddd; margin: 30px 0; }}
 </style>
 """
 
