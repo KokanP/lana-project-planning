@@ -10,15 +10,18 @@ The interactive cost calculator and links to other documents are hosted at:
 
 ## Contents
 
+### Project Related
 * **[`lana-cost-calculator.html`](./lana-cost-calculator.html)**: The main **interactive** cost estimation tool built with HTML, CSS, and JavaScript. Allows for live calculation updates based on user inputs. *(Direct Link to Calculator)*
 * **[`lana_project_cost_sample.html`](./lana_project_cost_sample.html)**: A **static HTML version** of the project documentation containing sample cost estimations based on default parameters (10% EUR Rate Adjustment, 10x LANA Multiplier). *(Direct Link to Static Sample Doc)*
-* **[`Building-Trust.html`](./Building-Trust.html)**: Static HTML version of the 'Building Trust: Essential Website Elements for Level 1 Blockchain Cryptocurrencies' guidelines document. *(Direct Link to Trust Guidelines)*
 * **[`presentation.html`](./presentation.html)**: A scrollable presentation demo covering the project plan, calculator, sample costs, and next steps. *(Direct Link to Presentation Demo)*
+
+
+### General Analysis
+* **[`static_lana_report.html`](./static_lana_report.html)**: Static report combining API and website data analysis. *(Manually generated snapshot)*
 * **[`whales-analysis.html`](./whales-analysis.html)**: An analytical article examining the role and impact of cryptocurrency "whales" holding assets in low-volume market conditions. *(Direct Link to Whale Analysis Context)*
     * **[`LANA_Whale_Report.html`](./LANA_Whale_Report.html)**: Automated report showing LanaCoin top holder concentration and distribution analysis. *(Auto-updated daily via GitHub Actions)*
-* **[`whales-analysis.html`](./whales-analysis.html)**: An analytical article examining the role and impact of cryptocurrency "whales"... *(Direct Link to Whale Analysis Context)*
-    * **[`LANA_Whale_Report.html`](./LANA_Whale_Report.html)**: Automated report showing LanaCoin top holder concentration... *(Auto-updated daily via GitHub Actions)*
-    * **[`static_lana_report.html`](./static_lana_report.html)**: Static report combining API and website data analysis. *(Manually generated snapshot)* <--- Add this line
+* **[`Building-Trust.html`](./Building-Trust.html)**: Static HTML version of the 'Building Trust: Essential Website Elements for Level 1 Blockchain Cryptocurrencies' guidelines document. *(Direct Link to Trust Guidelines)*
+
 * **`README.md`**: This file, explaining the repository contents.
 
 ## Using the Interactive Calculator (`lana-cost-calculator.html`)
