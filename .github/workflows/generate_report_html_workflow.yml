@@ -1,0 +1,75 @@
+name: Generate LanaCoin HTML Report
+
+on:
+  schedule:
+    # Example: Run daily at 8:30 AM UTC
+    - cron: '30 8 * * *'
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  build-and-report:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed to commit changes back
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # Install necessary libraries for the script
+          pip install requests matplotlib numpy
+
+      - name: Run HTML Report Generation Script
+        # Runs the new script and redirects standard output (the HTML) to report.html
+        id: report
+        env:
+          API_KEY: ${{ secrets.CRYPTOID_API_KEY }}
+        run: |
+          # Use the new script name here
+          python generate_report_html.py > report.html
+          # Check if the HTML output file was created and has content
+          if [ ! -s report.html ]; then
+            echo "HTML report file is empty or script failed." >&2
+            exit 1 # Fail the workflow if the report is empty
+          else
+            echo "HTML report generated successfully."
+          fi
+          # Plot files are generated temporarily but not needed for commit
+
+      - name: Commit HTML Report
+        # Commits the generated HTML file
+        if: true
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+          # Define the target HTML report file name in the repository
+          TARGET_HTML_FILE="LANA_Whale_Report.html"
+
+          echo "Moving generated report to $TARGET_HTML_FILE"
+          # Move the generated file to the target name
+          mv report.html $TARGET_HTML_FILE || echo "report.html not found, skipping move."
+
+          # Add the HTML report file to git staging
+          echo "Adding $TARGET_HTML_FILE to git"
+          git add $TARGET_HTML_FILE
+
+          echo "Checking for changes in $TARGET_HTML_FILE..."
+          # Commit only if the target file has changed
+          if git diff --staged --quiet $TARGET_HTML_FILE; then
+            echo "No changes detected in $TARGET_HTML_FILE."
+          else
+            echo "Changes detected in $TARGET_HTML_FILE, attempting commit..."
+            git commit -m "Update LanaCoin HTML analysis report" $TARGET_HTML_FILE
+            echo "Pushing changes..."
+            git push
+            echo "Changes pushed."
+          fi
