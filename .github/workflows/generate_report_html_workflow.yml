@@ -2,13 +2,17 @@ name: Generate LanaCoin HTML Report
 
 on:
   schedule:
-    # Example: Run daily at 8:30 AM UTC
+    # Runs the workflow automatically at a scheduled time.
+    # This example runs daily at 08:30 UTC.
+    # Use https://crontab.guru/ to customize the schedule.
+    # Remember: Time is in UTC.
     - cron: '30 8 * * *'
-  workflow_dispatch: # Allows manual triggering
+  workflow_dispatch: # Allows manual triggering from the Actions tab
 
 jobs:
   build-and-report:
     runs-on: ubuntu-latest
+    # Grant permissions for the GITHUB_TOKEN to push changes back to the repo
     permissions:
       contents: write # Needed to commit changes back
 
@@ -28,12 +32,13 @@ jobs:
           pip install requests matplotlib numpy
 
       - name: Run HTML Report Generation Script
-        # Runs the new script and redirects standard output (the HTML) to report.html
+        # Runs the python script and redirects standard output (the HTML report) to report.html
         id: report
         env:
+          # Pass the repository secret CRYPTOID_API_KEY as API_KEY env variable
           API_KEY: ${{ secrets.CRYPTOID_API_KEY }}
         run: |
-          # Use the new script name here
+          # Use the correct script name here
           python generate_report_html.py > report.html
           # Check if the HTML output file was created and has content
           if [ ! -s report.html ]; then
@@ -42,11 +47,11 @@ jobs:
           else
             echo "HTML report generated successfully."
           fi
-          # Plot files are generated temporarily but not needed for commit
+          # Plot files are generated temporarily by the script but not needed for commit
 
       - name: Commit HTML Report
         # Commits the generated HTML file
-        if: true
+        if: true # Ensure this step runs
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
@@ -68,8 +73,10 @@ jobs:
             echo "No changes detected in $TARGET_HTML_FILE."
           else
             echo "Changes detected in $TARGET_HTML_FILE, attempting commit..."
+            # Commit only the target file to avoid unrelated changes
             git commit -m "Update LanaCoin HTML analysis report" $TARGET_HTML_FILE
             echo "Pushing changes..."
+            # Push using default GITHUB_TOKEN
             git push
             echo "Changes pushed."
           fi
