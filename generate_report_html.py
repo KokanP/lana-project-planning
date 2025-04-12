@@ -22,8 +22,7 @@ PLOT_LORENZ_FILENAME = "lorenz_curve.png"
 PLOT_HIST_FILENAME = "balance_histogram.png"
 # Link for context
 CONTEXT_URL = "https://lana.freq.band/whales-analysis.html"
-# Conversion factor (assuming 8 decimal places) - IMPORTANT TO VERIFY
-BASE_UNITS_PER_COIN = 1e8
+# BASE_UNITS_PER_COIN = 1e8 # Removed - Balances seem to be in whole coins already
 
 # --- Helper Function for API Calls ---
 def get_api_data(base_url, query_params, api_key):
@@ -65,7 +64,6 @@ def get_api_data(base_url, query_params, api_key):
         return None
 
 # --- Plotting Functions (Save to file) ---
-# (Plotting functions remain the same - plot_top_n_chart, plot_lorenz_curve, plot_balance_histogram)
 def plot_top_n_chart(holders_data, num_holders_to_plot, filename):
     """Generates and saves a bar chart of top N holders."""
     print(f"\nGenerating Top {num_holders_to_plot} Holders Bar Chart...")
@@ -75,8 +73,8 @@ def plot_top_n_chart(holders_data, num_holders_to_plot, filename):
     try:
         top_n_holders = holders_data[:num_holders_to_plot]
         addresses = [f"...{h.get('address', 'Unknown')[-6:]}" for h in top_n_holders]
-        # Convert balance from base units to LANA for plotting
-        balances = [float(h.get('balance', 0)) / BASE_UNITS_PER_COIN for h in top_n_holders]
+        # Balances are already in whole coins (float)
+        balances = [h.get('balance', 0) for h in top_n_holders]
         plt.figure(figsize=(12, 6))
         bars = plt.bar(addresses, balances)
         plt.xlabel("Address (Last 6 Chars)")
@@ -101,20 +99,20 @@ def plot_lorenz_curve(holders_data, filename):
         print("Error: No holder data available for Lorenz curve.")
         return False, None
     try:
-        # Use balances already in base units (float)
-        balances_lorenz_base = np.array([h['balance'] for h in holders_data if isinstance(h.get('balance'), (int, float))])
-        balances_lorenz_base = np.sort(balances_lorenz_base)
-        balances_lorenz_base = balances_lorenz_base[balances_lorenz_base > 0]
-        if len(balances_lorenz_base) == 0:
+        # Use balances directly (already in whole coins as floats)
+        balances_lorenz_coins = np.array([h['balance'] for h in holders_data if isinstance(h.get('balance'), (int, float))])
+        balances_lorenz_coins = np.sort(balances_lorenz_coins)
+        balances_lorenz_coins = balances_lorenz_coins[balances_lorenz_coins > 0]
+        if len(balances_lorenz_coins) == 0:
             print("Error: No valid positive balances found for Lorenz curve.")
             return False, None
-        # Calculate cumulative percentage based on base units
-        total_balance_base = balances_lorenz_base.sum()
-        if total_balance_base == 0:
+        # Calculate cumulative percentage based on whole coins
+        total_balance_coins = balances_lorenz_coins.sum()
+        if total_balance_coins == 0:
              print("Error: Total balance is zero, cannot generate Lorenz curve.")
              return False, None
-        cum_balance_perc = np.cumsum(balances_lorenz_base) / total_balance_base # Use base units here
-        num_holders = len(balances_lorenz_base)
+        cum_balance_perc = np.cumsum(balances_lorenz_coins) / total_balance_coins
+        num_holders = len(balances_lorenz_coins)
         holders_perc = np.linspace(0., 1., num_holders + 1)[1:]
         holders_axis = np.insert(holders_perc, 0, 0)
         balance_axis = np.insert(cum_balance_perc, 0, 0)
@@ -145,25 +143,24 @@ def plot_balance_histogram(holders_data, filename):
         print("Error: No holder data available for histogram.")
         return False
     try:
-        # Convert balances to LANA for histogram axis readability
-        balances_hist = np.array([float(h.get('balance', 0)) / BASE_UNITS_PER_COIN for h in holders_data if isinstance(h.get('balance'), (int, float))])
+        # Balances are already in whole coins (float)
+        balances_hist = np.array([h['balance'] for h in holders_data if isinstance(h.get('balance'), (int, float))])
         balances_hist = balances_hist[balances_hist > 0]
         if len(balances_hist) == 0:
             print("Error: No valid positive balances found for histogram.")
             return False
         plt.figure(figsize=(10, 6))
-        # Use logarithmic bins for potentially wide range
-        min_log_bal = np.log10(max(balances_hist.min(), 1e-8)) # Avoid log10(0)
+        min_log_bal = np.log10(max(balances_hist.min(), 1e-8)) # Avoid log10(0) or small numbers
         max_log_bal = np.log10(balances_hist.max())
         if max_log_bal <= min_log_bal: max_log_bal = min_log_bal + 1
-        log_bins = np.logspace(min_log_bal, max_log_bal, num=15) # Adjust num bins as needed
+        log_bins = np.logspace(min_log_bal, max_log_bal, num=15)
         plt.hist(balances_hist, bins=log_bins, edgecolor='black')
         plt.xscale('log')
         plt.yscale('log')
         plt.xlabel("Balance Held (LANA) - Log Scale")
         plt.ylabel("Number of Holders - Log Scale")
         plt.title(f"Distribution of Balances within Top {len(holders_data)} Holders")
-        plt.gca().xaxis.set_major_formatter(mticker.ScalarFormatter()) # Use default scalar formatter for log scale
+        plt.gca().xaxis.set_major_formatter(mticker.ScalarFormatter())
         plt.gca().xaxis.get_major_formatter().set_scientific(False)
         plt.gca().xaxis.get_major_formatter().set_useOffset(False)
         plt.grid(True, which='both', linestyle='--', alpha=0.5)
@@ -192,7 +189,7 @@ def image_to_base64(filename):
         print(f"Error encoding image {filename} to base64: {e}", file=sys.stderr)
         return None
 
-# --- NEW: Concentration Calculation Function ---
+# --- Concentration Calculation Function ---
 def calculate_and_format_concentration(holders_data, circulating_supply):
     """Calculates and formats Top 10 and Top 100 concentration."""
     print("\nCalculating concentration...")
@@ -202,38 +199,31 @@ def calculate_and_format_concentration(holders_data, circulating_supply):
     if not holders_data:
         print("Cannot calculate concentration: No parsed holder data.")
         return conc_10_str, conc_100_str
-    if circulating_supply is None or circulating_supply <= 0:
-        print("Cannot calculate concentration: Invalid circulating supply.")
+    # Ensure circulating_supply is a valid number > 0
+    if circulating_supply is None or not isinstance(circulating_supply, (int, float)) or circulating_supply <= 0:
+        print(f"Cannot calculate concentration: Invalid circulating supply ({circulating_supply}).")
         return conc_10_str, conc_100_str
 
-    # Ensure balances are numeric floats (should be from parsing)
-    # Already sorted descending by balance after parsing
-    # TODO: Consider adding exchange filtering here if needed later
-    # filtered_holders = [h for h in holders_data if h['address'] not in KNOWN_EXCHANGES]
-    filtered_holders = holders_data # Use raw list for now
+    # Use holders with valid numeric balances (already sorted)
+    filtered_holders = [h for h in holders_data if isinstance(h.get('balance'), (int, float))]
 
     if not filtered_holders:
-        print("Cannot calculate concentration: No holders remaining after potential filtering.")
+        print("Cannot calculate concentration: No holders with valid balances found.")
         return conc_10_str, conc_100_str
 
     try:
-        # Calculate sums using base units
+        # Calculate sums using whole coin balances
         top_10_balance = sum(h['balance'] for h in filtered_holders[:10])
         top_100_balance = sum(h['balance'] for h in filtered_holders[:100])
-        circ_supply_base_units = circulating_supply * BASE_UNITS_PER_COIN
 
-        print(f"Debug Info: Top 10 Sum = {top_10_balance}, Top 100 Sum = {top_100_balance}, Circ Supply Base = {circ_supply_base_units}") # Keep for one more run
+        # --- Calculate directly with whole coin values ---
+        conc_10_val = (top_10_balance / circulating_supply) * 100
+        conc_100_val = (top_100_balance / circulating_supply) * 100
+        # --- END ---
 
-        if circ_supply_base_units > 0:
-            conc_10_val = (top_10_balance / circ_supply_base_units) * 100
-            conc_100_val = (top_100_balance / circ_supply_base_units) * 100
-            conc_10_str = f"{conc_10_val:.2f}%"
-            conc_100_str = f"{conc_100_val:.2f}%"
-            print("Calculations complete.")
-        else:
-            print("Error: Circulating supply (base units) is zero.")
-            conc_10_str = "Error (Supply=0)"
-            conc_100_str = "Error (Supply=0)"
+        conc_10_str = f"{conc_10_val:.2f}%"
+        conc_100_str = f"{conc_100_val:.2f}%"
+        print("Calculations complete.")
 
     except Exception as e:
         print(f"Error during concentration calculation: {e}", file=sys.stderr)
@@ -265,14 +255,12 @@ def run_analysis():
     circulating_supply_data = get_api_data(API_BASE_URL_GENERAL, {'q': 'circulating'}, api_key)
     if circulating_supply_data is not None:
         try:
-            circulating_supply = float(circulating_supply_data)
+            circulating_supply = float(circulating_supply_data) # Supply is in whole coins
             print(f"Received circulating supply: {circulating_supply}")
         except ValueError:
             print(f"Error: Could not convert circulating supply data '{circulating_supply_data}' to float.", file=sys.stderr)
-            # Allow continuation, report will show N/A or Error
     else:
         print("Failed to fetch circulating supply.", file=sys.stderr)
-        # Allow continuation
 
     # --- Fetch Rich List ---
     print(f"Waiting {API_DELAY}s...")
@@ -280,7 +268,7 @@ def run_analysis():
     print("Fetching rich list (top 1000)...")
     rich_list_data = get_api_data(API_BASE_URL_GENERAL, {'q': 'rich'}, api_key)
     if rich_list_data and isinstance(rich_list_data, dict):
-        rich_list_snippet_for_log = str(rich_list_data) # Store snippet for debug section
+        rich_list_snippet_for_log = str(rich_list_data)
         holders_list = rich_list_data.get('rich1000', [])
         if isinstance(holders_list, list):
             print("\nParsing rich list data...")
@@ -291,21 +279,19 @@ def run_analysis():
                         address = holder_data.get('addr')
                         balance_raw = holder_data.get('amount')
                         if address is not None and balance_raw is not None:
-                            # Ensure balance is float right after parsing
-                            balance = float(balance_raw)
+                            # Ensure balance is float (API returns numbers, but good practice)
+                            balance = float(balance_raw) # Balance is in whole coins
                             temp_holders.append({'address': address, 'balance': balance})
                         else:
                              print(f"Warning: Missing 'addr' or 'amount' in holder data: {holder_data}", file=sys.stderr)
                     except (ValueError, TypeError) as e:
-                        # Handle potential errors during float conversion
                         print(f"Warning: Could not parse balance for holder data {holder_data}: {e}", file=sys.stderr)
                 else:
                      print(f"Warning: Expected dict item in rich1000 list, got {type(holder_data)}", file=sys.stderr)
 
-            parsed_holders = temp_holders # Assign parsed list
+            parsed_holders = temp_holders
             print(f"Successfully parsed {len(parsed_holders)} entries from rich list.")
             # Sort by balance descending AFTER parsing all
-            # Ensure sorting handles potential None balances gracefully if error handling changes
             parsed_holders.sort(key=lambda x: x.get('balance', 0), reverse=True)
         else:
             print(f"Error: Expected 'rich1000' key to contain a list.", file=sys.stderr)
@@ -313,13 +299,12 @@ def run_analysis():
         print("Could not fetch rich list data or data is not a dictionary.", file=sys.stderr)
 
     # --- Perform Concentration Calculations ---
-    # Call the dedicated function
     concentration_top_10, concentration_top_100 = calculate_and_format_concentration(
         parsed_holders, circulating_supply
     )
 
     # --- Generate Plots ---
-    # Pass parsed_holders list to plotting functions
+    # Pass parsed_holders list (balances in whole coins) to plotting functions
     top_n_plot_success = plot_top_n_chart(parsed_holders, 20, PLOT_TOP_N_FILENAME)
     lorenz_plot_success, gini_coefficient = plot_lorenz_curve(parsed_holders, PLOT_LORENZ_FILENAME)
     # pie_chart_success = plot_pie_chart(parsed_holders, circulating_supply, PLOT_PIE_FILENAME) # Keep removed
@@ -337,7 +322,7 @@ def run_analysis():
     report_time_utc = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')
 
     # Define circ_supply_str safely
-    circ_supply_str = "N/A" # Default
+    circ_supply_str = "N/A"
     if circulating_supply is not None:
         try:
             circ_supply_str = f"{circulating_supply:,.2f}"
@@ -350,7 +335,7 @@ def run_analysis():
     # Basic CSS for styling + Debug CSS
     html_style = """
 <style>
-  body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; line-height: 1.6; padding: 20px; max-width: 1000px; margin: auto; background-color: #f9f9f9; color: #333; /* Removed test border */ }
+  body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; line-height: 1.6; padding: 20px; max-width: 1000px; margin: auto; background-color: #f9f9f9; color: #333; }
   h1, h2, h3 { color: #1a1a1a; border-bottom: 1px solid #ddd; padding-bottom: 6px; }
   h1 { text-align: center; border-bottom: 2px solid #ccc; margin-bottom: 20px;}
   h2 { margin-top: 40px; }
@@ -375,21 +360,19 @@ def run_analysis():
 """
 
     # --- Build Top 10 Table ---
-    # Use parsed_holders directly (already sorted)
     top_10_table_html = "<h3>Top 10 Holders Table</h3>\n"
-    if parsed_holders:
+    if parsed_holders: # Use original parsed list
         top_10_table_html += "<table>\n<thead><tr><th>Rank</th><th>Address</th><th>Balance (LANA)</th><th>% of Circulating</th></tr></thead>\n<tbody>\n"
         num_to_show = min(10, len(parsed_holders))
         for i in range(num_to_show):
             holder = parsed_holders[i]
             address = holder.get('address', 'N/A')
-            balance_base = holder.get('balance', 0)
-            balance_lana = balance_base / BASE_UNITS_PER_COIN
-            # Calculate percentage using the result from calculate_and_format_concentration if needed, or recalculate
-            percent_circ_val = (balance_base / (circulating_supply * BASE_UNITS_PER_COIN)) * 100 if circulating_supply and circulating_supply > 0 else 0
+            balance_coins = holder.get('balance', 0) # This is already in whole coins
+            # Recalculate percentage string directly for table
+            percent_circ_val = (balance_coins / circulating_supply) * 100 if circulating_supply and circulating_supply > 0 else 0
             percent_circ_str = f"{percent_circ_val:.3f}%"
             display_address = f"{address[:8]}...{address[-6:]}" if len(address) > 14 else address
-            top_10_table_html += f"<tr><td>{i+1}</td><td title='{address}'>{display_address}</td><td>{balance_lana:,.2f}</td><td>{percent_circ_str}</td></tr>\n"
+            top_10_table_html += f"<tr><td>{i+1}</td><td title='{address}'>{display_address}</td><td>{balance_coins:,.2f}</td><td>{percent_circ_str}</td></tr>\n"
         top_10_table_html += "</tbody>\n</table>\n"
     else:
         top_10_table_html += "<p>No holder data parsed to display table.</p>\n"
@@ -399,6 +382,7 @@ def run_analysis():
     # Prepare conditional image tags
     top_n_img_html = f'<img src="{top_n_base64}" alt="Top 20 Holders Chart">' if top_n_base64 else '<p class="error">Failed to generate Top Holders chart.</p>'
     hist_img_html = f'<img src="{hist_base64}" alt="Balance Histogram">' if hist_base64 else '<p class="error">Failed to generate Balance Histogram.</p>'
+    # pie_img_html = f'<img src="{pie_base64}" alt="Concentration Pie Chart">' if pie_base64 else '<p class="error">Failed to generate Concentration Pie Chart.</p>' # Keep removed
     lorenz_img_html = f'<img src="{lorenz_base64}" alt="Lorenz Curve Chart">' if lorenz_base64 else '<p class="error">Failed to generate Lorenz Curve chart.</p>'
     lorenz_note_html = f'<p class="note">Gini Coefficient: {gini_str} (0 = perfect equality, 1 = perfect inequality)</p>' if lorenz_base64 and gini_str != "N/A" else ''
 
