@@ -33,11 +33,12 @@ jobs:
 
       # 4. Run the report generation script
       #    Assumes generate_report_html.py prints HTML to stdout and saves PNGs
-      #    Make sure your API key is stored as a secret named LANA_API_KEY in your repo settings
+      #    Make sure your API key is stored as a secret named CRYPTOID_API_KEY in your repo settings
       - name: Generate Report and Images
         run: python generate_report_html.py > LANA_Whale_Report.html
         env:
-          API_KEY: ${{ secrets.LANA_API_KEY }} # Pass the API key as an environment variable
+          # Use the correct secret name specified by the user
+          API_KEY: ${{ secrets.CRYPTOID_API_KEY }} # Pass the API key as an environment variable
 
       # 5. Create Release and Upload Assets using GitHub CLI
       - name: Create Release and Upload Assets
