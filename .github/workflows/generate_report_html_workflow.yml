@@ -1,82 +1,79 @@
-name: Generate LanaCoin HTML Report
+# .github/workflows/archive_report.yml # Suggested filename
 
+name: Archive Daily Whale Report
+
+# Controls when the workflow will run
 on:
+  # Schedule to run daily at 08:30 UTC (adjust as needed)
   schedule:
-    # Runs the workflow automatically at a scheduled time.
-    # This example runs daily at 08:30 UTC.
-    # Use https://crontab.guru/ to customize the schedule.
-    # Remember: Time is in UTC.
     - cron: '30 8 * * *'
-  workflow_dispatch: # Allows manual triggering from the Actions tab
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 jobs:
-  build-and-report:
+  build-and-release:
     runs-on: ubuntu-latest
-    # Grant permissions for the GITHUB_TOKEN to push changes back to the repo
+
+    # Grant permissions for the GITHUB_TOKEN to create releases
+    # Note: 'contents: write' is needed by gh release create to create tags
     permissions:
-      contents: write # Needed to commit changes back
+      contents: write
 
     steps:
-      - name: Checkout code
+      # 1. Check out the repository code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # 2. Set up Python environment
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.10' # Specify your Python version
 
+      # 3. Install Python dependencies
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           # Install necessary libraries for the script
           pip install requests matplotlib numpy
 
+      # 4. Run HTML Report Generation Script
+      #    Runs the python script and redirects standard output (the HTML report) to report.html
+      #    Assumes the script embeds images via Base64 into the HTML.
       - name: Run HTML Report Generation Script
-        # Runs the python script and redirects standard output (the HTML report) to report.html
         id: report
         env:
           # Pass the repository secret CRYPTOID_API_KEY as API_KEY env variable
           API_KEY: ${{ secrets.CRYPTOID_API_KEY }}
         run: |
           # Use the correct script name here
-          python generate_report_html.py > report.html
+          python generate_report_html.py > LANA_Whale_Report.html # Output directly to final name
           # Check if the HTML output file was created and has content
-          if [ ! -s report.html ]; then
+          if [ ! -s LANA_Whale_Report.html ]; then
             echo "HTML report file is empty or script failed." >&2
             exit 1 # Fail the workflow if the report is empty
           else
             echo "HTML report generated successfully."
           fi
-          # Plot files are generated temporarily by the script but not needed for commit
+          # Plot files are generated temporarily by the script but removed, only HTML is needed.
 
-      - name: Commit HTML Report
-        # Commits the generated HTML file
-        if: true # Ensure this step runs
+      # 5. Create Release and Upload HTML Report as Asset
+      - name: Create Release and Upload Report Asset
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          # Generate a tag name based on the current date
+          TAG_NAME="report-$(date +'%Y-%m-%d')"
+          echo "Creating release with tag: $TAG_NAME"
 
-          # Define the target HTML report file name in the repository
-          TARGET_HTML_FILE="LANA_Whale_Report.html"
+          # Create the release and upload ONLY the HTML file.
+          # The 'gh release create' command handles tag creation automatically.
+          # Using '--latest=false' prevents this daily tag from being marked as the "latest" release.
+          gh release create "$TAG_NAME" \
+             --title "Lana Whale Report - $(date +'%Y-%m-%d')" \
+             --notes "Automated daily whale report for $(date +'%Y-%m-%d'). Contains embedded images." \
+             --latest=false \
+             LANA_Whale_Report.html
+        env:
+          # GITHUB_TOKEN is automatically available and used by gh cli
+          # The 'permissions: contents: write' above grants it necessary rights
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-          echo "Moving generated report to $TARGET_HTML_FILE"
-          # Move the generated file to the target name
-          mv report.html $TARGET_HTML_FILE || echo "report.html not found, skipping move."
-
-          # Add the HTML report file to git staging
-          echo "Adding $TARGET_HTML_FILE to git"
-          git add $TARGET_HTML_FILE
-
-          echo "Checking for changes in $TARGET_HTML_FILE..."
-          # Commit only if the target file has changed
-          if git diff --staged --quiet $TARGET_HTML_FILE; then
-            echo "No changes detected in $TARGET_HTML_FILE."
-          else
-            echo "Changes detected in $TARGET_HTML_FILE, attempting commit..."
-            # Commit only the target file to avoid unrelated changes
-            git commit -m "Update LanaCoin HTML analysis report" $TARGET_HTML_FILE
-            echo "Pushing changes..."
-            # Push using default GITHUB_TOKEN
-            git push
-            echo "Changes pushed."
-          fi
