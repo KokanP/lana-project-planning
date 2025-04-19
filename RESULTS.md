@@ -12,7 +12,7 @@ Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multia
 
 Received multiaddr response for first address (type: <class 'dict'>).
 Multiaddr response snippet (first address):
-{'addresses': [{'address': 'LTdb5KrqryPihAU1RebDCy8tVxi1SVtGqu', 'total_sent': 245159021170548847, 'total_received': 274212031866790303, 'final_balance': 29053010696241456, 'n_tx': 77568}], 'txs': [{'hash': 'b7d6135f1bb0b3bcbad33864273a4a148a010f1d84442b97ad1079e2fd8e1780', 'confirmations': 5, 'change': 396468287414, 'time_utc': '2025-04-18T07:34:40Z', 'n': 2}, {'hash': 'b7d6135f1bb0b3bcbad33864273a4a148a010f1d84442b97ad1079e2fd8e1780', 'confirmations': 5, 'change': 396468000000, 'time_utc': '2025-04-18T07:34:40Z', 'n': 1}, {'hash': 'b7d6135f1bb0b3bcbad33864273a4a148a010f1d84442b97ad1079e2fd8e1780', 'confirmations': 5, 'change': -641865000000, 'time_utc': '2025-04-18T07:34:40Z'}, {'hash': '843b531be4e71f036011634365b69a7c573f14e1adc5045ed02afa602554ee49', 'confirmations': 6, 'change': 275221917696, 'time_utc': '2025-04-18T07:22:24Z', 'n': 2}, {'hash': '843b531be4e71f036011634365b69a7c573f14e1adc5045ed02afa602554ee49', 'confirmations': 6, 'change': 275221000000, 'time_utc': '2025-04-18T07:22:24Z', 'n': 1}, {'hash': '843b531be4e71f036011634365b69a7c573f14e1adc5045ed02afa602554ee49', 'confirmations': 6, 'change': -410645610968, 'time_utc': '2025-04-18T07:22:24Z'}, {'hash': 'b813ccad6f12fda6d7e70ac6b609115b1552662347f1984f432298402f70a204', 'confirmations': 10, 'change': 408999228257, 'time_utc': '2025-04-18T07:08Z', 'n': 2}, {'hash': 'b813ccad6f12fda6d7e70ac6b609115b1552662347f1984f432298402f70a204', 'confirmations': 10, 'change': 408999000000, 'time_utc': '2025-04-18T07:08Z', '...
+{'addresses': [{'address': 'LTdb5KrqryPihAU1RebDCy8tVxi1SVtGqu', 'total_sent': 245170917637059615, 'total_received': 274227067047573294, 'final_balance': 29056149410513679, 'n_tx': 77594}], 'txs': [{'hash': '64da6b699287546076ffb7c457b02e11df39eef812e8f546baf50146fe95bf32', 'confirmations': 3, 'change': 325078461130, 'time_utc': '2025-04-19T08:10:08Z', 'n': 2}, {'hash': '64da6b699287546076ffb7c457b02e11df39eef812e8f546baf50146fe95bf32', 'confirmations': 3, 'change': 325077000000, 'time_utc': '2025-04-19T08:10:08Z', 'n': 1}, {'hash': '64da6b699287546076ffb7c457b02e11df39eef812e8f546baf50146fe95bf32', 'confirmations': 3, 'change': -515553000000, 'time_utc': '2025-04-19T08:10:08Z'}, {'hash': '0c7adcf21dda9d7df3c85712c3d12e266ffbe6b9f991738fc32c4e4771769b7f', 'confirmations': 23, 'change': 255365322658, 'time_utc': '2025-04-19T05:57:20Z', 'n': 2}, {'hash': '0c7adcf21dda9d7df3c85712c3d12e266ffbe6b9f991738fc32c4e4771769b7f', 'confirmations': 23, 'change': 255365000000, 'time_utc': '2025-04-19T05:57:20Z', 'n': 1}, {'hash': '0c7adcf21dda9d7df3c85712c3d12e266ffbe6b9f991738fc32c4e4771769b7f', 'confirmations': 23, 'change': -373828000000, 'time_utc': '2025-04-19T05:57:20Z'}, {'hash': '771afd3127158cf5b6edbad16522bd101f08623ac6b010de8f5757783838b22b', 'confirmations': 46, 'change': 426028000082, 'time_utc': '2025-04-19T03:19:44Z', 'n': 2}, {'hash': '771afd3127158cf5b6edbad16522bd101f08623ac6b010de8f5757783838b22b', 'confirmations': 46, 'change': 426028000000, 'time_utc': '2025-04-19T03:1...
 
 Parsing multiaddr transaction data (placeholder - needs update based on snippet above)...
 
@@ -56,17 +56,17 @@ Processing address 11/100: LZ1KgRd7JUNVMYMdt1EDz3mrpjoPdykiCt
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LZ1KgRd7JUNVMYMdt1EDz3mrpjoPdykiCt', 'key': '29e9ef74c886'}
 
-Processing address 12/100: LLeiQ8bBqXakdAecKPs9qUBduPAEmDctvj
-Waiting 11s...
-Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LLeiQ8bBqXakdAecKPs9qUBduPAEmDctvj', 'key': '29e9ef74c886'}
-
-Processing address 13/100: LcKYMGD74AM2TxD7MLiB5BE1ATV8Qdvun4
+Processing address 12/100: LcKYMGD74AM2TxD7MLiB5BE1ATV8Qdvun4
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LcKYMGD74AM2TxD7MLiB5BE1ATV8Qdvun4', 'key': '29e9ef74c886'}
 
-Processing address 14/100: LXQr1s1KpLVRE537UKQWuhZ8mvPqtSeAip
+Processing address 13/100: LXQr1s1KpLVRE537UKQWuhZ8mvPqtSeAip
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LXQr1s1KpLVRE537UKQWuhZ8mvPqtSeAip', 'key': '29e9ef74c886'}
+
+Processing address 14/100: LLeiQ8bBqXakdAecKPs9qUBduPAEmDctvj
+Waiting 11s...
+Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LLeiQ8bBqXakdAecKPs9qUBduPAEmDctvj', 'key': '29e9ef74c886'}
 
 Processing address 15/100: LSy3RQ4kPwU2WY7HSAq2RxUdw7Nnc6XLji
 Waiting 11s...
@@ -264,153 +264,153 @@ Processing address 63/100: LX2J5ApTzZvyJvfMWWNScrYEaGBUx4fbvF
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LX2J5ApTzZvyJvfMWWNScrYEaGBUx4fbvF', 'key': '29e9ef74c886'}
 
-Processing address 64/100: LgqdPmTNAYf8J2PUccSuM8KGyLNac1Whkc
+Processing address 64/100: Lg4vAeCupwA59Ebuh6wH1fpubceTfWB99k
+Waiting 11s...
+Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'Lg4vAeCupwA59Ebuh6wH1fpubceTfWB99k', 'key': '29e9ef74c886'}
+
+Processing address 65/100: LgqdPmTNAYf8J2PUccSuM8KGyLNac1Whkc
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LgqdPmTNAYf8J2PUccSuM8KGyLNac1Whkc', 'key': '29e9ef74c886'}
 
-Processing address 65/100: LaXuyTALsMJG5FFxbgFhGzpxb3CjtzJTR4
+Processing address 66/100: LaXuyTALsMJG5FFxbgFhGzpxb3CjtzJTR4
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LaXuyTALsMJG5FFxbgFhGzpxb3CjtzJTR4', 'key': '29e9ef74c886'}
 
-Processing address 66/100: LNeBx7iogMssZhTrf7enpgie9LtXZqMfG3
+Processing address 67/100: LNeBx7iogMssZhTrf7enpgie9LtXZqMfG3
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LNeBx7iogMssZhTrf7enpgie9LtXZqMfG3', 'key': '29e9ef74c886'}
 
-Processing address 67/100: LZF8TBnSrxM6uPdbJ56bNKWW95KcXCqL6v
+Processing address 68/100: LZF8TBnSrxM6uPdbJ56bNKWW95KcXCqL6v
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LZF8TBnSrxM6uPdbJ56bNKWW95KcXCqL6v', 'key': '29e9ef74c886'}
 
-Processing address 68/100: LM96igxgpB6HWNeJypdWePHfQPpW23T8Fh
+Processing address 69/100: LM96igxgpB6HWNeJypdWePHfQPpW23T8Fh
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LM96igxgpB6HWNeJypdWePHfQPpW23T8Fh', 'key': '29e9ef74c886'}
 
-Processing address 69/100: LPBA2zzHrMgvKtwKaKutUcGK4h7cW2xnHK
+Processing address 70/100: LPBA2zzHrMgvKtwKaKutUcGK4h7cW2xnHK
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LPBA2zzHrMgvKtwKaKutUcGK4h7cW2xnHK', 'key': '29e9ef74c886'}
 
-Processing address 70/100: LbyQUTV9WqJeVYKJDDZPXCA4T2YdRwkQwo
+Processing address 71/100: LbyQUTV9WqJeVYKJDDZPXCA4T2YdRwkQwo
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LbyQUTV9WqJeVYKJDDZPXCA4T2YdRwkQwo', 'key': '29e9ef74c886'}
 
-Processing address 71/100: Leau5ESnLBJg93pukcV2U5sD5MFLZfRgF4
+Processing address 72/100: Leau5ESnLBJg93pukcV2U5sD5MFLZfRgF4
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'Leau5ESnLBJg93pukcV2U5sD5MFLZfRgF4', 'key': '29e9ef74c886'}
 
-Processing address 72/100: LNTPfnsewydYjgFFKzwPnoe81RYgbhcD2S
+Processing address 73/100: LNTPfnsewydYjgFFKzwPnoe81RYgbhcD2S
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LNTPfnsewydYjgFFKzwPnoe81RYgbhcD2S', 'key': '29e9ef74c886'}
-
-Processing address 73/100: LhEC44ALXmsX2zMJbZ57T5oLpqx9dRjmr8
-Waiting 11s...
-Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LhEC44ALXmsX2zMJbZ57T5oLpqx9dRjmr8', 'key': '29e9ef74c886'}
 
 Processing address 74/100: LdbQp3QL9Tz1UUKQMreMyLJp3faxRavk5r
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LdbQp3QL9Tz1UUKQMreMyLJp3faxRavk5r', 'key': '29e9ef74c886'}
 
-Processing address 75/100: LVCtfZjhDNLkHxzScXk5Whdx8qFWY5cJDQ
+Processing address 75/100: LhEC44ALXmsX2zMJbZ57T5oLpqx9dRjmr8
+Waiting 11s...
+Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LhEC44ALXmsX2zMJbZ57T5oLpqx9dRjmr8', 'key': '29e9ef74c886'}
+
+Processing address 76/100: LVCtfZjhDNLkHxzScXk5Whdx8qFWY5cJDQ
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LVCtfZjhDNLkHxzScXk5Whdx8qFWY5cJDQ', 'key': '29e9ef74c886'}
 
-Processing address 76/100: LSZ4oJExzGE7LLvdU3hL1prpgwHHgfVYEh
+Processing address 77/100: LSZ4oJExzGE7LLvdU3hL1prpgwHHgfVYEh
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LSZ4oJExzGE7LLvdU3hL1prpgwHHgfVYEh', 'key': '29e9ef74c886'}
 
-Processing address 77/100: Le4Q4PkkWzHS7cemnvH27M7FBYLWVvYyDu
+Processing address 78/100: Le4Q4PkkWzHS7cemnvH27M7FBYLWVvYyDu
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'Le4Q4PkkWzHS7cemnvH27M7FBYLWVvYyDu', 'key': '29e9ef74c886'}
 
-Processing address 78/100: LKYnx7g35FXiopV5J3nFNaxWgjQpoY7Sjt
+Processing address 79/100: LKYnx7g35FXiopV5J3nFNaxWgjQpoY7Sjt
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LKYnx7g35FXiopV5J3nFNaxWgjQpoY7Sjt', 'key': '29e9ef74c886'}
 
-Processing address 79/100: Li2MpQaY9XY9iswTBcSmxHuLiS4BLVQqB7
+Processing address 80/100: Li2MpQaY9XY9iswTBcSmxHuLiS4BLVQqB7
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'Li2MpQaY9XY9iswTBcSmxHuLiS4BLVQqB7', 'key': '29e9ef74c886'}
 
-Processing address 80/100: LYZbbNne1AbSQU8e9ezUHHdu7QjsSQKNZb
+Processing address 81/100: LYZbbNne1AbSQU8e9ezUHHdu7QjsSQKNZb
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LYZbbNne1AbSQU8e9ezUHHdu7QjsSQKNZb', 'key': '29e9ef74c886'}
 
-Processing address 81/100: LZyayMibriVYv8CZFynQGRCCrE62g93u9x
+Processing address 82/100: LZyayMibriVYv8CZFynQGRCCrE62g93u9x
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LZyayMibriVYv8CZFynQGRCCrE62g93u9x', 'key': '29e9ef74c886'}
 
-Processing address 82/100: LQ5CdQjhA7YnuFavEmWevkt4eZRdobNdCE
+Processing address 83/100: LQ5CdQjhA7YnuFavEmWevkt4eZRdobNdCE
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LQ5CdQjhA7YnuFavEmWevkt4eZRdobNdCE', 'key': '29e9ef74c886'}
 
-Processing address 83/100: LgvZ6rNLYiaYPKUrQsmFhWTLiS6FoAuV7v
+Processing address 84/100: LgvZ6rNLYiaYPKUrQsmFhWTLiS6FoAuV7v
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LgvZ6rNLYiaYPKUrQsmFhWTLiS6FoAuV7v', 'key': '29e9ef74c886'}
 
-Processing address 84/100: LNpKXKL7Fb5gSQSbwNSqmGwFzZpdsRLpL9
+Processing address 85/100: LNpKXKL7Fb5gSQSbwNSqmGwFzZpdsRLpL9
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LNpKXKL7Fb5gSQSbwNSqmGwFzZpdsRLpL9', 'key': '29e9ef74c886'}
 
-Processing address 85/100: LY4nGQpbUmemu4Tauko313YbRkWuCak2NQ
+Processing address 86/100: LY4nGQpbUmemu4Tauko313YbRkWuCak2NQ
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LY4nGQpbUmemu4Tauko313YbRkWuCak2NQ', 'key': '29e9ef74c886'}
 
-Processing address 86/100: Lb679LaZzvo9cPx1EEwUMfdxiskpUX68ZT
+Processing address 87/100: Lb679LaZzvo9cPx1EEwUMfdxiskpUX68ZT
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'Lb679LaZzvo9cPx1EEwUMfdxiskpUX68ZT', 'key': '29e9ef74c886'}
 
-Processing address 87/100: LT2xJKQBKgmHbjQedqyJ91tuxBxFCfB1XF
+Processing address 88/100: LT2xJKQBKgmHbjQedqyJ91tuxBxFCfB1XF
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LT2xJKQBKgmHbjQedqyJ91tuxBxFCfB1XF', 'key': '29e9ef74c886'}
 
-Processing address 88/100: LSoVqL15M4SEGSTBgbsSPNXgtYPwHDzQve
+Processing address 89/100: LSoVqL15M4SEGSTBgbsSPNXgtYPwHDzQve
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LSoVqL15M4SEGSTBgbsSPNXgtYPwHDzQve', 'key': '29e9ef74c886'}
 
-Processing address 89/100: LVxoo8KY669N5KfXR6XN13TKycfPLLRJMW
+Processing address 90/100: LVxoo8KY669N5KfXR6XN13TKycfPLLRJMW
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LVxoo8KY669N5KfXR6XN13TKycfPLLRJMW', 'key': '29e9ef74c886'}
 
-Processing address 90/100: Ldf9tEeQsUVtCBTZL16ae758zRj1N176ov
+Processing address 91/100: Ldf9tEeQsUVtCBTZL16ae758zRj1N176ov
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'Ldf9tEeQsUVtCBTZL16ae758zRj1N176ov', 'key': '29e9ef74c886'}
-
-Processing address 91/100: LSXT6gJzwSfgFCLay3yTCBtknTkE2ivCNM
-Waiting 11s...
-Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LSXT6gJzwSfgFCLay3yTCBtknTkE2ivCNM', 'key': '29e9ef74c886'}
 
 Processing address 92/100: LiEXRLiwaafBBZcJNogBE9JnudL3yixG5i
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LiEXRLiwaafBBZcJNogBE9JnudL3yixG5i', 'key': '29e9ef74c886'}
 
-Processing address 93/100: LYL8cnN5h5vGLdfUPUpKk2VBQxupjtckja
+Processing address 93/100: LSXT6gJzwSfgFCLay3yTCBtknTkE2ivCNM
+Waiting 11s...
+Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LSXT6gJzwSfgFCLay3yTCBtknTkE2ivCNM', 'key': '29e9ef74c886'}
+
+Processing address 94/100: LYL8cnN5h5vGLdfUPUpKk2VBQxupjtckja
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LYL8cnN5h5vGLdfUPUpKk2VBQxupjtckja', 'key': '29e9ef74c886'}
 
-Processing address 94/100: LLuXnadW59QxKcDbUtRjFh67ExqCUAqWLh
+Processing address 95/100: LLuXnadW59QxKcDbUtRjFh67ExqCUAqWLh
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LLuXnadW59QxKcDbUtRjFh67ExqCUAqWLh', 'key': '29e9ef74c886'}
 
-Processing address 95/100: LUsdfHHz644jSaTepkfuty71Y35EYqsn9B
+Processing address 96/100: LUsdfHHz644jSaTepkfuty71Y35EYqsn9B
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LUsdfHHz644jSaTepkfuty71Y35EYqsn9B', 'key': '29e9ef74c886'}
 
-Processing address 96/100: LP88ojUXdEfkNXi2HCwbepBvBGqBiNTB13
+Processing address 97/100: LP88ojUXdEfkNXi2HCwbepBvBGqBiNTB13
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LP88ojUXdEfkNXi2HCwbepBvBGqBiNTB13', 'key': '29e9ef74c886'}
-
-Processing address 97/100: LU19AUs7o5TvCpVSE14xeUzBG3HusXQ4zm
-Waiting 11s...
-Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LU19AUs7o5TvCpVSE14xeUzBG3HusXQ4zm', 'key': '29e9ef74c886'}
 
 Processing address 98/100: LXuVH8Lamci27iGhq6MyTrdCY9LEtDcjCX
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LXuVH8Lamci27iGhq6MyTrdCY9LEtDcjCX', 'key': '29e9ef74c886'}
 
-Processing address 99/100: Lb7b6cM2fTWJeEo6GdtNw11tGbwqYSBXjZ
+Processing address 99/100: LU19AUs7o5TvCpVSE14xeUzBG3HusXQ4zm
+Waiting 11s...
+Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LU19AUs7o5TvCpVSE14xeUzBG3HusXQ4zm', 'key': '29e9ef74c886'}
+
+Processing address 100/100: Lb7b6cM2fTWJeEo6GdtNw11tGbwqYSBXjZ
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'Lb7b6cM2fTWJeEo6GdtNw11tGbwqYSBXjZ', 'key': '29e9ef74c886'}
-
-Processing address 100/100: LQKArvgc6ep7CCMbfsiwHCgoVzJsY3a5Ga
-Waiting 11s...
-Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LQKArvgc6ep7CCMbfsiwHCgoVzJsY3a5Ga', 'key': '29e9ef74c886'}
 
 Finished fetching transaction data for 100 addresses.
 
@@ -426,9 +426,9 @@ Formatting results...
 --- Analysis Output ---
 # LanaCoin Whale Analysis Report
 
-**Data Fetched:** 2025-04-18 08:47:17 UTC
+**Data Fetched:** 2025-04-19 08:44:48 UTC
 
-* **Circulating Supply:** 3,523,901,278.66 LANA
+* **Circulating Supply:** 3,524,247,198.29 LANA
 
 ---
 
@@ -441,8 +441,8 @@ Transaction data for 100 addresses saved to address_transactions.json. Analysis 
 
 ## Top Holder Concentration (Based on Raw Top 1000 API Data)
 
-* **Top 10 Holders (% of Circulating):** 35.42%
-* **Top 100 Holders (% of Circulating):** 72.77%
+* **Top 10 Holders (% of Circulating):** 35.38%
+* **Top 100 Holders (% of Circulating):** 72.53%
 
 *(Note: Concentration based on raw API data. Known exchange/contract addresses are NOT filtered out.)*
 
@@ -452,12 +452,12 @@ Transaction data for 100 addresses saved to address_transactions.json. Analysis 
 
 **Rich List Snippet:**
 ```json
-{'total': 3523901278.66084, 'rich1000': [{'amount': 290530106.962415, 'addr': 'LTdb5KrqryPihAU1RebDCy8tVxi1SVtGqu', 'wallet': 78322}, {'amount': 155448559.812351, 'addr': 'LaFnKHXxj4KEuVMbtyLnNCJTpUtTPWXjJC', 'wallet': 96575}, {'amount': 143048118.280643, 'addr': 'LLZr9vsHWjcL6Tohu12TrYJtrgctapZHjH', 'wallet': 213166}, {'amount': 122487764.168111, 'addr': 'LbRugxTQt4eJFHaDc73zKjViVEuNcP3NwD', 'wallet': 166701}, {'amount': 103429460.613765, 'addr': 'LaXTGF8X6FGXCSgWc3WFXimw5fWHMAcFQe', 'wallet': ...
+{'total': 3524247198.28548, 'rich1000': [{'amount': 290561494.105137, 'addr': 'LTdb5KrqryPihAU1RebDCy8tVxi1SVtGqu', 'wallet': 78322}, {'amount': 155484832.739953, 'addr': 'LaFnKHXxj4KEuVMbtyLnNCJTpUtTPWXjJC', 'wallet': 96575}, {'amount': 143062931.209204, 'addr': 'LLZr9vsHWjcL6Tohu12TrYJtrgctapZHjH', 'wallet': 213166}, {'amount': 122517009.695052, 'addr': 'LbRugxTQt4eJFHaDc73zKjViVEuNcP3NwD', 'wallet': 166701}, {'amount': 103202759.384945, 'addr': 'LaXTGF8X6FGXCSgWc3WFXimw5fWHMAcFQe', 'wallet': ...
 ```
 
 **MultiAddr Response Snippet (First Address Checked Only):**
 ```json
-{'addresses': [{'address': 'LTdb5KrqryPihAU1RebDCy8tVxi1SVtGqu', 'total_sent': 245159021170548847, 'total_received': 274212031866790303, 'final_balance': 29053010696241456, 'n_tx': 77568}], 'txs': [{'hash': 'b7d6135f1bb0b3bcbad33864273a4a148a010f1d84442b97ad1079e2fd8e1780', 'confirmations': 5, 'change': 396468287414, 'time_utc': '2025-04-18T07:34:40Z', 'n': 2}, {'hash': 'b7d6135f1bb0b3bcbad33864273a4a148a010f1d84442b97ad1079e2fd8e1780', 'confirmations': 5, 'change': 396468000000, 'time_utc': '20...
+{'addresses': [{'address': 'LTdb5KrqryPihAU1RebDCy8tVxi1SVtGqu', 'total_sent': 245170917637059615, 'total_received': 274227067047573294, 'final_balance': 29056149410513679, 'n_tx': 77594}], 'txs': [{'hash': '64da6b699287546076ffb7c457b02e11df39eef812e8f546baf50146fe95bf32', 'confirmations': 3, 'change': 325078461130, 'time_utc': '2025-04-19T08:10:08Z', 'n': 2}, {'hash': '64da6b699287546076ffb7c457b02e11df39eef812e8f546baf50146fe95bf32', 'confirmations': 3, 'change': 325077000000, 'time_utc': '20...
 ```
 
 *End of Report*
