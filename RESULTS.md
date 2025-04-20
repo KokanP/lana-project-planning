@@ -12,7 +12,7 @@ Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multia
 
 Received multiaddr response for first address (type: <class 'dict'>).
 Multiaddr response snippet (first address):
-{'addresses': [{'address': 'LTdb5KrqryPihAU1RebDCy8tVxi1SVtGqu', 'total_sent': 245170917637059615, 'total_received': 274227067047573294, 'final_balance': 29056149410513679, 'n_tx': 77594}], 'txs': [{'hash': '64da6b699287546076ffb7c457b02e11df39eef812e8f546baf50146fe95bf32', 'confirmations': 3, 'change': 325078461130, 'time_utc': '2025-04-19T08:10:08Z', 'n': 2}, {'hash': '64da6b699287546076ffb7c457b02e11df39eef812e8f546baf50146fe95bf32', 'confirmations': 3, 'change': 325077000000, 'time_utc': '2025-04-19T08:10:08Z', 'n': 1}, {'hash': '64da6b699287546076ffb7c457b02e11df39eef812e8f546baf50146fe95bf32', 'confirmations': 3, 'change': -515553000000, 'time_utc': '2025-04-19T08:10:08Z'}, {'hash': '0c7adcf21dda9d7df3c85712c3d12e266ffbe6b9f991738fc32c4e4771769b7f', 'confirmations': 23, 'change': 255365322658, 'time_utc': '2025-04-19T05:57:20Z', 'n': 2}, {'hash': '0c7adcf21dda9d7df3c85712c3d12e266ffbe6b9f991738fc32c4e4771769b7f', 'confirmations': 23, 'change': 255365000000, 'time_utc': '2025-04-19T05:57:20Z', 'n': 1}, {'hash': '0c7adcf21dda9d7df3c85712c3d12e266ffbe6b9f991738fc32c4e4771769b7f', 'confirmations': 23, 'change': -373828000000, 'time_utc': '2025-04-19T05:57:20Z'}, {'hash': '771afd3127158cf5b6edbad16522bd101f08623ac6b010de8f5757783838b22b', 'confirmations': 46, 'change': 426028000082, 'time_utc': '2025-04-19T03:19:44Z', 'n': 2}, {'hash': '771afd3127158cf5b6edbad16522bd101f08623ac6b010de8f5757783838b22b', 'confirmations': 46, 'change': 426028000000, 'time_utc': '2025-04-19T03:1...
+{'addresses': [{'address': 'LTdb5KrqryPihAU1RebDCy8tVxi1SVtGqu', 'total_sent': 245186139021430727, 'total_received': 274245578237655682, 'final_balance': 29059439216224955, 'n_tx': 77626}], 'txs': [{'hash': '44a8ffbef584f831c9b1fa353cea6e01051be08a4a2b99bef331d849fc04ded1', 'confirmations': 6, 'change': 246916633422, 'time_utc': '2025-04-20T07:53:04Z', 'n': 2}, {'hash': '44a8ffbef584f831c9b1fa353cea6e01051be08a4a2b99bef331d849fc04ded1', 'confirmations': 6, 'change': 246916000000, 'time_utc': '2025-04-20T07:53:04Z', 'n': 1}, {'hash': '44a8ffbef584f831c9b1fa353cea6e01051be08a4a2b99bef331d849fc04ded1', 'confirmations': 6, 'change': -332946000000, 'time_utc': '2025-04-20T07:53:04Z'}, {'hash': '19f5bccf53b916667d92244cd3fd2c7738cdc1571b21b1e8e2063245cce88faf', 'confirmations': 8, 'change': 400152526604, 'time_utc': '2025-04-20T07:22:08Z', 'n': 2}, {'hash': '19f5bccf53b916667d92244cd3fd2c7738cdc1571b21b1e8e2063245cce88faf', 'confirmations': 8, 'change': 400152000000, 'time_utc': '2025-04-20T07:22:08Z', 'n': 1}, {'hash': '19f5bccf53b916667d92244cd3fd2c7738cdc1571b21b1e8e2063245cce88faf', 'confirmations': 8, 'change': -732179200628, 'time_utc': '2025-04-20T07:22:08Z'}, {'hash': 'b05e8baf189195d55ec7e0cc5c8a312396131993cb14dbcd1ee01c9d0ddc4827', 'confirmations': 10, 'change': 416331997510, 'time_utc': '2025-04-20T07:00:48Z', 'n': 2}, {'hash': 'b05e8baf189195d55ec7e0cc5c8a312396131993cb14dbcd1ee01c9d0ddc4827', 'confirmations': 10, 'change': 416331000000, 'time_utc': '2025-04-20T07:00:4...
 
 Parsing multiaddr transaction data (placeholder - needs update based on snippet above)...
 
@@ -264,21 +264,21 @@ Processing address 63/100: LX2J5ApTzZvyJvfMWWNScrYEaGBUx4fbvF
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LX2J5ApTzZvyJvfMWWNScrYEaGBUx4fbvF', 'key': '29e9ef74c886'}
 
-Processing address 64/100: Lg4vAeCupwA59Ebuh6wH1fpubceTfWB99k
-Waiting 11s...
-Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'Lg4vAeCupwA59Ebuh6wH1fpubceTfWB99k', 'key': '29e9ef74c886'}
-
-Processing address 65/100: LgqdPmTNAYf8J2PUccSuM8KGyLNac1Whkc
+Processing address 64/100: LgqdPmTNAYf8J2PUccSuM8KGyLNac1Whkc
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LgqdPmTNAYf8J2PUccSuM8KGyLNac1Whkc', 'key': '29e9ef74c886'}
 
-Processing address 66/100: LaXuyTALsMJG5FFxbgFhGzpxb3CjtzJTR4
+Processing address 65/100: LaXuyTALsMJG5FFxbgFhGzpxb3CjtzJTR4
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LaXuyTALsMJG5FFxbgFhGzpxb3CjtzJTR4', 'key': '29e9ef74c886'}
 
-Processing address 67/100: LNeBx7iogMssZhTrf7enpgie9LtXZqMfG3
+Processing address 66/100: LNeBx7iogMssZhTrf7enpgie9LtXZqMfG3
 Waiting 11s...
 Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LNeBx7iogMssZhTrf7enpgie9LtXZqMfG3', 'key': '29e9ef74c886'}
+
+Processing address 67/100: LhASMATuReBan68LWx5RVz1KYQpdszywKv
+Waiting 11s...
+Requesting: https://chainz.cryptoid.info/lana/api.dws with params: {'q': 'multiaddr', 'active': 'LhASMATuReBan68LWx5RVz1KYQpdszywKv', 'key': '29e9ef74c886'}
 
 Processing address 68/100: LZF8TBnSrxM6uPdbJ56bNKWW95KcXCqL6v
 Waiting 11s...
@@ -426,9 +426,9 @@ Formatting results...
 --- Analysis Output ---
 # LanaCoin Whale Analysis Report
 
-**Data Fetched:** 2025-04-19 08:44:48 UTC
+**Data Fetched:** 2025-04-20 08:44:11 UTC
 
-* **Circulating Supply:** 3,524,247,198.29 LANA
+* **Circulating Supply:** 3,524,626,220.36 LANA
 
 ---
 
@@ -441,8 +441,8 @@ Transaction data for 100 addresses saved to address_transactions.json. Analysis 
 
 ## Top Holder Concentration (Based on Raw Top 1000 API Data)
 
-* **Top 10 Holders (% of Circulating):** 35.38%
-* **Top 100 Holders (% of Circulating):** 72.53%
+* **Top 10 Holders (% of Circulating):** 35.35%
+* **Top 100 Holders (% of Circulating):** 72.47%
 
 *(Note: Concentration based on raw API data. Known exchange/contract addresses are NOT filtered out.)*
 
@@ -452,12 +452,12 @@ Transaction data for 100 addresses saved to address_transactions.json. Analysis 
 
 **Rich List Snippet:**
 ```json
-{'total': 3524247198.28548, 'rich1000': [{'amount': 290561494.105137, 'addr': 'LTdb5KrqryPihAU1RebDCy8tVxi1SVtGqu', 'wallet': 78322}, {'amount': 155484832.739953, 'addr': 'LaFnKHXxj4KEuVMbtyLnNCJTpUtTPWXjJC', 'wallet': 96575}, {'amount': 143062931.209204, 'addr': 'LLZr9vsHWjcL6Tohu12TrYJtrgctapZHjH', 'wallet': 213166}, {'amount': 122517009.695052, 'addr': 'LbRugxTQt4eJFHaDc73zKjViVEuNcP3NwD', 'wallet': 166701}, {'amount': 103202759.384945, 'addr': 'LaXTGF8X6FGXCSgWc3WFXimw5fWHMAcFQe', 'wallet': ...
+{'total': 3524626220.35678, 'rich1000': [{'amount': 290594392.16225, 'addr': 'LTdb5KrqryPihAU1RebDCy8tVxi1SVtGqu', 'wallet': 78322}, {'amount': 155493576.551481, 'addr': 'LaFnKHXxj4KEuVMbtyLnNCJTpUtTPWXjJC', 'wallet': 96575}, {'amount': 143089188.941683, 'addr': 'LLZr9vsHWjcL6Tohu12TrYJtrgctapZHjH', 'wallet': 213166}, {'amount': 122560549.208995, 'addr': 'LbRugxTQt4eJFHaDc73zKjViVEuNcP3NwD', 'wallet': 166701}, {'amount': 103011292.38984, 'addr': 'LaXTGF8X6FGXCSgWc3WFXimw5fWHMAcFQe', 'wallet': 20...
 ```
 
 **MultiAddr Response Snippet (First Address Checked Only):**
 ```json
-{'addresses': [{'address': 'LTdb5KrqryPihAU1RebDCy8tVxi1SVtGqu', 'total_sent': 245170917637059615, 'total_received': 274227067047573294, 'final_balance': 29056149410513679, 'n_tx': 77594}], 'txs': [{'hash': '64da6b699287546076ffb7c457b02e11df39eef812e8f546baf50146fe95bf32', 'confirmations': 3, 'change': 325078461130, 'time_utc': '2025-04-19T08:10:08Z', 'n': 2}, {'hash': '64da6b699287546076ffb7c457b02e11df39eef812e8f546baf50146fe95bf32', 'confirmations': 3, 'change': 325077000000, 'time_utc': '20...
+{'addresses': [{'address': 'LTdb5KrqryPihAU1RebDCy8tVxi1SVtGqu', 'total_sent': 245186139021430727, 'total_received': 274245578237655682, 'final_balance': 29059439216224955, 'n_tx': 77626}], 'txs': [{'hash': '44a8ffbef584f831c9b1fa353cea6e01051be08a4a2b99bef331d849fc04ded1', 'confirmations': 6, 'change': 246916633422, 'time_utc': '2025-04-20T07:53:04Z', 'n': 2}, {'hash': '44a8ffbef584f831c9b1fa353cea6e01051be08a4a2b99bef331d849fc04ded1', 'confirmations': 6, 'change': 246916000000, 'time_utc': '20...
 ```
 
 *End of Report*
