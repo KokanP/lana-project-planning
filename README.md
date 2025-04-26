@@ -10,6 +10,16 @@
 * The final report in Slovenian is available here **[`https://lana.freq.band/si`](https://lana.freq.band/si)**
 
 **--- END OF NOTICE ---**
+**--- PROJEKT ZAKLJUČEN ---**
+
+**OBVESTILO (26. april 2025): Ta projekt je zdaj zaključen in repozitorij je zamrznjen. Nadaljnji razvoj ali posodobitve ne bodo več izvajane.**
+
+* **Dnevno samodejno generiranje poročila o kitih je ustavljeno.**
+* **Zadnje samodejno poročilo `LANA_Whale_Report.html` je bilo ustvarjeno 26. 4. 2025 ob 08:43:22 UTC.** Različica, ki je na voljo prek gostujoče povezave ali v repozitoriju, odraža to zadnje izvajanje.
+* **Vsi ostali dokumenti in orodja ostajajo na voljo za zgodovinski pregled, vendar niso več vzdrževani.**
+* Zadnja verzija poročila v slovenščini je na voljo na tej povezavi **[`https://lana.freq.band/si`](https://lana.freq.band/si)**
+
+**--- KONEC OBVESTILA ---**
 
 This repository hosts files related to the planning and cost estimation for the Lana Project, including automated analysis reports.
 
