@@ -10,6 +10,8 @@
 * The final report in Slovenian is available here **[`https://lana.freq.band/si`](https://lana.freq.band/si)**
 
 **--- END OF NOTICE ---**
+
+
 **--- PROJEKT ZAKLJUČEN ---**
 
 **OBVESTILO (26. april 2025): Ta projekt je zdaj zaključen in repozitorij je zamrznjen. Nadaljnji razvoj ali posodobitve ne bodo več izvajane.**
